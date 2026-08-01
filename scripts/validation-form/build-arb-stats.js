@@ -115,6 +115,8 @@ function loadBgysStats(file) {
     const existing = out.get(k);
     if (existing && existing.totalAgriLandHa >= agriLand) continue;
     out.set(k, {
+      municipality: String(r[cMuni] || '').trim(),
+      barangay: String(r[cBrgy] || '').trim(),
       arcId: r[cArcId] != null ? String(r[cArcId]).trim() : null,
       arcName: r[cArcName] != null ? String(r[cArcName]).trim() : null,
       arcType: r[cType] != null ? String(r[cType]).trim() : null,
@@ -177,8 +179,8 @@ for (const k of allKeys) {
   const b = bgysStats.get(k);
   const p = popStats.get(k);
   if (p) popMatched++;
-  const municipality = (a && a.municipality) || '';
-  const barangay = (a && a.barangay) || '';
+  const municipality = (a && a.municipality) || (b && b.municipality) || '';
+  const barangay = (a && a.barangay) || (b && b.barangay) || '';
   const distributedAreaHa = a ? a.distributedAreaHa : 0;
   const arbCount = a ? a.arbCount : 0;
   const totalAgriLandHa = b ? b.totalAgriLandHa : null;
