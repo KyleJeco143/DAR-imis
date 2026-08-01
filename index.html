@@ -328,7 +328,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [hasRoadMap, setHasRoadMap] = u.useState(false);
 
   u.useEffect(() => {
-    fetch("data/arb-barangay-stats.json")
+    fetch("data/arb-barangay-stats.json", { cache: "no-cache" })
       .then((r) => {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
