@@ -54,15 +54,16 @@ defaults:
 | Variable | Default | Purpose |
 |---|---|---|
 | `REPORT_SHEET_ID` | the known Pangasinan sheet ID | Google Sheet to read |
-| `REPORT_SHEET_RANGE` | `A1:BK5000` | Range/tab to read. If your sheet has multiple tabs, set this to e.g. `'Sheet1'!A1:BK5000` (use the exact tab name shown at the bottom of the Google Sheet). |
+| `REPORT_SHEET_RANGE` | `'REG.1'!A1:BK5000` | Range/tab to read. The sheet has two tabs — `GUIDEPOST` (column documentation) and `REG.1` (the actual data) — so this must point at `REG.1` unless DAR renames it, in which case set this to `'NewTabName'!A1:BK5000` (exact tab name shown at the bottom of the Google Sheet). |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `scripts/report/credentials.json` | Path to the service-account key file |
 
 ## Troubleshooting
 
 - **"Service account credentials not found"** — you haven't done step 5 above.
 - **"Could not find the header row"** — the tab name in `REPORT_SHEET_RANGE`
-  is wrong, or the sheet's layout changed. Open the sheet and confirm column A
-  still starts with `REGION` on the header row.
+  is wrong (most likely DAR renamed the `REG.1` tab), or the sheet's layout
+  changed. Open the sheet, check the tab names at the bottom, and confirm
+  column A still starts with `REGION` on the header row of the data tab.
 - **A `PERMISSION_DENIED` / 403 error from Google** — the sheet hasn't been
   shared with the service account's email (step 6), or the Sheets API isn't
   enabled on the project (step 2).

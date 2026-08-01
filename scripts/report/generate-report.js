@@ -13,8 +13,10 @@ const path = require('path');
 const { google } = require('googleapis');
 
 const SPREADSHEET_ID = process.env.REPORT_SHEET_ID || '1RkSa07tivqCjY5xtJdDiK-adpYEDeFf7GwuMskGG_Oo';
-// If your sheet has a specific tab name, set REPORT_SHEET_RANGE to e.g. "'Sheet1'!A1:BK5000".
-const SHEET_RANGE = process.env.REPORT_SHEET_RANGE || 'A1:BK5000';
+// The sheet has two tabs: "GUIDEPOST" (column documentation) and "REG.1" (the
+// actual data). Override REPORT_SHEET_RANGE if the tab gets renamed, e.g.
+// "'NewTabName'!A1:BK5000".
+const SHEET_RANGE = process.env.REPORT_SHEET_RANGE || "'REG.1'!A1:BK5000";
 const CREDENTIALS_PATH = process.env.GOOGLE_APPLICATION_CREDENTIALS || path.join(__dirname, 'credentials.json');
 
 const TEMPLATE_DIR = path.join(__dirname, 'template');
