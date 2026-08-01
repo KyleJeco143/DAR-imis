@@ -57,6 +57,12 @@ daily at 06:00 Philippine time (`cron: '0 22 * * *'` in
 `REPORT_SHEET_CREDENTIALS` secret is set — no one needs to trigger it. Change
 the cron line if you want a different time.
 
+**5. Automatically, within a couple minutes of a sheet edit:** a small script
+attached to the Google Sheet itself (see "Setting up the near-real-time
+refresh" below) watches the `REG.1` tab and asks GitHub Actions to refresh
+the report ~2 minutes after you stop editing — no manual trigger needed and
+no 24-hour wait for the next scheduled run.
+
 ### Setting up the GitHub Actions option (one-time, optional but required for the automatic daily refresh)
 
 1. Open your local `scripts/report/credentials.json` in a text editor and
@@ -74,6 +80,38 @@ else needs to change or redeploy.
 
 If you want to commit the refreshed report so it's live on your deployed
 site, commit `reports/pangasinan-report.html` as you normally would.
+
+### Setting up the near-real-time refresh (one-time, optional)
+
+This makes the report update ~2 minutes after someone edits the `REG.1`
+tab, instead of waiting for the daily 06:00 run. It requires the GitHub
+Actions option above to already be set up (the `REPORT_SHEET_CREDENTIALS`
+secret), plus one new secret and a script pasted into the sheet itself.
+
+1. **Create a GitHub personal access token** the sheet script will use to
+   trigger the workflow:
+   [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new) →
+   scope it to **this repository only**, grant **Actions: Read and write**
+   permission, nothing else. Copy the generated token — you won't be able to
+   see it again.
+2. **Open the Google Sheet → Extensions → Apps Script.**
+3. Paste the contents of
+   [`scripts/report/apps-script/refresh-trigger.gs`](apps-script/refresh-trigger.gs)
+   into `Code.gs`, replacing whatever's there.
+4. **Project Settings** (gear icon, left sidebar) → **Script Properties** →
+   **Add script property** → name it `GITHUB_TOKEN`, paste the token from
+   step 1 as the value.
+5. Back in the editor, select **`installTrigger`** from the function
+   dropdown at the top and click **Run**. Approve the authorization prompt
+   (it needs permission to make external requests and read sheet edits).
+   This is a one-time step — the trigger persists after you close the tab.
+
+That's it. Now, ~2 minutes after the last edit to the `REG.1` tab, the sheet
+script calls the same `Refresh Infra Report` GitHub Actions workflow used by
+the manual and daily options, which regenerates and commits the report as
+usual. A burst of edits collapses into a single refresh, not one per
+keystroke. Check the repo's **Actions** tab if you want to watch a run in
+progress, or the Apps Script editor's **Executions** log for the sheet side.
 
 ## Configuration
 
