@@ -12,33 +12,103 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
 <style>
+  :root { --ease: cubic-bezier(.4,0,.2,1); --ease-out: cubic-bezier(.16,1,.3,1); }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   html, body { margin: 0; padding: 0; }
-  body { font-family: 'IBM Plex Sans', sans-serif; background: #F8F7ED; color: #0E4D2B; }
-  input:focus, select:focus, textarea:focus { outline: 2px solid #D4A017; outline-offset: 0; }
-  button { font-family: inherit; }
-  button:hover { opacity: 0.85; }
-  button:disabled { opacity: 0.4 !important; cursor: default !important; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: radial-gradient(1200px 600px at 8% -10%, #F1EEDC 0%, #F8F7ED 55%), linear-gradient(160deg, #F8F7ED 0%, #F5F3E6 50%, #F8F7ED 100%);
+    background-attachment: fixed;
+    color: #0E4D2B;
+    animation: imisBodyIn .5s var(--ease-out) both;
+  }
+  @keyframes imisBodyIn { from { opacity: 0; } to { opacity: 1; } }
+
+  input, select, textarea { transition: outline-color .18s var(--ease), box-shadow .18s var(--ease); }
+  input:focus, select:focus, textarea:focus { outline: 2px solid #D4A017; outline-offset: 0; box-shadow: 0 0 0 4px rgba(212,160,23,0.16); }
+
+  button { font-family: inherit; transition: opacity .15s var(--ease), transform .12s var(--ease), box-shadow .15s var(--ease); }
+  button:hover { opacity: 0.85; transform: translateY(-1px); }
+  button:active { transform: translateY(0) scale(0.96); }
+  button:disabled { opacity: 0.4 !important; cursor: default !important; transform: none !important; }
+
   table { border-collapse: collapse; width: 100%; }
   th { text-align: left; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: #4A5A46; padding: 6px 10px; border-bottom: 1.5px solid #0E4D2B; }
   td { padding: 10px; border-bottom: 1px solid #DCE6D6; font-size: 13px; vertical-align: top; }
+  tbody tr { transition: background .15s var(--ease); animation: imisRowIn .32s var(--ease-out) both; }
   tbody tr:hover { background: #F2F5EC; }
+  tbody tr:nth-child(1) { animation-delay: .01s; } tbody tr:nth-child(2) { animation-delay: .02s; }
+  tbody tr:nth-child(3) { animation-delay: .03s; } tbody tr:nth-child(4) { animation-delay: .04s; }
+  tbody tr:nth-child(5) { animation-delay: .05s; } tbody tr:nth-child(6) { animation-delay: .06s; }
+  tbody tr:nth-child(7) { animation-delay: .07s; } tbody tr:nth-child(8) { animation-delay: .08s; }
+  tbody tr:nth-child(9) { animation-delay: .09s; } tbody tr:nth-child(10) { animation-delay: .10s; }
+  tbody tr:nth-child(n+11) { animation-delay: .11s; }
+  @keyframes imisRowIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: #EDE9DA; }
-  ::-webkit-scrollbar-thumb { background: #C3BC9F; border-radius: 5px; }
+  ::-webkit-scrollbar-thumb { background: #C3BC9F; border-radius: 5px; transition: background .2s var(--ease); }
   ::-webkit-scrollbar-thumb:hover { background: #A79F7C; }
-  .imis-card { transition: box-shadow 0.15s ease, transform 0.15s ease; }
-  .imis-card:hover { box-shadow: 0 3px 10px rgba(14,77,43,0.14); transform: translateY(-1px); }
-  .imis-navbtn { transition: background 0.12s ease; }
+
+  .imis-shell { animation: imisFadeIn .4s var(--ease-out) both; }
+  .imis-sidebar { animation: imisSlideInLeft .45s var(--ease-out) both; }
+  .imis-main { animation: imisFadeUp .45s var(--ease-out) .06s both; }
+  @keyframes imisFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes imisSlideInLeft { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes imisFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .imis-card {
+    transition: box-shadow .22s var(--ease), transform .22s var(--ease), border-color .22s var(--ease);
+    animation: imisCardIn .4s var(--ease-out) both;
+    will-change: transform;
+  }
+  .imis-card:hover { box-shadow: 0 10px 26px rgba(14,77,43,0.16), 0 2px 8px rgba(14,77,43,0.08); transform: translateY(-3px); }
+  .imis-card:active { transform: translateY(-1px); }
+  @keyframes imisCardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .imis-grid-2 > .imis-card:nth-child(1), .imis-grid-3 > .imis-card:nth-child(1), .imis-grid-4 > .imis-card:nth-child(1) { animation-delay: .02s; }
+  .imis-grid-2 > .imis-card:nth-child(2), .imis-grid-3 > .imis-card:nth-child(2), .imis-grid-4 > .imis-card:nth-child(2) { animation-delay: .06s; }
+  .imis-grid-2 > .imis-card:nth-child(3), .imis-grid-3 > .imis-card:nth-child(3), .imis-grid-4 > .imis-card:nth-child(3) { animation-delay: .10s; }
+  .imis-grid-2 > .imis-card:nth-child(4), .imis-grid-3 > .imis-card:nth-child(4), .imis-grid-4 > .imis-card:nth-child(4) { animation-delay: .14s; }
+  .imis-grid-3 > .imis-card:nth-child(5), .imis-grid-4 > .imis-card:nth-child(5) { animation-delay: .18s; }
+  .imis-grid-3 > .imis-card:nth-child(6), .imis-grid-4 > .imis-card:nth-child(6) { animation-delay: .22s; }
+  .imis-grid-4 > .imis-card:nth-child(7) { animation-delay: .26s; }
+  .imis-grid-4 > .imis-card:nth-child(8) { animation-delay: .30s; }
+
+  .imis-navbtn {
+    transition: background .16s var(--ease), padding-left .16s var(--ease), color .16s var(--ease);
+    position: relative;
+    overflow: hidden;
+  }
+  .imis-navbtn:hover { padding-left: 4px; }
+  .imis-navbtn::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: #D4A017; transform: scaleY(0); transform-origin: center;
+    transition: transform .18s var(--ease-out);
+  }
+  .imis-navbtn:hover::before { transform: scaleY(1); }
+
+  .imis-titleblock { animation: imisFadeUp .5s var(--ease-out) both; }
+  .imis-titleblock > div { transition: background .18s var(--ease); }
+
   .leaflet-container { background: #F8F7ED !important; font-family: 'IBM Plex Sans', sans-serif; }
   .leaflet-tooltip { background: #FBF9F1; border: 1px solid #BFD0BC; color: #0E4D2B; font-size: 10.5px; border-radius: 3px; box-shadow: none; }
   .brgy-label { font-weight: 700; font-size: 11px; background: #0E4D2B !important; color: #F5F0D8 !important; border: none !important; padding: 2px 6px; }
   .brgy-label::before { border-top-color: #0E4D2B !important; }
   .muni-label { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 10px; color: #0E4D2B; letter-spacing: 0.01em; text-shadow: -1px -1px 0 #F8F7ED, 1px -1px 0 #F8F7ED, -1px 1px 0 #F8F7ED, 1px 1px 0 #F8F7ED, 0 0 4px #F8F7ED; pointer-events: none; }
   .muni-label::before { display: none !important; }
-  .map-title-overlay { position: absolute; top: 10px; left: 0; right: 0; text-align: center; pointer-events: none; z-index: 400; }
+  .map-title-overlay { position: absolute; top: 10px; left: 0; right: 0; text-align: center; pointer-events: none; z-index: 400; animation: imisFadeUp .6s var(--ease-out) both; }
   .map-title-overlay .big { font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 26px; letter-spacing: 0.12em; color: #0E4D2B; opacity: 0.16; text-transform: uppercase; }
   .map-title-overlay .small { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: #0E4D2B; opacity: 0.35; text-transform: uppercase; margin-top: -6px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
   @media (max-width: 860px) {
     .imis-shell { flex-direction: column; }
     .imis-sidebar { width: 100% !important; border-right: none !important; border-bottom: 1.5px solid #0E4D2B; }
