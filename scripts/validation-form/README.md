@@ -37,6 +37,58 @@ the script normalizes these to join the datasets. Check the coverage summary
 after any rebuild — a big drop usually means a source added a new spelling
 variant that needs adding to `MUNI_FIXES`.
 
+## Saving records (Supabase setup)
+
+The Validation Form page can save filled-in forms — barangay, project info,
+and all the manual scoring sections — to a `validation_forms` table, synced
+live the same way every other record type in this app is (Projects,
+Documents, SME records, etc). The table doesn't exist by default; create it
+once in your Supabase project's **SQL Editor**:
+
+```sql
+create table public.validation_forms (
+  id text primary key,
+  municipality text not null,
+  barangay text not null,
+  project_name text,
+  project_type text,
+  physical_target text,
+  project_cost numeric,
+  implementing_agency text,
+  actual_arb numeric default 0,
+  potential_arb numeric default 0,
+  non_arb numeric default 0,
+  manual_adj_arb numeric default 0,
+  manual_adj_pop numeric default 0,
+  org jsonb,
+  imp jsonb,
+  safe jsonb,
+  has_road_map boolean default false,
+  total_score numeric,
+  updated_at timestamptz default now()
+);
+
+alter table public.validation_forms enable row level security;
+
+create policy "Authenticated users can read/write validation forms"
+  on public.validation_forms for all
+  using (auth.role() = 'authenticated')
+  with check (auth.role() = 'authenticated');
+
+alter publication supabase_realtime add table public.validation_forms;
+```
+
+Match this to whatever RLS convention the rest of your tables already use if
+it differs from "any authenticated user can read/write everything" — this app
+doesn't scope records per-user, so that's the same access level `projects`,
+`documents`, etc. already have.
+
+Only the barangay/municipality selection and manually-entered fields are
+stored — the auto-computed CARP/ARB/population figures are recalculated live
+from `arb-barangay-stats.json` on load, so they never go stale relative to
+the underlying dataset. `total_score` is stored as a point-in-time snapshot
+for the saved-forms list, not a live value.
+
 ## Known limitations
 
 - **"Total Agri Land" is a 1993–2015 baseline.** Some barangays have since had
