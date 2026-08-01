@@ -1,0 +1,135 @@
+<title>Infrastructure Projects Accomplishments — DAR Pangasinan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+__FONTS_CSS__
+__POSTER_CSS__
+</style>
+<div class="poster">
+  <div class="banner">
+    <svg class="road" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid slice">
+      <polygon points="0,300 300,300 300,180 0,260" fill="#F5F0D8"></polygon>
+      <polygon points="120,300 180,300 165,180 135,180" fill="#DCE6D6"></polygon>
+      <line x1="150" y1="300" x2="150" y2="185" stroke="#F5F0D8" stroke-width="3" stroke-dasharray="10,8"></line>
+    </svg>
+    <div class="letterhead">
+      <svg class="seal" viewBox="0 0 100 100" aria-label="Department of Agrarian Reform seal">
+        <defs>
+          <path id="sealRingPath" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"></path>
+        </defs>
+        <circle cx="50" cy="50" r="48" fill="#F5F0D8"></circle>
+        <circle cx="50" cy="50" r="40" fill="#0E4D2B" stroke="#D4A017" stroke-width="1.4"></circle>
+        <circle cx="50" cy="50" r="30" fill="none" stroke="#D4A017" stroke-width="0.8"></circle>
+        <text font-size="6.6" fill="#F5F0D8" letter-spacing="0.6" font-family="IBM Plex Sans, sans-serif" font-weight="700">
+          <textPath href="#sealRingPath" startOffset="1%">REPUBLIC OF THE PHILIPPINES • DEPARTMENT OF AGRARIAN REFORM •</textPath>
+        </text>
+        <text x="50" y="46" text-anchor="middle" font-size="17" fill="#F5F0D8" font-family="Roboto Slab, serif" font-weight="700">DAR</text>
+        <text x="50" y="58" text-anchor="middle" font-size="5.2" fill="#D4A017" font-family="IBM Plex Sans, sans-serif" letter-spacing="0.5">1988</text>
+      </svg>
+      <div class="letterhead-text">
+        <div class="lh-republic">Republic of the Philippines</div>
+        <div class="lh-dept">DEPARTMENT OF AGRARIAN REFORM</div>
+        <div class="lh-office">Provincial Office &mdash; Pangasinan</div>
+      </div>
+    </div>
+    <div class="banner-divider"></div>
+    <div class="text">
+      <h1>Infrastructure Projects Accomplishments Report</h1>
+      <div class="period" id="period-label">—</div>
+      <div class="tagline">Monitoring farm-to-market roads, irrigation, and bridge projects serving agrarian reform communities.</div>
+    </div>
+  </div>
+
+  <div class="stat-row" id="stat-row"></div>
+
+  <div class="panel-row">
+    <div class="panel">
+      <div class="panel-head">1. Project Status Overview</div>
+      <div class="panel-body">
+        <div class="donut-wrap">
+          <svg id="donut-svg" width="168" height="168" viewBox="0 0 168 168"></svg>
+          <div class="donut-center"><div class="n" id="donut-total">—</div><div class="l">Total Projects</div></div>
+        </div>
+        <div class="donut-legend" id="donut-legend"></div>
+      </div>
+      <div class="panel-insight"><span class="ic">📈</span><span>Nearly 9 in 10 projects are complete, with a small number still on-going or awaiting a status update in the source sheet.</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">2. Accomplishment by Municipality</div>
+      <div class="panel-body">
+        <svg id="muni-svg" class="combo-chart" viewBox="0 0 560 190" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="panel-insight"><span class="ic">📋</span><span>Sta. Maria, Umingan, and Natividad have the most 2024–present projects on file for Pangasinan.</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">3. Financial Accomplishment</div>
+      <div class="panel-body">
+        <div class="fin-bars">
+          <div class="fin-bar-col">
+            <div class="amt" id="amt-obligated">—</div>
+            <div class="track"><div class="fill" id="bar-obligated" style="background:var(--chart-a);height:0"></div></div>
+            <div class="lbl">Obligated</div>
+          </div>
+          <div class="fin-bar-col">
+            <div class="amt" id="amt-disbursed">—</div>
+            <div class="track"><div class="fill" id="bar-disbursed" style="background:var(--chart-b);height:0"></div></div>
+            <div class="lbl">Disbursed</div>
+          </div>
+        </div>
+        <div class="fin-pct"><b id="fin-pct-value">—</b> disbursed of obligated<br /><span id="fin-pct-n" style="font-size:10px;"></span></div>
+      </div>
+      <div class="panel-insight"><span class="ic">💰</span><span>Disbursement is trailing obligation — typical for projects still mid-construction or awaiting billing.</span></div>
+    </div>
+  </div>
+
+  <div class="trend-panel">
+    <div class="panel-head" style="margin: -14px -18px 14px;">4. Accomplishment Progress Trend</div>
+    <div class="trend-row">
+      <svg id="trend-svg" class="trend-chart" viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="trend-callout">
+        <div class="ic">📈</div>
+        <p>Cumulative share of 2024–present projects with a recorded completion date, by month. Steady progress through mid-2025, based on the physical completion dates on file.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slippage-panel">
+    <div class="panel-head">5. Slippage Watch — Physical vs. Financial Accomplishment</div>
+    <div class="slippage-row">
+      <div class="slippage-chart">
+        <svg id="slip-svg" viewBox="0 0 620 400" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="slippage-side">
+        <div class="slippage-stat">
+          <div class="n" id="slip-avg">—</div>
+          <div class="l">Avg. slippage province-wide<br />(physical % &minus; financial %)</div>
+        </div>
+        <div class="slippage-flagged">
+          <div class="ft-head">Most-flagged projects</div>
+          <div id="slip-flagged-list"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-insight" style="margin:0 14px 14px;"><span class="ic">⚠️</span><span>Slippage here means <b>physical work has outpaced fund disbursement</b> — every flagged project below is <em>further along in construction than in payment</em>, not the reverse. Municipalities in gold/red have completed or nearly-completed projects still awaiting the bulk of their billing to be processed.</span></div>
+  </div>
+
+  <div class="footer-band">Land to the Tiller is our Business</div>
+
+  <details class="methodology">
+    <summary>About this report</summary>
+    <ul>
+      <li>Source: Region I Infrastructure (FMR &amp; Irrigation) Monitoring Form, filtered to Province = Pangasinan and Year Funded ≥ 2024.</li>
+      <li>This is a snapshot, not a live feed — ask Claude to refresh it whenever the source sheet has changed.</li>
+      <li>Obligated/Disbursed figures exclude one row with an obligated amount far exceeding its approved budget (likely a data-entry error in the source sheet) and only count projects with a figure on file.</li>
+      <li>"No status recorded" means the sheet's Physical Status column was left blank for that project — not that work hasn't started.</li>
+      <li><b>Slippage</b> = Physical Accomplishment % &minus; Financial Accomplishment %, both as reported in the source sheet for each project. A positive value means physical construction progress is ahead of the funds disbursed against it (a billing/disbursement lag); it does not mean the project itself is behind schedule. Projects with slippage over 40 points are flagged high-priority for billing follow-up.</li>
+    </ul>
+  </details>
+</div>
+<script>
+window.POSTER_DATA_JSON = __POSTER_DATA__;
+</script>
+<script>
+__POSTER_JS__
+</script>
