@@ -51,7 +51,13 @@ secret is set (see below), go to the repo's **Actions** tab →
 **Refresh Infra Report** → **Run workflow**. It regenerates the report in the
 cloud and commits it straight to `main` — nothing to install or run locally.
 
-### Setting up the GitHub Actions option (one-time, optional)
+**4. Automatically, every morning:** the same workflow also runs on its own
+daily at 06:00 Philippine time (`cron: '0 22 * * *'` in
+`.github/workflows/refresh-report.yml`, UTC), as long as the
+`REPORT_SHEET_CREDENTIALS` secret is set — no one needs to trigger it. Change
+the cron line if you want a different time.
+
+### Setting up the GitHub Actions option (one-time, optional but required for the automatic daily refresh)
 
 1. Open your local `scripts/report/credentials.json` in a text editor and
    copy its entire contents.

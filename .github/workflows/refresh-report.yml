@@ -2,6 +2,9 @@ name: Refresh Infra Report
 
 on:
   workflow_dispatch:
+  schedule:
+    # 06:00 Philippine time (UTC+8) daily = 22:00 UTC the day before.
+    - cron: '0 22 * * *'
 
 permissions:
   contents: write
