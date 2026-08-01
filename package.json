@@ -1,0 +1,17 @@
+{
+  "name": "dar-imis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DAR Pangasinan Infrastructure Monitoring & Information System",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@playwright/test": "^1.62.1",
+    "@supabase/supabase-js": "^2.111.0",
+    "leaflet": "^1.9.4",
+    "xlsx": "^0.18.5"
+  }
+}
