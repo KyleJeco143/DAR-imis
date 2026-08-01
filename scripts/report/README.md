@@ -34,10 +34,33 @@ the key or the sheet owner changes.
 
 ## Usage
 
+Three ways to run it, once the one-time setup above is done:
+
+**1. Command line:**
 ```
 npm install        # first time only
 npm run report
 ```
+
+**2. Double-click, no terminal:** double-click **`Refresh Report.bat`** in the
+repo root (Windows only). It runs the same command in a console window that
+closes itself when done.
+
+**3. From GitHub, no computer needed:** if the repo's `REPORT_SHEET_CREDENTIALS`
+secret is set (see below), go to the repo's **Actions** tab →
+**Refresh Infra Report** → **Run workflow**. It regenerates the report in the
+cloud and commits it straight to `main` — nothing to install or run locally.
+
+### Setting up the GitHub Actions option (one-time, optional)
+
+1. Open your local `scripts/report/credentials.json` in a text editor and
+   copy its entire contents.
+2. On GitHub: repo → **Settings** → **Secrets and variables** → **Actions** →
+   **New repository secret**.
+3. Name it `REPORT_SHEET_CREDENTIALS`, paste the JSON as the value, **Add secret**.
+
+That's it — the "Refresh Infra Report" workflow (Actions tab) is now usable
+by anyone with write access to the repo, no local setup required per person.
 
 This overwrites `reports/pangasinan-report.html`. Refresh the "Infra
 Reports" page in the app (or just re-open it) to see the update — nothing
