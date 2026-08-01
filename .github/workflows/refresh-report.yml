@@ -1,0 +1,38 @@
+name: Refresh Infra Report
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - name: Write service account credentials
+        env:
+          CREDENTIALS_JSON: ${{ secrets.REPORT_SHEET_CREDENTIALS }}
+        run: echo "$CREDENTIALS_JSON" > scripts/report/credentials.json
+
+      - run: npm run report
+
+      - name: Commit the refreshed report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/pangasinan-report.html
+          if git diff --staged --quiet; then
+            echo "No changes to the report — nothing to commit."
+          else
+            git commit -m "Refresh infrastructure accomplishment report"
+            git push
+          fi
