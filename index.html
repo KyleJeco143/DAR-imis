@@ -249,11 +249,11 @@ Error generating stack: `+a.message+`
 
     sectionHeader("C.  Organization of Project Recipients  (25 pts.)", d.orgScore == null ? "" : d.orgScore),
     "<tr>" + td("C.1  On-going DAR Locally-Funded Projects in the Barangay/Agrarian Reform Community", { bold: true, colspan: 4 }) + "</tr>",
-    checkRow("ARCCESS", d.org.arccess),
-    checkRow("APCP / CAP-PBD Window III", d.org.apcp),
-    checkRow("Other Partnership Programs", d.org.otherPartnership),
-    checkRow("Other Livelihood Projects", d.org.otherLivelihood),
-    "<tr>" + td("C.2  Recipient of similar agribusiness projects implemented by other agencies", { bold: true, colspan: 4 }) + "</tr>",
+    checkRow("CRFPS", d.org.arccess),
+    checkRow("Credit (APCP, MICOOP, DAR-CARD, CAP-PBD Window III)", d.org.apcp),
+    checkRow("CP-Wash", d.org.otherPartnership),
+    checkRow("Partnership (VLPCE, Up-Valuing, DAR-CRS, PRME)", d.org.otherLivelihood),
+    "<tr>" + td("C.2  List of similar projects implemented by other agencies", { bold: true, colspan: 4 }) + "</tr>",
     checkRow("Recipient of similar agribusiness projects", d.org.similarAgribusiness),
     spacer(8),
 
@@ -755,12 +755,12 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           u.default.createElement("span", null, "C. Farmers Organization"),
           u.default.createElement("span", { style: VF_ptsBox }, orgScore + " / 25")
         ),
-        u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, marginBottom: 6 } }, "C.1 Recipient of CSF, BDS, AES, APCP and Partnership Programs (20 pts)"),
-        checkbox(org.arccess, (v) => setOrg({ ...org, arccess: v }), "ARCCESS", "5 pts"),
-        checkbox(org.apcp, (v) => setOrg({ ...org, apcp: v }), "APCP / CAP-PBD Window III", "5 pts"),
-        checkbox(org.otherPartnership, (v) => setOrg({ ...org, otherPartnership: v }), "Other Partnership Programs", "5 pts"),
-        checkbox(org.otherLivelihood, (v) => setOrg({ ...org, otherLivelihood: v }), "Other Livelihood Projects", "5 pts"),
-        u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, margin: "10px 0 6px" } }, "C.2 Recipient of similar agribusiness projects of other agencies (5 pts)"),
+        u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, marginBottom: 6 } }, "C.1 On-going DAR Locally-Funded Projects in the Barangay/Agrarian Reform Community (20 pts)"),
+        checkbox(org.arccess, (v) => setOrg({ ...org, arccess: v }), "CRFPS", "5 pts"),
+        checkbox(org.apcp, (v) => setOrg({ ...org, apcp: v }), "Credit (APCP, MICOOP, DAR-CARD, CAP-PBD Window III)", "5 pts"),
+        checkbox(org.otherPartnership, (v) => setOrg({ ...org, otherPartnership: v }), "CP-Wash", "5 pts"),
+        checkbox(org.otherLivelihood, (v) => setOrg({ ...org, otherLivelihood: v }), "Partnership (VLPCE, Up-Valuing, DAR-CRS, PRME)", "5 pts"),
+        u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, margin: "10px 0 6px" } }, "C.2 List of similar projects implemented by other agencies (5 pts)"),
         checkbox(org.similarAgribusiness, (v) => setOrg({ ...org, similarAgribusiness: v }), "Yes, recipient of a similar project", "5 pts")
       ),
 
