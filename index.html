@@ -166,6 +166,8 @@ Error generating stack: `+a.message+`
     ["Population, this barangay", d.ownPop != null ? d.ownPop : "no data"],
     ["ARB households (ARC record)", d.arbHousehold != null ? d.arbHousehold : ""],
     ["Adjacent barangays", d.adjacentList],
+    ["ARBs in adjacent barangays", d.adjArb],
+    ["Population in adjacent barangays", d.adjPop != null ? d.adjPop : "no data"],
     ["Total ARBs (this barangay + adjacent)", d.totalArb],
     ["Total population (this barangay + adjacent)", d.hasAnyPop ? d.totalPop : "no data"],
     [],
@@ -438,6 +440,8 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             adjacentList: adjacency.supported
               ? (adjacentRecords.length > 0 ? adjacentRecords.map((r) => r.barangay + (r.municipality !== muni ? " (" + r.municipality + ")" : "")).join(", ") : "none matched")
               : "not auto-detected for this municipality",
+            adjArb: adjacency.supported ? adjArbFromMap : VF_num(manualAdjArb, 0),
+            adjPop: adjacency.supported ? (adjPopKnown.length > 0 || adjacentRecords.length === 0 ? adjPopFromMap : null) : VF_num(manualAdjPop, 0),
             totalArb, totalPop, hasAnyPop,
             actualArb, potentialArb, nonArb, recipTotal, recipScore,
             org, orgScore, imp, impScore, safe, safeScore, hasRoadMap,
@@ -551,6 +555,10 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           !adjacency.supported && u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 8 } },
             u.default.createElement(VF_Field, { label: "Adjacent barangays — combined ARBs" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjArb, onChange: (e) => setManualAdjArb(Number(e.target.value)) })),
             u.default.createElement(VF_Field, { label: "Adjacent barangays — combined population" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjPop, onChange: (e) => setManualAdjPop(Number(e.target.value)) }))
+          ),
+          u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 4, paddingTop: 10, borderTop: "1px dashed #DCE6D6" } },
+            u.default.createElement(VF_Field, { label: "ARBs in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, (adjacency.supported ? adjArbFromMap : VF_num(manualAdjArb, 0)).toLocaleString())),
+            u.default.createElement(VF_Field, { label: "Population in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, adjacency.supported ? (adjPopKnown.length > 0 || adjacentRecords.length === 0 ? adjPopFromMap.toLocaleString() : "no data") : VF_num(manualAdjPop, 0).toLocaleString()))
           ),
           u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 4, paddingTop: 10, borderTop: "1px dashed #DCE6D6" } },
             u.default.createElement(VF_Field, { label: "Total ARBs (this barangay + adjacent)" }, u.default.createElement("div", { style: { ...VF_readout, fontSize: 15 } }, totalArb.toLocaleString())),
