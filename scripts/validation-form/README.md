@@ -54,6 +54,40 @@ in San Jacinto/Bayambang/Sual) are dropped rather than shown as a fake
 barangay. If a rebuild's population match rate drops, check for a new
 unmatched spelling that belongs in `KNOWN_BARANGAY_ALIASES`.
 
+## Boundary data
+
+Builds `data/barangay-boundaries.json`, the barangay polygon dataset used by
+the Validation Form's adjacent-barangay detection (`VF_findAdjacent` in
+`index.html`). Unlike the sources above, this one has no PII and is safe to
+regenerate from public data — the source files themselves aren't committed
+though, just the compact merged output.
+
+Source: barangay/sub-municipality-level GeoJSON from
+[faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps)
+(MIT licensed), which republishes PSA PSGC-derived boundaries. You need two
+files from that repo's `2023/geojson/` tree:
+
+| File | What it provides |
+|---|---|
+| `provdists/lowres/municities-provdist-105500000.0.001.json` | Pangasinan's 48 municipalities/cities, with PSGC codes (`105500000` is Pangasinan's `adm2_psgc`) |
+| `municities/hires/bgysubmuns-municity-<adm3_psgc>.0.1.json` | One file per municipality, all its barangay/sub-municipality polygons |
+
+```
+PROVDIST_JSON=/path/to/municities-provdist-105500000.0.001.json \
+MUNICITY_BGY_DIR=/path/to/municities/hires \
+node scripts/validation-form/build-barangay-boundaries.js
+```
+
+Output is a flat JSON array of `{ municipality, barangay, rings }`, one entry
+per barangay (`rings` is an array of coordinate rings — more than one for
+MultiPolygon barangays), coordinates rounded to ~1m precision. Municipality
+names are normalized to match the display spelling used in
+`arb-barangay-stats.json` (e.g. "CITY OF ALAMINOS" → "ALAMINOS CITY");
+barangay names are normalized but not alias-mapped, so a name that doesn't
+match a stats record just means that neighbor won't be enriched with
+area/ARB/population figures — see the coverage caveat under "Known
+limitations" below.
+
 ## Saving records (Supabase setup)
 
 The Validation Form page can save filled-in forms — barangay, project info,
@@ -141,13 +175,20 @@ for the saved-forms list, not a live value.
   distributed never exceeds 100 (some barangays have since had more land
   distributed than the baseline recorded). The underlying denominator may
   just be stale; verify on site if a % looks off.
-- **Adjacent-barangay detection only works where the app has real surveyed
-  boundaries** (`rf` in `index.html`, currently ~9 municipalities: Calasiao,
-  Alaminos, Tayug, Infanta, Sta. Maria, Mapandan, Bolinao, Sison, Malasique —
-  and only some barangays within a few of those). Elsewhere, only an
-  approximate municipality outline exists, which isn't precise enough to
-  honestly claim two specific barangays share a border — the app says so and
-  falls back to manual entry rather than guessing.
+- **Adjacent-barangay detection now uses real surveyed boundaries for the
+  whole province** (`data/barangay-boundaries.json`, built by
+  `build-barangay-boundaries.js` below — 1,364 barangay/sub-municipality
+  polygons across all 48 Pangasinan municipalities/cities, sourced from PSA
+  PSGC-derived GeoJSON). Two barangays count as adjacent when their polygons'
+  closest points are within the app's proximity threshold. About 94.5% of
+  `arb-barangay-stats.json` records have a matching polygon (by normalized
+  name) and so get a real surveyed-boundary match; the rest fall back to the
+  old same-ARC-cluster heuristic. Of the polygons themselves, about 76% have
+  a matching stats record — a found neighbor without one just doesn't
+  contribute area/ARB/population figures, the same graceful degradation as
+  before. (This replaces the old `rf` object in `index.html`, which only
+  covered ~9 municipalities and is still used as-is by the separate ARC Map
+  feature.)
 - **Population match rate is ~95%** against the ARB/ARC barangay set after
   the alias cleanup above. The remainder is mostly barangays that appear to
   be filed under the wrong municipality in the source data (e.g. a handful

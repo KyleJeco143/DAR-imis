@@ -420,22 +420,34 @@ const VF_ADJACENCY_DIST_THRESHOLD = 0.006;
 function VF_norm(s) {
   return String(s || "").trim().toUpperCase();
 }
-function VF_findAdjacent(municipality, barangay) {
-  if (typeof rf === "undefined") return { supported: false, neighbors: [] };
-  let muniKey = Object.keys(rf).find((k) => VF_norm(k) === VF_norm(municipality));
-  let muniRf = muniKey ? rf[muniKey] : null;
-  let brgyKey = muniRf ? Object.keys(muniRf).find((k) => VF_norm(k) === VF_norm(barangay)) : null;
-  if (!muniRf || !brgyKey) return { supported: false, neighbors: [] };
-  let target = muniRf[brgyKey];
+// A barangay can be a MultiPolygon (islands, detached parcels) — check every
+// ring of one against every ring of the other and keep the closest pair.
+function VF_ringSetMinDist(ringsA, ringsB) {
+  let best = Infinity;
+  for (const ringA of ringsA) {
+    for (const ringB of ringsB) {
+      const d = VF_ringMinDist(ringA, ringB);
+      if (d < best) best = d;
+    }
+  }
+  return best;
+}
+// `boundaries` is data/barangay-boundaries.json — real barangay polygons for
+// every municipality/city in Pangasinan (built from PSA/PSGC boundary data;
+// see scripts/validation-form/build-barangay-boundaries.js). Distinct from
+// `rf`, the smaller hand-picked OSM boundary set the separate ARC Map feature
+// still uses.
+function VF_findAdjacent(boundaries, municipality, barangay) {
+  if (!boundaries || !boundaries.length) return { supported: false, neighbors: [] };
+  let target = boundaries.find((b) => VF_norm(b.municipality) === VF_norm(municipality) && VF_norm(b.barangay) === VF_norm(barangay));
+  if (!target) return { supported: false, neighbors: [] };
   let neighbors = [];
-  Object.entries(rf).forEach(([otherMuni, brgys]) => {
-    Object.entries(brgys).forEach(([name, ring]) => {
-      if (VF_norm(otherMuni) === VF_norm(municipality) && VF_norm(name) === VF_norm(barangay)) return;
-      if (VF_ringMinDist(target, ring) < VF_ADJACENCY_DIST_THRESHOLD) {
-        neighbors.push({ municipality: otherMuni, barangay: name });
-      }
-    });
-  });
+  for (const b of boundaries) {
+    if (b === target) continue;
+    if (VF_ringSetMinDist(target.rings, b.rings) < VF_ADJACENCY_DIST_THRESHOLD) {
+      neighbors.push({ municipality: b.municipality, barangay: b.barangay });
+    }
+  }
   return { supported: true, neighbors };
 }
 function VF_findStat(stats, municipality, barangay) {
@@ -527,6 +539,7 @@ function VF_toDb(r) {
 function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [stats, setStats] = u.useState(null);
   let [loadErr, setLoadErr] = u.useState(null);
+  let [boundaries, setBoundaries] = u.useState(null);
   let [recordId, setRecordId] = u.useState(null);
   let [muni, setMuni] = u.useState("");
   let [brgy, setBrgy] = u.useState("");
@@ -558,12 +571,22 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       })
       .then(setStats)
       .catch((e) => setLoadErr(String(e)));
+    // Real barangay polygons for adjacency detection, covering all of Pangasinan
+    // (see scripts/validation-form/build-barangay-boundaries.js). Optional — if
+    // this fails to load, adjacency just falls back to the ARC-cluster method.
+    fetch("data/barangay-boundaries.json", { cache: "no-cache" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setBoundaries)
+      .catch(() => setBoundaries([]));
   }, []);
 
   let munis = u.useMemo(() => (stats ? [...new Set(stats.map((s) => s.municipality))].sort() : []), [stats]);
   let brgysInMuni = u.useMemo(() => (stats ? stats.filter((s) => s.municipality === muni).map((s) => s.barangay).sort() : []), [stats, muni]);
   let own = u.useMemo(() => (stats && muni && brgy ? VF_findStat(stats, muni, brgy) : null), [stats, muni, brgy]);
-  let adjacency = u.useMemo(() => (muni && brgy ? VF_findAdjacent(muni, brgy) : { supported: false, neighbors: [] }), [muni, brgy]);
+  let adjacency = u.useMemo(
+    () => (muni && brgy && boundaries ? VF_findAdjacent(boundaries, muni, brgy) : { supported: false, neighbors: [] }),
+    [boundaries, muni, brgy]
+  );
   let boundaryRecords = u.useMemo(
     () => (stats ? adjacency.neighbors.map((n) => VF_findStat(stats, n.municipality, n.barangay)).filter(Boolean) : []),
     [stats, adjacency]
