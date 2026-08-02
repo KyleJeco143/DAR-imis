@@ -139,7 +139,8 @@ Error generating stack: `+a.message+`
   // (bold, borders, fills) — only the paid Pro add-on can. Excel opens an
   // HTML table saved with an .xls extension with full CSS fidelity, so we
   // build one modeled directly on DAR's own "VF FORMS IN DAR" template
-  // (Project Validation Form No. 1, revised October 2014) instead. This
+  // (Project Validation Form No. 1, revised October 2014) instead — matched
+  // cell-for-cell against that workbook, not just the printed layout. This
   // also drops the CDN dependency for this export (works fully offline).
   const yn = (v) => (v ? "☑" : "☐");
   const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -201,8 +202,16 @@ Error generating stack: `+a.message+`
       "<td style=\"border:none;border-bottom:1px solid #444;padding:3px 8px;text-align:center;\">" + esc(value) + "</td>" +
       td("", { noBorder: true }) + "</tr>";
   }
+  // An unscored sub-line under a.-style breakdowns (e.g. LAD / Leasehold) — no data collected, template placeholder only.
+  function blankLine(label) {
+    return "<tr>" + td(label, { colspan: 2, noBorder: true }) +
+      "<td style=\"border:none;border-bottom:1px solid #444;\" colspan=\"2\">&nbsp;</td>" + "</tr>";
+  }
   function checkRow(label, checked) {
     return "<tr>" + td(yn(checked) + "  " + label, { colspan: 4 }) + "</tr>";
+  }
+  function textRow(label) {
+    return "<tr>" + td(label, { colspan: 4 }) + "</tr>";
   }
   function spacer(h) {
     return '<tr><td colspan="4" style="border:none;height:' + (h || 6) + 'px;"></td></tr>';
@@ -215,7 +224,8 @@ Error generating stack: `+a.message+`
     "<tr>" + td("REVISED VALIDATION FORM", { bold: true, align: "center", bg: "#d9d9d9", colspan: 4 }) + "</tr>",
     spacer(4),
     "<tr>" + td("PROJECT VALIDATION FORM NO. 1", { bold: true, align: "center", size: "13pt", color: NAVY, colspan: 4 }) + "</tr>",
-    "<tr>" + td("For Infrastructure Projects", { italic: true, align: "center", color: MAROON, colspan: 3 }) +
+    "<tr>" + td("For Infrastructure Projects", { italic: true, align: "center", color: MAROON, colspan: 4 }) + "</tr>",
+    "<tr>" + td("", { noBorder: true, colspan: 3 }) +
       td(d.totalScore == null ? "" : Math.round(d.totalScore * 10) / 10, { italic: true, bold: true, align: "center", noBorder: true }) + "</tr>",
     spacer(8),
 
@@ -227,7 +237,7 @@ Error generating stack: `+a.message+`
     infoRow("4. Project Type", d.projectType || ""),
     infoCaption("(e.g., Irrigation, Farm-to-Market Road, CSF)"),
     infoRow("5. Physical Target", d.physicalTarget || ""),
-    infoCaption("(e.g., Service area - hectare, Length - km./lm, or Units)"),
+    infoCaption("(e.g., Service area - hectare, Length - km./lm., or Units)"),
     infoRow("6. Scope of Work  2/", ""),
     infoRow("7. Estimated Total Project Cost (PhP)", peso(d.projectCost)),
     infoRow("8. Implementing Agency", d.implementingAgency || ""),
@@ -236,6 +246,12 @@ Error generating stack: `+a.message+`
     sectionHeader("B.  Land Tenure Status  (20 pts.)", null),
     colHeads("Hectares", TEAL),
     scoredRow("1. Total CARP Area  3/", d.distributedAreaHa, d.carpScore),
+    blankLine("a. Distributed and/or Leasehold Area"),
+    blankLine("     LAD"),
+    blankLine("     Leasehold"),
+    blankLine("b. Being processed  4/"),
+    blankLine("c. To be covered within 12 months"),
+    blankLine("d. To be covered beyond 12 months"),
     scoredRow("2. Non-CARP Area  5/", d.nonCarpAreaHa != null ? d.nonCarpAreaHa : "", null),
     spacer(8),
 
@@ -248,40 +264,41 @@ Error generating stack: `+a.message+`
     spacer(8),
 
     sectionHeader("C.  Organization of Project Recipients  (25 pts.)", d.orgScore == null ? "" : d.orgScore),
-    "<tr>" + td("C.1  On-going DAR Locally-Funded Projects in the Barangay/Agrarian Reform Community", { bold: true, colspan: 4 }) + "</tr>",
+    "<tr>" + td("C.1  On-going DAR Locally-Funded Projects in the Barangay/Agrarian Reform Community  (20 pts.)", { bold: true, colspan: 4 }) + "</tr>",
     checkRow("CRFPS", d.org.arccess),
     checkRow("Credit (APCP, MICOOP, DAR-CARD, CAP-PBD Window III)", d.org.apcp),
     checkRow("CP-Wash", d.org.otherPartnership),
     checkRow("Partnership (VLPCE, Up-Valuing, DAR-CRS, PRME)", d.org.otherLivelihood),
-    "<tr>" + td("C.2  List of similar projects implemented by other agencies", { bold: true, colspan: 4 }) + "</tr>",
+    textRow("5. ARISP III  (not tracked by this app — verify on site)"),
+    "<tr>" + td("C.2  List of similar projects implemented by other agencies  (5 pts.)", { bold: true, colspan: 4 }) + "</tr>",
     checkRow("Recipient of similar agribusiness projects", d.org.similarAgribusiness),
+    "<tr>" + td("Name/Type of Project", { italic: true, size: "9pt", colspan: 2 }) +
+      td("Implementing Agency", { italic: true, size: "9pt", colspan: 2 }) + "</tr>",
+    blankLine("1."),
     spacer(8),
 
     sectionHeader("D.  Importance / Necessity of the Project  (30 pts.)", d.impScore == null ? "" : d.impScore),
-    scoredRow("Will serve production areas (0–10)", "", d.imp.production),
-    scoredRow("Will serve post-harvest / processing (0–10)", "", d.imp.postHarvest),
-    scoredRow("Connects to existing brgy/municipal/main road (0–10)", "", d.imp.connectivity),
+    "<tr>" + td("Will serve production areas", { colspan: 2 }) +
+      td("Production Area covered (has.)", { italic: true, size: "9pt", colspan: 1 }) +
+      td(d.imp.production, { bold: true, align: "center", bg: "#fffbe6" }) + "</tr>",
+    scoredRow("Will serve post harvest and processing facilities", "", d.imp.postHarvest),
+    scoredRow("Will connect to existing Barangay or Municipal or Main", "", d.imp.connectivity),
     spacer(8),
 
     sectionHeader("E.  Safeguards  (5 pts.)", d.safeScore == null ? "" : d.safeScore),
-    checkRow("No road right-of-way (ROW) problem", d.safe.noRow),
-    checkRow("No adverse environmental impact", d.safe.noEnviro),
+    checkRow("1. No road ROW problem", d.safe.noRow),
+    checkRow("2. No adverse environmental impact", d.safe.noEnviro),
     spacer(8),
 
-    sectionHeader("F.  Prerequisite", null),
-    checkRow("With clear road network map", d.hasRoadMap),
+    sectionHeader("F.  Prerequisite:", null),
+    checkRow("With clear road network Map", d.hasRoadMap),
     spacer(8),
 
     sectionHeader("G.  Justification/Notes  (Use additional pages if necessary)", null),
     "<tr>" + td(d.justification || "", { colspan: 4 }) + "</tr>",
     '<tr><td colspan="4" style="border:none;border-bottom:1px solid #444;height:16px;"></td></tr>',
     '<tr><td colspan="4" style="border:none;border-bottom:1px solid #444;height:16px;"></td></tr>',
-    spacer(10),
-
-    "<tr>" + td("TOTAL SCORE", { bold: true, size: "12pt", colspan: 2 }) +
-      td(d.totalScore == null ? "" : Math.round(d.totalScore * 10) / 10, { bold: true, align: "center", bg: "#fffbe6", size: "12pt" }) +
-      td("/ 100", { align: "center", bold: true }) + "</tr>",
-    spacer(10),
+    spacer(14),
 
     sectionHeader("ARBs and Population  (supplementary — not part of the official score)", null),
     infoRow("ARBs in this barangay (on the ARC)", blank(d.ownArb)),
@@ -305,13 +322,13 @@ Error generating stack: `+a.message+`
     "<tr>" + td(d.notedBy || "", { align: "center", colspan: 2 }) +
       td("", { colspan: 2, noBorder: true }) + "</tr>",
     "<tr>" + td("OIC-CARPO", { italic: true, align: "center", size: "9pt", colspan: 2 }) +
-      td("PARCCOM Representative", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
+      td("(PARCCOM Representative)", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
     spacer(8),
     "<tr>" + td(d.notedByParpo || "", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
-    "<tr>" + td("PARPO II", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
+    "<tr>" + td("PARPO I", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
     spacer(8),
     "<tr>" + td(d.notedByRegional || "", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
-    "<tr>" + td("Regional Director", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
+    "<tr>" + td("PARPO II", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
   ].join("\n");
 
   const html =
@@ -813,8 +830,8 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
         u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Noted By:"),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 } },
           u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — OIC-CARPO" }),
-          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByParpo, onChange: (e) => setNotedByParpo(e.target.value), placeholder: "Name — PARPO II" }),
-          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByRegional, onChange: (e) => setNotedByRegional(e.target.value), placeholder: "Name — Regional Director" })
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByParpo, onChange: (e) => setNotedByParpo(e.target.value), placeholder: "Name — PARPO I" }),
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByRegional, onChange: (e) => setNotedByRegional(e.target.value), placeholder: "Name — PARPO II" })
         )
       )
     )
