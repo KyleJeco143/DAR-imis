@@ -84,6 +84,8 @@ create table public.validation_forms (
   justification text,
   validated_by text,
   noted_by text,
+  noted_by_parpo text,
+  noted_by_regional text,
   total_score numeric,
   updated_at timestamptz default now()
 );
@@ -111,6 +113,17 @@ alter table public.validation_forms
   add column if not exists justification text,
   add column if not exists validated_by text,
   add column if not exists noted_by text;
+```
+
+**If you already created the table before the Noted By block had all three
+signatories** (it originally had just one `noted_by` field; the export now
+shows OIC-CARPO, PARPO II, and Regional Director as separate blank/editable
+lines matching the official form), add the other two with:
+
+```sql
+alter table public.validation_forms
+  add column if not exists noted_by_parpo text,
+  add column if not exists noted_by_regional text;
 ```
 
 Only the barangay/municipality selection and manually-entered fields are
