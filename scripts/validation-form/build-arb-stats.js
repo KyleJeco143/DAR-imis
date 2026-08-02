@@ -179,8 +179,13 @@ for (const k of allKeys) {
   const b = bgysStats.get(k);
   const p = popStats.get(k);
   if (p) popMatched++;
-  const municipality = (a && a.municipality) || (b && b.municipality) || '';
-  const barangay = (a && a.barangay) || (b && b.barangay) || '';
+  // Uppercase for display too (not the full normMuni() join-key transform,
+  // which also strips "City" suffixes and rewrites abbreviations — fine for
+  // matching, wrong for display). This still fixes the real bug: the same
+  // municipality/barangay no longer splits into case-variant duplicates
+  // depending on which source (ARB list vs Bgys sheet) contributed it.
+  const municipality = normBrgy((a && a.municipality) || (b && b.municipality) || '');
+  const barangay = normBrgy((a && a.barangay) || (b && b.barangay) || '');
   const distributedAreaHa = a ? a.distributedAreaHa : 0;
   const arbCount = a ? a.arbCount : 0;
   const totalAgriLandHa = b ? b.totalAgriLandHa : null;
