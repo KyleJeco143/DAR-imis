@@ -210,9 +210,6 @@ Error generating stack: `+a.message+`
   function checkRow(label, checked) {
     return "<tr>" + td(yn(checked) + "  " + label, { colspan: 4 }) + "</tr>";
   }
-  function textRow(label) {
-    return "<tr>" + td(label, { colspan: 4 }) + "</tr>";
-  }
   function spacer(h) {
     return '<tr><td colspan="4" style="border:none;height:' + (h || 6) + 'px;"></td></tr>';
   }
@@ -269,7 +266,7 @@ Error generating stack: `+a.message+`
     checkRow("Credit (APCP, MICOOP, DAR-CARD, CAP-PBD Window III)", d.org.apcp),
     checkRow("CP-Wash", d.org.otherPartnership),
     checkRow("Partnership (VLPCE, Up-Valuing, DAR-CRS, PRME)", d.org.otherLivelihood),
-    textRow("5. ARISP III  (not tracked by this app — verify on site)"),
+    checkRow("ARISP III", d.org.arispIII),
     "<tr>" + td("C.2  List of similar projects implemented by other agencies  (5 pts.)", { bold: true, colspan: 4 }) + "</tr>",
     checkRow("Recipient of similar agribusiness projects", d.org.similarAgribusiness),
     "<tr>" + td("Name/Type of Project", { italic: true, size: "9pt", colspan: 2 }) +
@@ -433,7 +430,7 @@ function VF_fromDb(r) {
     nonArb: r.non_arb,
     manualAdjArb: r.manual_adj_arb,
     manualAdjPop: r.manual_adj_pop,
-    org: r.org || { arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, similarAgribusiness: false },
+    org: r.org || { arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, arispIII: false, similarAgribusiness: false },
     imp: r.imp || { production: 0, postHarvest: 0, connectivity: 0 },
     safe: r.safe || { noRow: false, noEnviro: false },
     hasRoadMap: r.has_road_map,
@@ -490,7 +487,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [actualArb, setActualArb] = u.useState(0);
   let [potentialArb, setPotentialArb] = u.useState(0);
   let [nonArb, setNonArb] = u.useState(0);
-  let [org, setOrg] = u.useState({ arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, similarAgribusiness: false });
+  let [org, setOrg] = u.useState({ arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, arispIII: false, similarAgribusiness: false });
   let [imp, setImp] = u.useState({ production: 0, postHarvest: 0, connectivity: 0 });
   let [safe, setSafe] = u.useState({ noRow: false, noEnviro: false });
   let [hasRoadMap, setHasRoadMap] = u.useState(false);
@@ -544,7 +541,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     ? Math.min(20, Math.round(((VF_num(actualArb, 0) / recipTotal) * 20 + (VF_num(potentialArb, 0) / recipTotal) * 15 + (VF_num(nonArb, 0) / recipTotal) * 10) * 10) / 10)
     : 0;
 
-  let orgScore = (org.arccess ? 5 : 0) + (org.apcp ? 5 : 0) + (org.otherPartnership ? 5 : 0) + (org.otherLivelihood ? 5 : 0) + (org.similarAgribusiness ? 5 : 0);
+  let orgScore = (org.arccess ? 4 : 0) + (org.apcp ? 4 : 0) + (org.otherPartnership ? 4 : 0) + (org.otherLivelihood ? 4 : 0) + (org.arispIII ? 4 : 0) + (org.similarAgribusiness ? 5 : 0);
   let impScore = Math.min(10, VF_num(imp.production, 0)) + Math.min(10, VF_num(imp.postHarvest, 0)) + Math.min(10, VF_num(imp.connectivity, 0));
   let safeScore = (safe.noRow ? 2.5 : 0) + (safe.noEnviro ? 2.5 : 0);
 
@@ -556,7 +553,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setManualAdjArb(0); setManualAdjPop(0);
     setProjectName(""); setProjectType(""); setPhysicalTarget(""); setProjectCost(""); setImplementingAgency("");
     setActualArb(0); setPotentialArb(0); setNonArb(0);
-    setOrg({ arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, similarAgribusiness: false });
+    setOrg({ arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, arispIII: false, similarAgribusiness: false });
     setImp({ production: 0, postHarvest: 0, connectivity: 0 });
     setSafe({ noRow: false, noEnviro: false });
     setHasRoadMap(false);
@@ -780,10 +777,11 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           u.default.createElement("span", { style: VF_ptsBox }, orgScore + " / 25")
         ),
         u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, marginBottom: 6 } }, "C.1 On-going DAR Locally-Funded Projects in the Barangay/Agrarian Reform Community (20 pts)"),
-        checkbox(org.arccess, (v) => setOrg({ ...org, arccess: v }), "CRFPS", "5 pts"),
-        checkbox(org.apcp, (v) => setOrg({ ...org, apcp: v }), "Credit (APCP, MICOOP, DAR-CARD, CAP-PBD Window III)", "5 pts"),
-        checkbox(org.otherPartnership, (v) => setOrg({ ...org, otherPartnership: v }), "CP-Wash", "5 pts"),
-        checkbox(org.otherLivelihood, (v) => setOrg({ ...org, otherLivelihood: v }), "Partnership (VLPCE, Up-Valuing, DAR-CRS, PRME)", "5 pts"),
+        checkbox(org.arccess, (v) => setOrg({ ...org, arccess: v }), "CRFPS", "4 pts"),
+        checkbox(org.apcp, (v) => setOrg({ ...org, apcp: v }), "Credit (APCP, MICOOP, DAR-CARD, CAP-PBD Window III)", "4 pts"),
+        checkbox(org.otherPartnership, (v) => setOrg({ ...org, otherPartnership: v }), "CP-Wash", "4 pts"),
+        checkbox(org.otherLivelihood, (v) => setOrg({ ...org, otherLivelihood: v }), "Partnership (VLPCE, Up-Valuing, DAR-CRS, PRME)", "4 pts"),
+        checkbox(org.arispIII, (v) => setOrg({ ...org, arispIII: v }), "ARISP III", "4 pts"),
         u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, margin: "10px 0 6px" } }, "C.2 List of similar projects implemented by other agencies (5 pts)"),
         checkbox(org.similarAgribusiness, (v) => setOrg({ ...org, similarAgribusiness: v }), "Yes, recipient of a similar project", "5 pts")
       ),
