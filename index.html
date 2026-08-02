@@ -343,21 +343,27 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let brgysInMuni = u.useMemo(() => (stats ? stats.filter((s) => s.municipality === muni).map((s) => s.barangay).sort() : []), [stats, muni]);
   let own = u.useMemo(() => (stats && muni && brgy ? VF_findStat(stats, muni, brgy) : null), [stats, muni, brgy]);
   let adjacency = u.useMemo(() => (muni && brgy ? VF_findAdjacent(muni, brgy) : { supported: false, neighbors: [] }), [muni, brgy]);
-  let adjacentRecords = u.useMemo(
+  let boundaryRecords = u.useMemo(
     () => (stats ? adjacency.neighbors.map((n) => VF_findStat(stats, n.municipality, n.barangay)).filter(Boolean) : []),
     [stats, adjacency]
   );
+  let arcRecords = u.useMemo(
+    () => (stats && own && !adjacency.supported && own.arcId ? stats.filter((s) => s.arcId === own.arcId && !(s.municipality === muni && s.barangay === brgy)) : []),
+    [stats, own, adjacency, muni, brgy]
+  );
+  let adjMode = adjacency.supported ? "boundary" : arcRecords.length > 0 ? "arc" : "none";
+  let adjacentRecords = adjMode === "boundary" ? boundaryRecords : adjMode === "arc" ? arcRecords : [];
 
   let ownArb = own ? own.arbCount : 0;
   let adjArbFromMap = adjacentRecords.reduce((sum, r) => sum + (r.arbCount || 0), 0);
-  let totalArb = ownArb + (adjacency.supported ? adjArbFromMap : VF_num(manualAdjArb, 0));
+  let totalArb = ownArb + adjArbFromMap + VF_num(manualAdjArb, 0);
 
   let ownPop = own ? own.population : null;
   let adjPopKnown = adjacentRecords.filter((r) => r.population != null);
   let adjPopFromMap = adjPopKnown.reduce((sum, r) => sum + r.population, 0);
-  let missingAdjPop = adjacency.supported && adjacentRecords.length > adjPopKnown.length;
-  let totalPop = (ownPop || 0) + (adjacency.supported ? adjPopFromMap : VF_num(manualAdjPop, 0));
-  let hasAnyPop = ownPop != null || adjPopKnown.length > 0 || (!adjacency.supported && manualAdjPop);
+  let missingAdjPop = adjMode !== "none" && adjacentRecords.length > adjPopKnown.length;
+  let totalPop = (ownPop || 0) + adjPopFromMap + VF_num(manualAdjPop, 0);
+  let hasAnyPop = ownPop != null || adjPopKnown.length > 0 || manualAdjPop;
 
   let carpScore = own && own.carpAreaScore != null ? own.carpAreaScore : own && own.distributedAreaHa > 0 ? 5 : 0;
   let nonCarpAreaHa = own && own.totalAgriLandHa != null ? Math.max(0, own.totalAgriLandHa - own.distributedAreaHa) : null;
@@ -437,11 +443,12 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             carpScore,
             ownArb, ownPop,
             arbHousehold: own && own.arbHousehold,
-            adjacentList: adjacency.supported
-              ? (adjacentRecords.length > 0 ? adjacentRecords.map((r) => r.barangay + (r.municipality !== muni ? " (" + r.municipality + ")" : "")).join(", ") : "none matched")
-              : "not auto-detected for this municipality",
-            adjArb: adjacency.supported ? adjArbFromMap : VF_num(manualAdjArb, 0),
-            adjPop: adjacency.supported ? (adjPopKnown.length > 0 || adjacentRecords.length === 0 ? adjPopFromMap : null) : VF_num(manualAdjPop, 0),
+            adjacentList: adjMode === "none"
+              ? "not auto-detected for this barangay"
+              : (adjMode === "arc" ? "same ARC cluster (" + own.arcName + "): " : "surveyed boundary match: ") +
+                (adjacentRecords.length > 0 ? adjacentRecords.map((r) => r.barangay + (r.municipality !== muni ? " (" + r.municipality + ")" : "")).join(", ") : "none matched"),
+            adjArb: adjArbFromMap + VF_num(manualAdjArb, 0),
+            adjPop: (adjPopKnown.length > 0 || manualAdjPop) ? adjPopFromMap + VF_num(manualAdjPop, 0) : null,
             totalArb, totalPop, hasAnyPop,
             actualArb, potentialArb, nonArb, recipTotal, recipScore,
             org, orgScore, imp, impScore, safe, safeScore, hasRoadMap,
@@ -542,23 +549,29 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             u.default.createElement(VF_Field, { label: "Population, this barangay" }, u.default.createElement("div", { style: VF_readout }, ownPop != null ? ownPop.toLocaleString() : "no data")),
             u.default.createElement(VF_Field, { label: "ARB households (ARC record)" }, u.default.createElement("div", { style: VF_readout }, own.arbHousehold != null ? own.arbHousehold.toLocaleString() : "—"))
           ),
-          adjacency.supported
-            ? u.default.createElement(u.default.Fragment, null,
-                u.default.createElement("div", { style: { fontSize: 12.5, marginBottom: 6 } },
-                  adjacentRecords.length > 0
-                    ? "Adjacent barangays (surveyed boundary match): " + adjacentRecords.map((r) => r.barangay + (r.municipality !== muni ? " (" + r.municipality + ")" : "")).join(", ")
-                    : "No adjacent barangays matched within the surveyed boundary data."
-                ),
-                missingAdjPop && u.default.createElement("div", { style: { fontSize: 11.5, color: "#791F1F", marginBottom: 6 } }, "Population is missing for one or more adjacent barangays — the total below undercounts them.")
-              )
-            : u.default.createElement("div", { style: { fontSize: 12.5, color: "#7C8A78", marginBottom: 8 } }, "This municipality doesn't have surveyed barangay boundary data on file, so adjacent barangays can't be auto-detected. Enter combined totals for the neighboring barangays yourself:"),
-          !adjacency.supported && u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 8 } },
-            u.default.createElement(VF_Field, { label: "Adjacent barangays — combined ARBs" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjArb, onChange: (e) => setManualAdjArb(Number(e.target.value)) })),
-            u.default.createElement(VF_Field, { label: "Adjacent barangays — combined population" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjPop, onChange: (e) => setManualAdjPop(Number(e.target.value)) }))
+          adjMode === "boundary" && u.default.createElement(u.default.Fragment, null,
+            u.default.createElement("div", { style: { fontSize: 12.5, marginBottom: 6 } },
+              adjacentRecords.length > 0
+                ? "Adjacent barangays (surveyed boundary match): " + adjacentRecords.map((r) => r.barangay + (r.municipality !== muni ? " (" + r.municipality + ")" : "")).join(", ")
+                : "No adjacent barangays matched within the surveyed boundary data."
+            ),
+            missingAdjPop && u.default.createElement("div", { style: { fontSize: 11.5, color: "#791F1F", marginBottom: 6 } }, "Population is missing for one or more adjacent barangays — the total below undercounts them.")
+          ),
+          adjMode === "arc" && u.default.createElement(u.default.Fragment, null,
+            u.default.createElement("div", { style: { fontSize: 12.5, marginBottom: 6 } },
+              "Adjacent barangays (same ARC cluster — \"" + own.arcName + "\"; no surveyed boundaries for this municipality, so barangays grouped under the same ARC are used as a proxy): " +
+              adjacentRecords.map((r) => r.barangay + (r.municipality !== muni ? " (" + r.municipality + ")" : "")).join(", ")
+            ),
+            missingAdjPop && u.default.createElement("div", { style: { fontSize: 11.5, color: "#791F1F", marginBottom: 6 } }, "Population is missing for one or more of these barangays — the total below undercounts them.")
+          ),
+          adjMode === "none" && u.default.createElement("div", { style: { fontSize: 12.5, color: "#7C8A78", marginBottom: 8 } }, "No surveyed boundary data or ARC grouping is available for this barangay, so adjacent barangays can't be auto-detected. Add combined totals for the neighboring barangays yourself below."),
+          u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 8 } },
+            u.default.createElement(VF_Field, { label: adjMode === "none" ? "Adjacent barangays — combined ARBs" : "Additional ARBs (not already counted above)" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjArb, onChange: (e) => setManualAdjArb(Number(e.target.value)) })),
+            u.default.createElement(VF_Field, { label: adjMode === "none" ? "Adjacent barangays — combined population" : "Additional population (not already counted above)" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjPop, onChange: (e) => setManualAdjPop(Number(e.target.value)) }))
           ),
           u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 4, paddingTop: 10, borderTop: "1px dashed #DCE6D6" } },
-            u.default.createElement(VF_Field, { label: "ARBs in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, (adjacency.supported ? adjArbFromMap : VF_num(manualAdjArb, 0)).toLocaleString())),
-            u.default.createElement(VF_Field, { label: "Population in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, adjacency.supported ? (adjPopKnown.length > 0 || adjacentRecords.length === 0 ? adjPopFromMap.toLocaleString() : "no data") : VF_num(manualAdjPop, 0).toLocaleString()))
+            u.default.createElement(VF_Field, { label: "ARBs in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, (adjArbFromMap + VF_num(manualAdjArb, 0)).toLocaleString())),
+            u.default.createElement(VF_Field, { label: "Population in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, (adjPopKnown.length > 0 || manualAdjPop) ? (adjPopFromMap + VF_num(manualAdjPop, 0)).toLocaleString() : "no data"))
           ),
           u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 4, paddingTop: 10, borderTop: "1px dashed #DCE6D6" } },
             u.default.createElement(VF_Field, { label: "Total ARBs (this barangay + adjacent)" }, u.default.createElement("div", { style: { ...VF_readout, fontSize: 15 } }, totalArb.toLocaleString())),
