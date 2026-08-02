@@ -64,6 +64,9 @@ create table public.validation_forms (
   imp jsonb,
   safe jsonb,
   has_road_map boolean default false,
+  justification text,
+  validated_by text,
+  noted_by text,
   total_score numeric,
   updated_at timestamptz default now()
 );
@@ -82,6 +85,16 @@ Match this to whatever RLS convention the rest of your tables already use if
 it differs from "any authenticated user can read/write everything" — this app
 doesn't scope records per-user, so that's the same access level `projects`,
 `documents`, etc. already have.
+
+**If you already created the table before `justification`/`validated_by`/
+`noted_by` existed**, add them with:
+
+```sql
+alter table public.validation_forms
+  add column if not exists justification text,
+  add column if not exists validated_by text,
+  add column if not exists noted_by text;
+```
 
 Only the barangay/municipality selection and manually-entered fields are
 stored — the auto-computed CARP/ARB/population figures are recalculated live

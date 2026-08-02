@@ -199,7 +199,12 @@ Error generating stack: `+a.message+`
     [],
     ["F. Prerequisite — clear road network map attached", yn(d.hasRoadMap), "not scored"],
     [],
+    ["G. Justification / Notes", d.justification || ""],
+    [],
     ["TOTAL SCORE", "", d.totalScore, "/ 100"],
+    [],
+    ["Validated By", d.validatedBy || ""],
+    ["Noted By", d.notedBy || ""],
   ];
   const ws = XLSX.utils.aoa_to_sheet(rows);
   ws["!cols"] = [{ wch: 46 }, { wch: 30 }, { wch: 10 }, { wch: 8 }];
@@ -265,6 +270,8 @@ const VF_label = { fontSize: 11.5, color: "#4A5A46", marginBottom: 3 };
 const VF_input = { width: "100%", padding: "7px 9px", border: "1px solid #C7CFC2", borderRadius: 3, fontSize: 13, fontFamily: "inherit" };
 const VF_readout = { fontSize: 13, fontWeight: 600 };
 const VF_pts = { fontSize: 12, fontWeight: 700, color: "#0E4D2B", background: "#EAF3E1", padding: "2px 8px", borderRadius: 12 };
+// Bordered "Points" box, matching the boxed score cells on the paper form.
+const VF_ptsBox = { display: "inline-block", minWidth: 34, textAlign: "center", border: "1.5px solid #0E4D2B", borderRadius: 2, padding: "2px 10px", fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: 13, color: "#0E4D2B", background: "#fff" };
 
 function VF_Field({ label, children }) {
   return u.default.createElement("div", null, u.default.createElement("div", { style: VF_label }, label), children);
@@ -289,6 +296,9 @@ function VF_fromDb(r) {
     imp: r.imp || { production: 0, postHarvest: 0, connectivity: 0 },
     safe: r.safe || { noRow: false, noEnviro: false },
     hasRoadMap: r.has_road_map,
+    justification: r.justification,
+    validatedBy: r.validated_by,
+    notedBy: r.noted_by,
     totalScore: r.total_score,
     updatedAt: r.updated_at,
   };
@@ -312,6 +322,9 @@ function VF_toDb(r) {
     imp: r.imp,
     safe: r.safe,
     has_road_map: !!r.hasRoadMap,
+    justification: r.justification || null,
+    validated_by: r.validatedBy || null,
+    noted_by: r.notedBy || null,
     total_score: r.totalScore,
     updated_at: new Date().toISOString(),
   };
@@ -336,6 +349,9 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [imp, setImp] = u.useState({ production: 0, postHarvest: 0, connectivity: 0 });
   let [safe, setSafe] = u.useState({ noRow: false, noEnviro: false });
   let [hasRoadMap, setHasRoadMap] = u.useState(false);
+  let [justification, setJustification] = u.useState("");
+  let [validatedBy, setValidatedBy] = u.useState("");
+  let [notedBy, setNotedBy] = u.useState("");
 
   u.useEffect(() => {
     fetch("data/arb-barangay-stats.json", { cache: "no-cache" })
@@ -397,6 +413,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setImp({ production: 0, postHarvest: 0, connectivity: 0 });
     setSafe({ noRow: false, noEnviro: false });
     setHasRoadMap(false);
+    setJustification(""); setValidatedBy(""); setNotedBy("");
   };
   let loadRecord = (r) => {
     setRecordId(r.id);
@@ -406,6 +423,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setProjectCost(r.projectCost != null ? r.projectCost : ""); setImplementingAgency(r.implementingAgency || "");
     setActualArb(r.actualArb || 0); setPotentialArb(r.potentialArb || 0); setNonArb(r.nonArb || 0);
     setOrg(r.org); setImp(r.imp); setSafe(r.safe); setHasRoadMap(!!r.hasRoadMap);
+    setJustification(r.justification || ""); setValidatedBy(r.validatedBy || ""); setNotedBy(r.notedBy || "");
   };
   let saveForm = () => {
     if (!muni || !brgy) return;
@@ -415,6 +433,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       projectName, projectType, physicalTarget, projectCost, implementingAgency,
       actualArb, potentialArb, nonArb, manualAdjArb, manualAdjPop,
       org, imp, safe, hasRoadMap,
+      justification, validatedBy, notedBy,
       totalScore: Math.round(totalScore * 10) / 10,
     };
     saveRecord(record);
@@ -433,8 +452,13 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     );
 
   return u.default.createElement("div", { style: { maxWidth: 880 } },
-    u.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 } },
-      u.default.createElement("h2", { style: { margin: 0, fontSize: 20, color: "#0E4D2B" } }, "Infrastructure Project Validation Form"),
+    u.default.createElement("div", { style: { textAlign: "center", marginBottom: 16 } },
+      u.default.createElement("div", { style: { fontSize: 10.5, fontWeight: 700, letterSpacing: "0.08em", color: "#7C8A78", textTransform: "uppercase" } }, "Revised Validation Form"),
+      u.default.createElement("div", { style: { display: "inline-block", border: "2px solid #0E4D2B", padding: "7px 28px", fontFamily: "'Roboto Slab', serif", fontWeight: 700, fontSize: 17, color: "#0E4D2B", margin: "5px 0 3px", letterSpacing: "0.02em" } }, "PROJECT VALIDATION FORM NO. 1"),
+      u.default.createElement("div", { style: { fontStyle: "italic", fontSize: 12.5, color: "#4A5A46" } }, "For Infrastructure Projects")
+    ),
+    u.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 10 } },
+      u.default.createElement("h2", { style: { margin: 0, fontSize: 16, color: "#4A5A46", fontWeight: 600 } }, muni && brgy ? "Brgy. " + brgy + ", " + muni : "Infrastructure Project Validation Form"),
       u.default.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } },
         u.default.createElement("div", { style: VF_pts }, "Total: " + Math.round(totalScore * 10) / 10 + " / 100"),
         u.default.createElement("button", {
@@ -460,6 +484,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             totalArb, totalPop, hasAnyPop,
             actualArb, potentialArb, nonArb, recipTotal, recipScore,
             org, orgScore, imp, impScore, safe, safeScore, hasRoadMap,
+            justification, validatedBy, notedBy,
             totalScore,
           }),
           style: { ...be, display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 12.5 }
@@ -541,7 +566,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       own && u.default.createElement("div", { style: VF_card },
         u.default.createElement("div", { style: VF_sectionTitle },
           u.default.createElement("span", null, "B.1 Land Tenure Status — CARP Area"),
-          u.default.createElement("span", { style: VF_pts }, carpScore + " / 20")
+          u.default.createElement("span", { style: VF_ptsBox }, carpScore + " / 20")
         ),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 10 } },
           u.default.createElement(VF_Field, { label: "CARP (Distributed) Area" }, u.default.createElement("div", { style: VF_readout }, own.distributedAreaHa.toLocaleString() + " ha")),
@@ -591,7 +616,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       u.default.createElement("div", { style: VF_card },
         u.default.createElement("div", { style: VF_sectionTitle },
           u.default.createElement("span", null, "B.2 Composition of Project Recipients"),
-          u.default.createElement("span", { style: VF_pts }, recipScore + " / 20")
+          u.default.createElement("span", { style: VF_ptsBox }, recipScore + " / 20")
         ),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 } },
           u.default.createElement(VF_Field, { label: "Actual ARBs (2.0 pts / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: VF_zeroBlank(actualArb), onChange: VF_onNum(setActualArb) })),
@@ -604,7 +629,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       u.default.createElement("div", { style: VF_card },
         u.default.createElement("div", { style: VF_sectionTitle },
           u.default.createElement("span", null, "C. Farmers Organization"),
-          u.default.createElement("span", { style: VF_pts }, orgScore + " / 25")
+          u.default.createElement("span", { style: VF_ptsBox }, orgScore + " / 25")
         ),
         u.default.createElement("div", { style: { fontWeight: 600, fontSize: 12.5, marginBottom: 6 } }, "C.1 Recipient of CSF, BDS, AES, APCP and Partnership Programs (20 pts)"),
         checkbox(org.arccess, (v) => setOrg({ ...org, arccess: v }), "ARCCESS", "5 pts"),
@@ -618,7 +643,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       u.default.createElement("div", { style: VF_card },
         u.default.createElement("div", { style: VF_sectionTitle },
           u.default.createElement("span", null, "D. Importance / Necessity of the Project"),
-          u.default.createElement("span", { style: VF_pts }, impScore + " / 30")
+          u.default.createElement("span", { style: VF_ptsBox }, impScore + " / 30")
         ),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 } },
           u.default.createElement(VF_Field, { label: "Will serve production areas (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.production), onChange: (e) => setImp({ ...imp, production: e.target.value === "" ? 0 : Number(e.target.value) }) })),
@@ -630,12 +655,37 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       u.default.createElement("div", { style: VF_card },
         u.default.createElement("div", { style: VF_sectionTitle },
           u.default.createElement("span", null, "E. Safeguards"),
-          u.default.createElement("span", { style: VF_pts }, safeScore + " / 5")
+          u.default.createElement("span", { style: VF_ptsBox }, safeScore + " / 5")
         ),
         checkbox(safe.noRow, (v) => setSafe({ ...safe, noRow: v }), "No road right-of-way (ROW) problem", "2.5 pts"),
         checkbox(safe.noEnviro, (v) => setSafe({ ...safe, noEnviro: v }), "No adverse environmental impact", "2.5 pts"),
         u.default.createElement("div", { style: { marginTop: 10, paddingTop: 10, borderTop: "1px solid #DCE6D6" } },
           checkbox(hasRoadMap, setHasRoadMap, "F. Prerequisite — clear road network map attached", "not scored")
+        )
+      ),
+
+      u.default.createElement("div", { style: VF_card },
+        u.default.createElement("div", { style: VF_sectionTitle },
+          u.default.createElement("span", null, "G. Justification / Notes"),
+          u.default.createElement("span", { style: { fontSize: 11, color: "#7C8A78", fontWeight: 400 } }, "Use additional pages if necessary")
+        ),
+        u.default.createElement("textarea", {
+          style: { ...VF_input, minHeight: 90, resize: "vertical", fontFamily: "inherit" },
+          value: justification,
+          onChange: (e) => setJustification(e.target.value),
+        })
+      ),
+
+      u.default.createElement("div", { style: { ...VF_card, marginBottom: 0 } },
+        u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 } },
+          u.default.createElement("div", null,
+            u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Validated By:"),
+            u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: validatedBy, onChange: (e) => setValidatedBy(e.target.value), placeholder: "Name — DAR Coordinator" })
+          ),
+          u.default.createElement("div", null,
+            u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Noted By:"),
+            u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — CARPO" })
+          )
         )
       )
     )
