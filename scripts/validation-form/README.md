@@ -136,11 +136,11 @@ for the saved-forms list, not a live value.
 
 - **"Total Agri Land" is a 1993–2015 baseline.** The Validation Form's B
   section computes CARP Area as the selected barangay's distributed area plus
-  its adjacent barangays', and Non-CARP Area as the whole municipality's
-  summed Total Agri Land minus that CARP area — clamped so the % distributed
-  never exceeds 100 (some barangays have since had more land distributed than
-  the baseline recorded). The underlying denominator may just be stale;
-  verify on site if a % looks off.
+  its adjacent barangays', and Non-CARP Area as that same barangay + adjacent
+  set's summed Total Agri Land minus that CARP area — clamped so the %
+  distributed never exceeds 100 (some barangays have since had more land
+  distributed than the baseline recorded). The underlying denominator may
+  just be stale; verify on site if a % looks off.
 - **Adjacent-barangay detection only works where the app has real surveyed
   boundaries** (`rf` in `index.html`, currently ~9 municipalities: Calasiao,
   Alaminos, Tayug, Infanta, Sta. Maria, Mapandan, Bolinao, Sison, Malasique —
