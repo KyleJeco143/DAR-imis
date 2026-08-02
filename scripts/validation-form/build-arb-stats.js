@@ -396,3 +396,22 @@ fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
 fs.writeFileSync(OUT_FILE, JSON.stringify(merged));
 console.log(`Wrote ${merged.length} barangay records to ${OUT_FILE}`);
 console.log(`ARB list barangays: ${arbStats.size}, Bgys/ARC barangays: ${bgysStats.size}, population barangays loaded: ${popStats.size}, matched into output: ${popMatched}`);
+
+// Distributed area per ARB is normally close to a hectare (province-wide
+// median is ~1 ha/ARB) — DAR CARP lots are rarely more than a few hectares
+// each. A barangay whose summed AREA (Sq. M.) works out to tens of hectares
+// per beneficiary usually means the source list has a duplicate lot row (the
+// same ARB's lot counted twice, which inflates distributedAreaSqm but not
+// arbIds.size) or a stray unit mismatch on one row, not a real distribution.
+// This doesn't correct the figure — we can't tell which row is wrong from
+// the aggregate — it just flags it for a manual look at the source file.
+const ANOMALY_HA_PER_ARB = 15;
+const anomalies = merged
+  .filter((r) => r.arbCount > 0 && r.distributedAreaHa / r.arbCount > ANOMALY_HA_PER_ARB)
+  .sort((x, y) => y.distributedAreaHa / y.arbCount - x.distributedAreaHa / x.arbCount);
+if (anomalies.length) {
+  console.warn(`\n${anomalies.length} barangay(s) have an implausible distributed-area-per-ARB ratio (>${ANOMALY_HA_PER_ARB} ha/ARB) — worth checking ${path.basename(ARB_LIST_XLSX)} by hand for a duplicate row or unit mismatch:`);
+  for (const r of anomalies) {
+    console.warn(`  ${r.municipality} / ${r.barangay}: ${r.distributedAreaHa} ha across ${r.arbCount} ARBs (${(r.distributedAreaHa / r.arbCount).toFixed(1)} ha/ARB)`);
+  }
+}

@@ -189,6 +189,19 @@ for the saved-forms list, not a live value.
   before. (This replaces the old `rf` object in `index.html`, which only
   covered ~9 municipalities and is still used as-is by the separate ARC Map
   feature.)
+- **A handful of barangays have an implausible distributed-area figure**,
+  e.g. Umingan/Diket shows 27,200 ha distributed across 328 ARBs (~83
+  ha/ARB, versus a province-wide median of ~1 ha/ARB) — along with similar
+  outliers in Aguilar/Laoag, Dasol/Macalang, Mabini/Barlo, San Manuel/San
+  Roque, and Infanta/Pita. `distributedAreaHa` is a straight sum of every
+  matching row's `AREA (Sq. M.)` in the ARB list, without deduplicating lot
+  rows — the likely cause is a duplicated lot row for the same ARB ID, or a
+  unit mismatch on one row, in the source spreadsheet, rather than a real
+  distribution that large. A rebuild now prints a warning listing any
+  barangay whose ha/ARB ratio exceeds 15 (see `ANOMALY_HA_PER_ARB` in
+  `build-arb-stats.js`) so this is caught automatically going forward; fixing
+  it requires finding and correcting the bad row(s) in the source ARB list
+  by hand, since the aggregate alone can't say which row is wrong.
 - **Population match rate is ~95%** against the ARB/ARC barangay set after
   the alias cleanup above. The remainder is mostly barangays that appear to
   be filed under the wrong municipality in the source data (e.g. a handful
