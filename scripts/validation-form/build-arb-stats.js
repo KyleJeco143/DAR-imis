@@ -33,17 +33,183 @@ if (!ARB_LIST_XLSX || !VF_FORMS_XLSX) {
 // "Malasique" vs "MALASIQUI", "Pozzurobio" vs "POZORRUBIO"). Normalize to a
 // join key; barangay names are normalized more lightly (case/whitespace only).
 const MUNI_FIXES = { POZZUROBIO: 'POZORRUBIO', MALASIQUE: 'MALASIQUI' };
+function stripDiacritics(s) {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
 function normMuni(s) {
-  let m = String(s || '').trim().toUpperCase().replace(/\s+/g, ' ');
+  let m = stripDiacritics(String(s || '')).trim().toUpperCase().replace(/\s+/g, ' ');
   m = m.replace(/^CITY OF /, '').replace(/ CITY$/, '');
   m = m.replace(/^STA\.?\s/, 'SANTA ').replace(/^STO\.?\s/, 'SANTO ');
   return MUNI_FIXES[m] || m;
 }
 function normBrgy(s) {
-  return String(s || '').trim().toUpperCase().replace(/\s+/g, ' ');
+  return stripDiacritics(String(s || '')).trim().toUpperCase().replace(/\s+/g, ' ');
+}
+
+// The ARB list, Bgys sheet, and PSA population sheet each spell a fair
+// number of barangays differently enough that a plain normBrgy() join
+// misses them (typos, transposed letters, "Sta."/"Sto." abbreviated one
+// place and spelled out another, hyphens vs spaces, stray periods). This
+// expands abbreviations and strips punctuation that never carries meaning,
+// then routes through a curated alias table for the remaining genuine
+// same-place spelling variants found by cross-checking every unmatched
+// barangay in data/arb-barangay-stats.json against the PSA population list
+// (see scripts/validation-form/README.md's "barangay name variants" note).
+// Two different real places (e.g. directional/numbered splits like "Carmay
+// East" vs "Carmay West", or "San Aurelio 1st/2nd/3rd") are deliberately
+// NOT aliased together, even when they look similar.
+function keyBrgyBase(s) {
+  let b = normBrgy(s);
+  b = b.replace(/^STA\.?\s/, 'SANTA ').replace(/^STO\.?\s/, 'SANTO ');
+  b = b.replace(/\./g, '');
+  return b;
+}
+const KNOWN_BARANGAY_ALIASES = {};
+function addAlias(muni, from, to) {
+  KNOWN_BARANGAY_ALIASES[`${normMuni(muni)}|${keyBrgyBase(from)}`] = `${normMuni(muni)}|${keyBrgyBase(to)}`;
+}
+[
+  ['AGNO', 'Allabom', 'Allabon'],
+  ['AGNO', 'Macabubuni', 'Macaboboni'],
+  ['AGUILAR', 'Bacacleo', 'Bocacliw'],
+  ['AGUILAR', 'Bagumban (Laoag)', 'Laoag'],
+  ['AGUILAR', 'Manlocoboc', 'Manlocboc'],
+  ['ALCALA', 'Pindanganan East', 'Pindangan East'],
+  ['ALCALA', 'San Pedro III', 'San Pedro Ili'],
+  ['ANDA', 'Macando-Candong', 'Macandocandong'],
+  ['ANDA', 'Malong', 'Mal-ong'],
+  ['ANDA', 'Sitios of Poblacion', 'Poblacion'],
+  ['ASINGAN', 'Ariston Oeste', 'Ariston Weste'],
+  ['ASINGAN', 'Ariston West', 'Ariston Weste'],
+  ['ASINGAN', 'Bantug', 'Bantog'],
+  ['ASINGAN', 'Carusocan Sur', 'Carosucan Sur'],
+  ['ASINGAN', 'Domampot', 'Domanpot'],
+  ['BALUNGAO', 'San Aurelio I', 'San Aurelio 1st'],
+  ['BALUNGAO', 'San Aurelio III', 'San Aurelio 3rd'],
+  ['BANI', 'Banlag', 'Ballag'],
+  ['BANI', 'Quinadayanan', 'Quinaoayanan'],
+  ['BAYAMBANG', 'Alingan', 'Alinggan'],
+  ['BAYAMBANG', 'Ambayat 1st', 'Ambayat I'],
+  ['BAYAMBANG', 'Ambayat 2nd', 'Ambayat II'],
+  ['BAYAMBANG', 'Batangcawa', 'Batangcaoa'],
+  ['BAYAMBANG', 'Bongato Este', 'Bongato East'],
+  ['BAYAMBANG', 'Buenlag Primero', 'Buenlag 1st'],
+  ['BAYAMBANG', 'Buenlag Segundo', 'Buenlag 2nd'],
+  ['BAYAMBANG', 'Hermosa', 'Hermoza'],
+  ['BAYAMBANG', 'Inanlorenzana', 'Inanlorenza'],
+  ['BAYAMBANG', 'Languiran', 'Langiran'],
+  ['BAYAMBANG', 'Poblacion', 'Poblacion Sur'],
+  ['BAYAMBANG', 'Pogo', 'Pugo'],
+  ['BINALONAN', 'Mancasuy', 'Mangcasuy'],
+  ['BINALONAN', 'Mangcasoy', 'Mangcasuy'],
+  ['BINMALEY', 'Canadalan', 'Canaoalan'],
+  ['BOLINAO', 'Catungui', 'Catungi'],
+  ['BUGALLON', 'Anagao', 'Banaga'],
+  ['BUGALLON', 'Salomague-Norte', 'Salomague Norte'],
+  ['BUGALLON', 'Salomague-Sur', 'Salomague Sur'],
+  ['CALASIAO', 'Ambunao', 'Ambonao'],
+  ['CALASIAO', 'Dinalaon', 'Dinalaoan'],
+  ['CALASIAO', 'Dinaloan', 'Dinalaoan'],
+  ['DASOL', 'Osmena Sr', 'Osmena'],
+  ['LABRADOR', 'Lawis', 'Laois'],
+  ['LABRADOR', 'Tubuan', 'Tobuan'],
+  ["LAOAC", "D'Alarcio", 'Domingo Alarcio'],
+  ['LAOAC', 'Nambagatan', 'Nanbagatan'],
+  ['LINGAYEN', 'Baseng', 'Basing'],
+  ['LINGAYEN', 'Dumalandan West', 'Domalandan West'],
+  ['LINGAYEN', 'Malipuec', 'Malimpuec'],
+  ['LINGAYEN', 'Matalaba', 'Matalava'],
+  ['LINGAYEN', 'Pangapisan Norte', 'Pangapisan North'],
+  ['MABINI', 'Caabiangan', 'Caabiangaan'],
+  ['MALASIQUI', 'Banaoang', 'Banawang'],
+  ['MALASIQUI', 'Lareglareg', 'Lareg-Lareg'],
+  ['MALASIQUI', 'Mangan Dampay', 'Manggan-Dampay'],
+  ['MALASIQUI', 'Tabo Sili', 'Tabo-Sili'],
+  ['MANAOAG', 'Calaocan (Sapang Norte)', 'Calaocan'],
+  ['MANAOAG', 'Leleman', 'Lelemaan'],
+  ['MANAOAG', 'Matulong', 'Matolong'],
+  ['MANGATAREM', 'Bunao', 'Bueno'],
+  ['MANGATAREM', 'Calvo St.', 'Calvo'],
+  ['MANGATAREM', 'Dorongan Keteket', 'Dorongan Ketaket'],
+  ['MANGATAREM', 'Old Cacamposan', 'Olo Cacamposan'],
+  ['MANGATAREM', 'Old-Cafabrosan', 'Olo Cafabrosan'],
+  ['MANGATAREM', 'Old-Cagarlitan', 'Olo Cagarlitan'],
+  ['MANGATAREM', 'Sawat', 'Dorongan Sawat'],
+  ['MANGATAREM', 'Tagak', 'Tagac'],
+  ['MAPANDAN', 'Amandaoac', 'Amanoaoac'],
+  ['ROSALES', 'Bakitbakit', 'Bakit-Bakit'],
+  ['ROSALES', 'Balincanaway', 'Balingcanaway'],
+  ['ROSALES', 'Borobor Site (Zone IV)', 'Zone IV'],
+  ['ROSALES', 'Carmay Weste', 'Carmay West'],
+  ['ROSALES', 'San Pedro Este', 'San Pedro East'],
+  ['ROSALES', 'San Pedro Weste', 'San Pedro West'],
+  ['ROSALES', 'Tomana Este', 'Tomana East'],
+  ['SAN FABIAN', 'Ambalangan Dalin', 'Ambalangan-Dalin'],
+  ['SAN FABIAN', 'Nibaliw Centro', 'Nibaliw Central'],
+  ['SAN MANUEL', 'Arzadon', 'San Antonio-Arzadon'],
+  ['SAN NICOLAS', 'Cacabungaoan', 'Cacabugaoan'],
+  ['SAN QUINTIN', 'Casantamari-an', 'Casantamarian'],
+  ['SAN QUINTIN', 'Casantamaria-an', 'Casantamarian'],
+  ['SAN QUINTIN', 'Nangapogan', 'Nangapugan'],
+  ['SANTA BARBARA', 'Carusucan', 'Carusocan'],
+  ['SANTA BARBARA', 'Matic-Matic', 'Maticmatic'],
+  ['SANTA BARBARA', 'Patayak', 'Patayac'],
+  ['SANTA BARBARA', 'Songuil', 'Sonquil'],
+  ['SISON', 'Bantay Intsik', 'Bantay Insik'],
+  ['SISON', 'Bolaoen East', 'Bulaoen East'],
+  ['SISON', 'Bolaoen West', 'Bulaoen West'],
+  ['SISON', 'Dongon', 'Dungon'],
+  ['SISON', 'Killo-Macao', 'Killo'],
+  ['SUAL', 'Baquiden', 'Baquioen'],
+  ['SUAL', 'Calomboyan', 'Calumbuyan'],
+  ['SUAL', 'Macaycayaoan', 'Macaycayawan'],
+  ['SUAL', 'Sidacio West', 'Sioasio West'],
+  ['SUAL', 'Sidasio East', 'Sioasio East'],
+  ['TAYUG', 'Crisanto Lichauco', 'C. Lichauco'],
+  ['TAYUG', 'Lichauco', 'C. Lichauco'],
+  ['UMINGAN', 'Abot-Molina', 'Abot Molina'],
+  ['UMINGAN', 'Don Abalos', 'Don Justo Abalos'],
+  ['UMINGAN', 'Masell-Sell', 'Maseil-Seil'],
+  ['UMINGAN', 'Masiel-Siel', 'Maseil-Seil'],
+  ['UMINGAN', 'Tangal-Sawang', 'Tanggal Sawang'],
+  ['URBIZTONDO', 'Batangcaoa', 'Batancaoa'],
+  ['URBIZTONDO', 'Camanbugan', 'Camambugan'],
+  ['URBIZTONDO', 'Pasibe East', 'Pasibi East'],
+  ['VILLASIS', 'Baranggobong', 'Barangobong'],
+].forEach(([muni, from, to]) => addAlias(muni, from, to));
+
+// Some barangay names are data-entry placeholders, not real places — drop
+// rows carrying them entirely rather than showing a fake "NULL" barangay.
+const PLACEHOLDER_BARANGAYS = new Set(['NULL', 'N/A', '']);
+
+function keyBrgy(s) {
+  const b = keyBrgyBase(s);
+  return b;
 }
 function key(muni, brgy) {
-  return `${normMuni(muni)}|${normBrgy(brgy)}`;
+  const k = `${normMuni(muni)}|${keyBrgy(brgy)}`;
+  return KNOWN_BARANGAY_ALIASES[k] || k;
+}
+
+// Same real municipality is spelled inconsistently across ROWS too (e.g.
+// "Alaminos" on one barangay's row, "Alaminos City" on another's; "Sto.
+// Tomas" vs "Santo Tomas") — normMuni() unifies them for joining, but each
+// merged record still shows whatever raw text happened to populate it,
+// which re-splits the same municipality into two dropdown entries. Track
+// every raw spelling seen per join key so the merge step can pick one
+// consistent display string per municipality.
+const muniVariantsByKey = new Map();
+function trackMuniVariant(muni) {
+  const k = normMuni(muni);
+  const raw = normBrgy(muni);
+  if (!muniVariantsByKey.has(k)) muniVariantsByKey.set(k, new Set());
+  muniVariantsByKey.get(k).add(raw);
+}
+function muniDisplay(muni) {
+  const k = normMuni(muni);
+  const variants = muniVariantsByKey.get(k);
+  const isCity = variants && [...variants].some((v) => / CITY$/.test(v) || /^CITY OF /.test(v));
+  return isCity ? `${k} CITY` : k;
 }
 
 // Some sheets have a blank first row before the real header; scan for it.
@@ -70,6 +236,8 @@ function loadArbStats(file) {
     const r = rows[i];
     if (!r || !r[cBrgy]) continue;
     const muni = r[cMuni], brgy = r[cBrgy];
+    if (PLACEHOLDER_BARANGAYS.has(String(brgy).trim().toUpperCase())) continue;
+    trackMuniVariant(muni);
     const k = key(muni, brgy);
     let e = byBrgy.get(k);
     if (!e) {
@@ -109,6 +277,8 @@ function loadBgysStats(file) {
   for (let i = headerIdx + 1; i < rows.length; i++) {
     const r = rows[i];
     if (!r || !r[cBrgy] || !r[cMuni]) continue;
+    if (PLACEHOLDER_BARANGAYS.has(String(r[cBrgy]).trim().toUpperCase())) continue;
+    trackMuniVariant(r[cMuni]);
     const k = key(r[cMuni], r[cBrgy]);
     // A barangay can belong to more than one ARC record across years; keep the one with the largest total agri land figure.
     const agriLand = Number(r[cAgriLand]) || 0;
@@ -152,7 +322,14 @@ function loadPopulationStats(file) {
       continue;
     }
     if (!currentMuni || typeof pop !== 'number') continue;
-    out.set(key(currentMuni, trimmed), { population: pop });
+    if (PLACEHOLDER_BARANGAYS.has(trimmed.toUpperCase())) continue;
+    // A few PSA cells hold a numeric-typed barangay "name" like 1 or 2 that
+    // Excel round-trips as "1.0"/"2.0" (e.g. Bolinao's "Lucients 1"/"2").
+    const cleaned = trimmed.replace(/\.0$/, '');
+    trackMuniVariant(currentMuni);
+    // Population is the ground truth for spelling — keep its raw text (used
+    // for display) alongside the join key.
+    out.set(key(currentMuni, cleaned), { population: pop, barangay: cleaned });
   }
   return out;
 }
@@ -179,13 +356,15 @@ for (const k of allKeys) {
   const b = bgysStats.get(k);
   const p = popStats.get(k);
   if (p) popMatched++;
-  // Uppercase for display too (not the full normMuni() join-key transform,
-  // which also strips "City" suffixes and rewrites abbreviations — fine for
-  // matching, wrong for display). This still fixes the real bug: the same
-  // municipality/barangay no longer splits into case-variant duplicates
-  // depending on which source (ARB list vs Bgys sheet) contributed it.
-  const municipality = normBrgy((a && a.municipality) || (b && b.municipality) || '');
-  const barangay = normBrgy((a && a.barangay) || (b && b.barangay) || '');
+  // Municipality display is picked from ALL raw spellings seen for this
+  // municipality across every barangay row (see muniDisplay()), so it no
+  // longer splits into duplicates like "Alaminos"/"Alaminos City" or
+  // "Santo Tomas"/"Sto. Tomas" depending on which record happened to carry
+  // which spelling. Barangay display prefers the population sheet's
+  // spelling (our ground truth) when a match exists, else falls back to
+  // whichever source populated this record.
+  const municipality = muniDisplay((a && a.municipality) || (b && b.municipality) || '');
+  const barangay = normBrgy((p && p.barangay) || (a && a.barangay) || (b && b.barangay) || '');
   const distributedAreaHa = a ? a.distributedAreaHa : 0;
   const arbCount = a ? a.arbCount : 0;
   const totalAgriLandHa = b ? b.totalAgriLandHa : null;
