@@ -138,17 +138,19 @@ Error generating stack: `+a.message+`
   // SheetJS's free CDN build (xlsx.full.min.js) can't write cell styling
   // (bold, borders, fills) — only the paid Pro add-on can. Excel opens an
   // HTML table saved with an .xls extension with full CSS fidelity, so we
-  // build one styled to match the official DAR paper form instead. This
+  // build one modeled directly on DAR's own "VF FORMS IN DAR" template
+  // (Project Validation Form No. 1, revised October 2014) instead. This
   // also drops the CDN dependency for this export (works fully offline).
-  const yn = (v) => (v ? "Yes" : "No");
+  const yn = (v) => (v ? "☑" : "☐");
   const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const peso = (v) => (typeof v === "number" ? "₱" + v.toLocaleString("en-PH") : esc(v));
+  const peso = (v) => (typeof v === "number" ? "₱ " + v.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "");
+  const blank = (v) => (v == null || v === "" ? "" : v);
 
-  const BORDER = "border:1px solid #444;";
-  const BASE = BORDER + "padding:5px 8px;font-family:Calibri,Arial,sans-serif;font-size:11pt;vertical-align:middle;";
+  const BASE = "border:1px solid #444;padding:5px 8px;font-family:Calibri,Arial,sans-serif;font-size:10.5pt;vertical-align:middle;";
   const NAVY = "#1c4e80";
   const MAROON = "#8a1f2b";
-  const LIGHT = "#eef3fb";
+  const TEAL = "#0e7c86";
+  const GREEN = "#2e7d32";
 
   function td(text, opts) {
     opts = opts || {};
@@ -158,118 +160,158 @@ Error generating stack: `+a.message+`
       "text-align:" + (opts.align || "left") + ";" +
       (opts.bg ? "background:" + opts.bg + ";" : "") +
       (opts.color ? "color:" + opts.color + ";" : "") +
-      (opts.size ? "font-size:" + opts.size + ";" : "");
+      (opts.size ? "font-size:" + opts.size + ";" : "") +
+      (opts.noBorder ? "border:none;" : "");
     const cs = opts.colspan ? ' colspan="' + opts.colspan + '"' : "";
     return '<td style="' + style + '"' + cs + '>' + esc(text) + "</td>";
   }
 
-  // A plain label/value row: label spans the first two columns, value the last two.
-  function row(label, value, opts) {
-    opts = opts || {};
-    return "<tr>" + td(label, { bold: true, colspan: 2 }) +
-      td(value, { align: opts.align, colspan: 2 }) + "</tr>";
+  // Numbered general-info field: label (col 1-2) + boxed centered value (col 3-4).
+  function infoRow(label, value) {
+    return "<tr>" + td(label, { bold: true, colspan: 2 }) + td(value, { align: "center", colspan: 2 }) + "</tr>";
+  }
+  function infoCaption(text) {
+    return "<tr>" + td("", { noBorder: true, colspan: 2 }) +
+      td(text, { italic: true, size: "8.5pt", color: "#666", align: "center", colspan: 2 }) + "</tr>";
   }
 
-  // A section band: bold navy title on the left, "Points" legend + max on the right.
   function sectionHeader(title, max) {
     return "<tr>" +
-      td(title, { bold: true, color: NAVY, bg: LIGHT, size: "12pt", colspan: 2 }) +
+      td(title, { bold: true, color: NAVY, bg: "#eef3fb", colspan: max != null ? 2 : 4 }) +
       (max != null
-        ? td("Points", { bold: true, color: MAROON, align: "right", bg: LIGHT }) +
-          td("/ " + max, { bold: true, align: "center", bg: LIGHT })
-        : td("", { bg: LIGHT, colspan: 2 })) +
+        ? td("Points", { bold: true, color: MAROON, align: "right", bg: "#eef3fb" }) +
+          td(max, { bold: true, align: "center", bg: "#fffbe6" })
+        : "") +
       "</tr>";
+  }
+  function colHeads(unitLabel, unitColor) {
+    return "<tr>" + td("", { noBorder: true, colspan: 2 }) +
+      td(unitLabel, { bold: true, align: "center", color: unitColor }) +
+      td("Points", { bold: true, align: "center", color: MAROON }) + "</tr>";
+  }
+  // A scored line item: label, a plain (unboxed) figure, and a boxed score.
+  function scoredRow(label, value, score) {
+    return "<tr>" + td(label, { colspan: 2 }) +
+      td(value, { align: "center" }) +
+      td(score == null ? "" : score, { bold: true, align: "center", bg: "#fffbe6" }) + "</tr>";
+  }
+  // A sub-item under a scored line (a./b./c.) — thin underline style, no box.
+  function subRow(label, value) {
+    return "<tr>" + td(label, { colspan: 2, noBorder: true }) +
+      "<td style=\"border:none;border-bottom:1px solid #444;padding:3px 8px;text-align:center;\">" + esc(value) + "</td>" +
+      td("", { noBorder: true }) + "</tr>";
+  }
+  function checkRow(label, checked) {
+    return "<tr>" + td(yn(checked) + "  " + label, { colspan: 4 }) + "</tr>";
+  }
+  function spacer(h) {
+    return '<tr><td colspan="4" style="border:none;height:' + (h || 6) + 'px;"></td></tr>';
   }
 
-  function scoreRow(label, score, max) {
-    return "<tr>" + td(label, { bold: true, colspan: 2 }) +
-      td(score == null ? "" : score, { bold: true, align: "center", bg: "#fffbe6" }) +
-      td("/ " + max, { align: "center" }) +
-      "</tr>";
-  }
+  const location = "BRGY. " + (d.barangay || "") + ", " + (d.municipality || "");
 
   const rowsHtml = [
-    // Title block
-    '<tr>' + td("PROJECT VALIDATION FORM NO. 1", { bold: true, align: "center", size: "14pt", colspan: 3 }) +
-      td("Total: " + (d.totalScore == null ? "" : Math.round(d.totalScore * 10) / 10) + " / 100", { bold: true, align: "center", bg: "#fffbe6" }) + "</tr>",
-    '<tr>' + td("For Infrastructure Projects", { italic: true, align: "center", colspan: 4 }) + "</tr>",
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    "<tr>" + td("as of October 2014", { noBorder: true, italic: true, size: "9pt", align: "right", colspan: 4 }) + "</tr>",
+    "<tr>" + td("REVISED VALIDATION FORM", { bold: true, align: "center", bg: "#d9d9d9", colspan: 4 }) + "</tr>",
+    spacer(4),
+    "<tr>" + td("PROJECT VALIDATION FORM NO. 1", { bold: true, align: "center", size: "13pt", color: NAVY, colspan: 4 }) + "</tr>",
+    "<tr>" + td("For Infrastructure Projects", { italic: true, align: "center", color: MAROON, colspan: 3 }) +
+      td(d.totalScore == null ? "" : Math.round(d.totalScore * 10) / 10, { italic: true, bold: true, align: "center", noBorder: true }) + "</tr>",
+    spacer(8),
 
-    sectionHeader("A. General Information", null),
-    row("Municipality", d.municipality),
-    row("Barangay", d.barangay),
-    row("ARC", d.arcName || "—"),
-    row("ARC Classification", d.arcClassification || "—"),
-    row("Name of Project", d.projectName || ""),
-    row("Project Type", d.projectType || ""),
-    row("Physical Target", d.physicalTarget || ""),
-    row("Estimated Project Cost (PHP)", peso(d.projectCost)),
-    row("Implementing Agency", d.implementingAgency || ""),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    sectionHeader("A.  General Information", null),
+    infoRow("1. Name of ARC/ARA", d.arcName || ""),
+    infoRow("2. Name of Project", d.projectName || ""),
+    infoRow("3. Location/ARC  1/", location),
+    infoCaption("(Barangay, Municipality, Province)"),
+    infoRow("4. Project Type", d.projectType || ""),
+    infoCaption("(e.g., Irrigation, Farm-to-Market Road, CSF)"),
+    infoRow("5. Physical Target", d.physicalTarget || ""),
+    infoCaption("(e.g., Service area - hectare, Length - km./lm, or Units)"),
+    infoRow("6. Scope of Work  2/", ""),
+    infoRow("7. Estimated Total Project Cost (PhP)", peso(d.projectCost)),
+    infoRow("8. Implementing Agency", d.implementingAgency || ""),
+    spacer(8),
 
-    sectionHeader("B.1  Land Tenure Status — CARP Area", 20),
-    row("CARP (Distributed) Area (ha)", d.distributedAreaHa),
-    row("Non-CARP Area (ha)", d.nonCarpAreaHa != null ? d.nonCarpAreaHa : "no baseline on file"),
-    row("% Distributed (of recorded Total Agri Land)", d.pctDistributed != null ? d.pctDistributed + "%" : "—"),
-    scoreRow("Score", d.carpScore, 20),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    sectionHeader("B.  Land Tenure Status  (20 pts.)", null),
+    colHeads("Hectares", TEAL),
+    scoredRow("1. Total CARP Area  3/", d.distributedAreaHa, d.carpScore),
+    scoredRow("2. Non-CARP Area  5/", d.nonCarpAreaHa != null ? d.nonCarpAreaHa : "", null),
+    spacer(8),
 
-    sectionHeader("ARBs and Population (supplementary — not part of the official score)", null),
-    row("ARBs in this barangay (on the ARC)", d.ownArb),
-    row("Population, this barangay", d.ownPop != null ? d.ownPop : "no data"),
-    row("ARB households (ARC record)", d.arbHousehold != null ? d.arbHousehold : "—"),
-    row("Adjacent barangays", d.adjacentList),
-    row("ARBs in adjacent barangays", d.adjArb),
-    row("Population in adjacent barangays", d.adjPop != null ? d.adjPop : "no data"),
-    row("Total ARBs (this barangay + adjacent)", d.totalArb),
-    row("Total population (this barangay + adjacent)", d.hasAnyPop ? d.totalPop : "no data"),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    sectionHeader("3.  Project Recipients  (20 pts.)", null),
+    colHeads("Number", GREEN),
+    scoredRow("Total number of project recipients", d.recipTotal, d.recipScore),
+    subRow("a. Total number of actual ARBs", d.actualArb),
+    subRow("b. Total number of potential ARBs", d.potentialArb),
+    subRow("c. Total number of non-ARBs/farmers", d.nonArb),
+    spacer(8),
 
-    sectionHeader("B.2  Composition of Project Recipients", 20),
-    row("Actual ARBs", d.actualArb),
-    row("Potential ARBs", d.potentialArb),
-    row("Non-ARBs / farmers", d.nonArb),
-    row("Total project recipients", d.recipTotal),
-    scoreRow("Score", d.recipScore, 20),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    sectionHeader("C.  Organization of Project Recipients  (25 pts.)", d.orgScore == null ? "" : d.orgScore),
+    "<tr>" + td("C.1  On-going DAR Locally-Funded Projects in the Barangay/Agrarian Reform Community", { bold: true, colspan: 4 }) + "</tr>",
+    checkRow("ARCCESS", d.org.arccess),
+    checkRow("APCP / CAP-PBD Window III", d.org.apcp),
+    checkRow("Other Partnership Programs", d.org.otherPartnership),
+    checkRow("Other Livelihood Projects", d.org.otherLivelihood),
+    "<tr>" + td("C.2  Recipient of similar agribusiness projects implemented by other agencies", { bold: true, colspan: 4 }) + "</tr>",
+    checkRow("Recipient of similar agribusiness projects", d.org.similarAgribusiness),
+    spacer(8),
 
-    sectionHeader("C.  Farmers Organization", 25),
-    row("C.1 ARCCESS", yn(d.org.arccess)),
-    row("C.1 APCP / CAP-PBD Window III", yn(d.org.apcp)),
-    row("C.1 Other Partnership Programs", yn(d.org.otherPartnership)),
-    row("C.1 Other Livelihood Projects", yn(d.org.otherLivelihood)),
-    row("C.2 Recipient of similar agribusiness projects", yn(d.org.similarAgribusiness)),
-    scoreRow("Score", d.orgScore, 25),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    sectionHeader("D.  Importance / Necessity of the Project  (30 pts.)", d.impScore == null ? "" : d.impScore),
+    scoredRow("Will serve production areas (0–10)", "", d.imp.production),
+    scoredRow("Will serve post-harvest / processing (0–10)", "", d.imp.postHarvest),
+    scoredRow("Connects to existing brgy/municipal/main road (0–10)", "", d.imp.connectivity),
+    spacer(8),
 
-    sectionHeader("D.  Importance / Necessity of the Project", 30),
-    row("Will serve production areas (0–10)", d.imp.production),
-    row("Will serve post-harvest / processing (0–10)", d.imp.postHarvest),
-    row("Connects to existing brgy/municipal/main road (0–10)", d.imp.connectivity),
-    scoreRow("Score", d.impScore, 30),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
-
-    sectionHeader("E.  Safeguards", 5),
-    row("No road right-of-way (ROW) problem", yn(d.safe.noRow)),
-    row("No adverse environmental impact", yn(d.safe.noEnviro)),
-    scoreRow("Score", d.safeScore, 5),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    sectionHeader("E.  Safeguards  (5 pts.)", d.safeScore == null ? "" : d.safeScore),
+    checkRow("No road right-of-way (ROW) problem", d.safe.noRow),
+    checkRow("No adverse environmental impact", d.safe.noEnviro),
+    spacer(8),
 
     sectionHeader("F.  Prerequisite", null),
-    row("Clear road network map attached", yn(d.hasRoadMap) + " (not scored)"),
-    '<tr><td colspan="4" style="border:none;height:6px;"></td></tr>',
+    checkRow("With clear road network map", d.hasRoadMap),
+    spacer(8),
 
-    sectionHeader("G.  Justification / Notes", null),
+    sectionHeader("G.  Justification/Notes  (Use additional pages if necessary)", null),
     "<tr>" + td(d.justification || "", { colspan: 4 }) + "</tr>",
-    '<tr><td colspan="4" style="border:none;height:10px;"></td></tr>',
+    '<tr><td colspan="4" style="border:none;border-bottom:1px solid #444;height:16px;"></td></tr>',
+    '<tr><td colspan="4" style="border:none;border-bottom:1px solid #444;height:16px;"></td></tr>',
+    spacer(10),
 
     "<tr>" + td("TOTAL SCORE", { bold: true, size: "12pt", colspan: 2 }) +
       td(d.totalScore == null ? "" : Math.round(d.totalScore * 10) / 10, { bold: true, align: "center", bg: "#fffbe6", size: "12pt" }) +
       td("/ 100", { align: "center", bold: true }) + "</tr>",
-    '<tr><td colspan="4" style="border:none;height:14px;"></td></tr>',
+    spacer(10),
 
-    "<tr>" + td("Validated By", { bold: true }) + td(d.validatedBy || "", { colspan: 3 }) + "</tr>",
-    "<tr>" + td("Noted By", { bold: true }) + td(d.notedBy || "", { colspan: 3 }) + "</tr>",
+    sectionHeader("ARBs and Population  (supplementary — not part of the official score)", null),
+    infoRow("ARBs in this barangay (on the ARC)", blank(d.ownArb)),
+    infoRow("Population, this barangay", d.ownPop != null ? d.ownPop : "no data"),
+    infoRow("ARB households (ARC record)", d.arbHousehold != null ? d.arbHousehold : "—"),
+    infoRow("Adjacent barangays", d.adjacentList || ""),
+    infoRow("ARBs in adjacent barangays", blank(d.adjArb)),
+    infoRow("Population in adjacent barangays", d.adjPop != null ? d.adjPop : "no data"),
+    infoRow("Total ARBs (this barangay + adjacent)", blank(d.totalArb)),
+    infoRow("Total population (this barangay + adjacent)", d.hasAnyPop ? d.totalPop : "no data"),
+    spacer(14),
+
+    "<tr>" + td("Validated By:", { bold: true, color: NAVY, colspan: 4 }) + "</tr>",
+    "<tr>" + td("ENGR. KYLE JECO E. BENITO", { align: "center", colspan: 2 }) +
+      td("", { colspan: 2, noBorder: true, }) + "</tr>",
+    "<tr>" + td("DAR Coordinator", { italic: true, align: "center", size: "9pt", colspan: 2 }) +
+      td("(LGU Representative)", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
+    spacer(10),
+
+    "<tr>" + td("Noted By:", { bold: true, color: NAVY, colspan: 4 }) + "</tr>",
+    "<tr>" + td("LORENZA G. SEVILLA", { align: "center", colspan: 2 }) +
+      td("", { colspan: 2, noBorder: true }) + "</tr>",
+    "<tr>" + td("OIC-CARPO", { italic: true, align: "center", size: "9pt", colspan: 2 }) +
+      td("PARCCOM Representative", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
+    spacer(8),
+    "<tr>" + td("CHARLOTTE F. LASMARIAS", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
+    "<tr>" + td("PARPO II", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
+    spacer(8),
+    "<tr>" + td("MARIA ANA R. FRANCISCO, CESO V", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
+    "<tr>" + td("Regional Director", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
   ].join("\n");
 
   const html =
@@ -280,7 +322,7 @@ Error generating stack: `+a.message+`
     "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->" +
     "</head><body>" +
     '<table style="border-collapse:collapse;">' +
-    '<colgroup><col style="width:260px"><col style="width:150px"><col style="width:90px"><col style="width:70px"></colgroup>' +
+    '<colgroup><col style="width:230px"><col style="width:180px"><col style="width:90px"><col style="width:70px"></colgroup>' +
     rowsHtml +
     "</table></body></html>";
 
