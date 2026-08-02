@@ -15,6 +15,11 @@ const FILE_MAP = [
     contentType: 'application/javascript',
   },
   {
+    match: 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js',
+    file: path.join(NM, 'exceljs', 'dist', 'exceljs.min.js'),
+    contentType: 'application/javascript',
+  },
+  {
     match: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
     file: path.join(NM, '@supabase', 'supabase-js', 'dist', 'umd', 'supabase.js'),
     contentType: 'application/javascript',

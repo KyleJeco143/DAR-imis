@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-free": "^7.3.1",
     "@playwright/test": "^1.62.1",
     "@supabase/supabase-js": "^2.111.0",
+    "exceljs": "^4.4.0",
     "leaflet": "^1.9.4",
     "xlsx": "^0.18.5"
   },
