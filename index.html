@@ -355,6 +355,16 @@ Error generating stack: `+a.message+`
   r++;
   spacer(10);
 
+  cell("B" + r, "Remarks / Comments", { bold: true, color: BLUE });
+  merge(r, 2, r, 5);
+  r++;
+  textRow(d.remarks || "");
+  ws.getRow(r - 1).height = 24;
+  cell("B" + r, "", { border: { bottom: THIN } });
+  merge(r, 2, r, 5);
+  r++;
+  spacer(10);
+
   cell("B" + r, "Validated By:", { bold: true, color: BLUE });
   r++;
   cell("B" + r, d.validatedBy || "", { align: "center", border: { bottom: THIN } });
@@ -488,6 +498,7 @@ function VF_fromDb(r) {
     safe: r.safe || { noRow: false, noEnviro: false },
     hasRoadMap: r.has_road_map,
     justification: r.justification,
+    remarks: r.remarks,
     validatedBy: r.validated_by,
     notedBy: r.noted_by,
     notedByParpo: r.noted_by_parpo,
@@ -516,6 +527,7 @@ function VF_toDb(r) {
     safe: r.safe,
     has_road_map: !!r.hasRoadMap,
     justification: r.justification || null,
+    remarks: r.remarks || null,
     validated_by: r.validatedBy || null,
     noted_by: r.notedBy || null,
     noted_by_parpo: r.notedByParpo || null,
@@ -545,6 +557,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [safe, setSafe] = u.useState({ noRow: false, noEnviro: false });
   let [hasRoadMap, setHasRoadMap] = u.useState(false);
   let [justification, setJustification] = u.useState("");
+  let [remarks, setRemarks] = u.useState("");
   let [validatedBy, setValidatedBy] = u.useState("");
   let [notedBy, setNotedBy] = u.useState("");
   let [notedByParpo, setNotedByParpo] = u.useState("");
@@ -617,7 +630,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setImp({ production: false, postHarvest: false, connectivity: false });
     setSafe({ noRow: false, noEnviro: false });
     setHasRoadMap(false);
-    setJustification(""); setValidatedBy(""); setNotedBy(""); setNotedByParpo(""); setNotedByRegional("");
+    setJustification(""); setRemarks(""); setValidatedBy(""); setNotedBy(""); setNotedByParpo(""); setNotedByRegional("");
   };
   let loadRecord = (r) => {
     setRecordId(r.id);
@@ -627,7 +640,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setProjectCost(r.projectCost != null ? r.projectCost : ""); setImplementingAgency(r.implementingAgency || "");
     setActualArb(r.actualArb || 0); setPotentialArb(r.potentialArb || 0); setNonArb(r.nonArb || 0);
     setOrg(r.org); setImp(r.imp); setSafe(r.safe); setHasRoadMap(!!r.hasRoadMap);
-    setJustification(r.justification || ""); setValidatedBy(r.validatedBy || ""); setNotedBy(r.notedBy || "");
+    setJustification(r.justification || ""); setRemarks(r.remarks || ""); setValidatedBy(r.validatedBy || ""); setNotedBy(r.notedBy || "");
     setNotedByParpo(r.notedByParpo || ""); setNotedByRegional(r.notedByRegional || "");
   };
   let saveForm = () => {
@@ -638,7 +651,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       projectName, projectType, physicalTarget, projectCost, implementingAgency,
       actualArb, potentialArb, nonArb, manualAdjArb, manualAdjPop,
       org, imp, safe, hasRoadMap,
-      justification, validatedBy, notedBy, notedByParpo, notedByRegional,
+      justification, remarks, validatedBy, notedBy, notedByParpo, notedByRegional,
       totalScore: Math.round(totalScore * 10) / 10,
     };
     saveRecord(record);
@@ -689,7 +702,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             totalArb, totalPop, hasAnyPop,
             actualArb, potentialArb, nonArb, recipTotal, recipScore,
             org, orgScore, imp, impScore, safe, safeScore, hasRoadMap,
-            justification, validatedBy, notedBy, notedByParpo, notedByRegional,
+            justification, remarks, validatedBy, notedBy, notedByParpo, notedByRegional,
             totalScore,
           }),
           style: { ...be, display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 12.5 }
@@ -877,6 +890,17 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           style: { ...VF_input, minHeight: 90, resize: "vertical", fontFamily: "inherit" },
           value: justification,
           onChange: (e) => setJustification(e.target.value),
+        })
+      ),
+
+      u.default.createElement("div", { style: VF_card },
+        u.default.createElement("div", { style: VF_sectionTitle },
+          u.default.createElement("span", null, "Remarks / Comments")
+        ),
+        u.default.createElement("textarea", {
+          style: { ...VF_input, minHeight: 70, resize: "vertical", fontFamily: "inherit" },
+          value: remarks,
+          onChange: (e) => setRemarks(e.target.value),
         })
       ),
 
