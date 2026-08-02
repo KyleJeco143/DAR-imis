@@ -308,10 +308,10 @@ Error generating stack: `+a.message+`
       td("PARCCOM Representative", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
     spacer(8),
     "<tr>" + td(d.notedByParpo || "", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
-    "<tr>" + td("PARPO II", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
+    "<tr>" + td("PARPO I", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
     spacer(8),
     "<tr>" + td(d.notedByRegional || "", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
-    "<tr>" + td("Regional Director", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
+    "<tr>" + td("PARPO II", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
   ].join("\n");
 
   const html =
@@ -813,8 +813,8 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
         u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Noted By:"),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 } },
           u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — OIC-CARPO" }),
-          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByParpo, onChange: (e) => setNotedByParpo(e.target.value), placeholder: "Name — PARPO II" }),
-          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByRegional, onChange: (e) => setNotedByRegional(e.target.value), placeholder: "Name — Regional Director" })
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByParpo, onChange: (e) => setNotedByParpo(e.target.value), placeholder: "Name — PARPO I" }),
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByRegional, onChange: (e) => setNotedByRegional(e.target.value), placeholder: "Name — PARPO II" })
         )
       )
     )

@@ -117,8 +117,8 @@ alter table public.validation_forms
 
 **If you already created the table before the Noted By block had all three
 signatories** (it originally had just one `noted_by` field; the export now
-shows OIC-CARPO, PARPO II, and Regional Director as separate blank/editable
-lines matching the official form), add the other two with:
+shows OIC-CARPO, PARPO I, and PARPO II as separate blank/editable lines
+matching the official form), add the other two with:
 
 ```sql
 alter table public.validation_forms
