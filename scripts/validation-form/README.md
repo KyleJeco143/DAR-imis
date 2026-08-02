@@ -82,7 +82,6 @@ create table public.validation_forms (
   safe jsonb,
   has_road_map boolean default false,
   justification text,
-  remarks text,
   validated_by text,
   noted_by text,
   noted_by_parpo text,
@@ -125,14 +124,6 @@ matching the official form), add the other two with:
 alter table public.validation_forms
   add column if not exists noted_by_parpo text,
   add column if not exists noted_by_regional text;
-```
-
-**If you already created the table before `remarks` existed** (a free-text
-Remarks/Comments field shown right before the signatory block), add it with:
-
-```sql
-alter table public.validation_forms
-  add column if not exists remarks text;
 ```
 
 Only the barangay/municipality selection and manually-entered fields are
