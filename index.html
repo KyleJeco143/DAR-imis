@@ -250,6 +250,14 @@ function VF_findStat(stats, municipality, barangay) {
 function VF_num(v, d) {
   return typeof v === "number" && Number.isFinite(v) ? v : d;
 }
+// Shows a blank field instead of a literal "0" so a typed digit replaces it
+// instead of concatenating onto an existing zero (a mobile number-input quirk).
+function VF_zeroBlank(v) {
+  return v === 0 ? "" : v;
+}
+function VF_onNum(setter) {
+  return (e) => setter(e.target.value === "" ? 0 : Number(e.target.value));
+}
 
 const VF_card = { border: "1.5px solid #0E4D2B", borderRadius: 4, padding: 16, background: "#FDFCF4", marginBottom: 14 };
 const VF_sectionTitle = { fontFamily: "'Roboto Slab', serif", fontWeight: 700, fontSize: 15, color: "#0E4D2B", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "baseline" };
@@ -566,8 +574,8 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           ),
           adjMode === "none" && u.default.createElement("div", { style: { fontSize: 12.5, color: "#7C8A78", marginBottom: 8 } }, "No surveyed boundary data or ARC grouping is available for this barangay, so adjacent barangays can't be auto-detected. Add combined totals for the neighboring barangays yourself below."),
           u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 8 } },
-            u.default.createElement(VF_Field, { label: adjMode === "none" ? "Adjacent barangays — combined ARBs" : "Additional ARBs (not already counted above)" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjArb, onChange: (e) => setManualAdjArb(Number(e.target.value)) })),
-            u.default.createElement(VF_Field, { label: adjMode === "none" ? "Adjacent barangays — combined population" : "Additional population (not already counted above)" }, u.default.createElement("input", { style: VF_input, type: "number", value: manualAdjPop, onChange: (e) => setManualAdjPop(Number(e.target.value)) }))
+            u.default.createElement(VF_Field, { label: adjMode === "none" ? "Adjacent barangays — combined ARBs" : "Additional ARBs (not already counted above)" }, u.default.createElement("input", { style: VF_input, type: "number", value: VF_zeroBlank(manualAdjArb), onChange: VF_onNum(setManualAdjArb) })),
+            u.default.createElement(VF_Field, { label: adjMode === "none" ? "Adjacent barangays — combined population" : "Additional population (not already counted above)" }, u.default.createElement("input", { style: VF_input, type: "number", value: VF_zeroBlank(manualAdjPop), onChange: VF_onNum(setManualAdjPop) }))
           ),
           u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 4, paddingTop: 10, borderTop: "1px dashed #DCE6D6" } },
             u.default.createElement(VF_Field, { label: "ARBs in adjacent barangays" }, u.default.createElement("div", { style: VF_readout }, (adjArbFromMap + VF_num(manualAdjArb, 0)).toLocaleString())),
@@ -586,9 +594,9 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           u.default.createElement("span", { style: VF_pts }, recipScore + " / 20")
         ),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 } },
-          u.default.createElement(VF_Field, { label: "Actual ARBs (2.0 pts / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: actualArb, onChange: (e) => setActualArb(Number(e.target.value)) })),
-          u.default.createElement(VF_Field, { label: "Potential ARBs (1.5 pts / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: potentialArb, onChange: (e) => setPotentialArb(Number(e.target.value)) })),
-          u.default.createElement(VF_Field, { label: "Non-ARBs / farmers (1.0 pt / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: nonArb, onChange: (e) => setNonArb(Number(e.target.value)) }))
+          u.default.createElement(VF_Field, { label: "Actual ARBs (2.0 pts / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: VF_zeroBlank(actualArb), onChange: VF_onNum(setActualArb) })),
+          u.default.createElement(VF_Field, { label: "Potential ARBs (1.5 pts / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: VF_zeroBlank(potentialArb), onChange: VF_onNum(setPotentialArb) })),
+          u.default.createElement(VF_Field, { label: "Non-ARBs / farmers (1.0 pt / 10%)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, value: VF_zeroBlank(nonArb), onChange: VF_onNum(setNonArb) }))
         ),
         u.default.createElement("div", { style: { fontSize: 11.5, color: "#7C8A78", marginTop: 8 } }, "Total project recipients: " + recipTotal.toLocaleString() + ". Composition percentages are of this total, not the barangay-wide ARB count above.")
       ),
@@ -613,9 +621,9 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           u.default.createElement("span", { style: VF_pts }, impScore + " / 30")
         ),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 } },
-          u.default.createElement(VF_Field, { label: "Will serve production areas (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: imp.production, onChange: (e) => setImp({ ...imp, production: Number(e.target.value) }) })),
-          u.default.createElement(VF_Field, { label: "Will serve post-harvest / processing (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: imp.postHarvest, onChange: (e) => setImp({ ...imp, postHarvest: Number(e.target.value) }) })),
-          u.default.createElement(VF_Field, { label: "Connects to existing brgy/municipal/main road (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: imp.connectivity, onChange: (e) => setImp({ ...imp, connectivity: Number(e.target.value) }) }))
+          u.default.createElement(VF_Field, { label: "Will serve production areas (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.production), onChange: (e) => setImp({ ...imp, production: e.target.value === "" ? 0 : Number(e.target.value) }) })),
+          u.default.createElement(VF_Field, { label: "Will serve post-harvest / processing (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.postHarvest), onChange: (e) => setImp({ ...imp, postHarvest: e.target.value === "" ? 0 : Number(e.target.value) }) })),
+          u.default.createElement(VF_Field, { label: "Connects to existing brgy/municipal/main road (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.connectivity), onChange: (e) => setImp({ ...imp, connectivity: e.target.value === "" ? 0 : Number(e.target.value) }) }))
         )
       ),
 
