@@ -150,7 +150,6 @@ Error generating stack: `+a.message+`
   }
   const yn = (v) => (v ? "☑" : "☐");
   const peso = (v) => (typeof v === "number" ? "₱ " + v.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "");
-  const blank = (v) => (v == null || v === "" ? "" : v);
 
   const FONT = "Arial";
   const NAVY = "FF000080"; // "PROJECT VALIDATION FORM NO. 1" title
@@ -340,6 +339,7 @@ Error generating stack: `+a.message+`
   cell("B" + r, "Will serve production areas", {});
   cell("D" + r, "Production Area covered (has.)", { italic: true, size: 9 });
   cell("E" + r, d.imp.production, { bold: true, align: "center", border: { top: MEDIUM, bottom: MEDIUM, left: MEDIUM, right: MEDIUM } });
+  ws.getRow(r).height = 26;
   r++;
   scoredRow("Will serve post harvest and processing facilities", "", d.imp.postHarvest);
   scoredRow("Will connect to existing Barangay or Municipal or Main", "", d.imp.connectivity);
@@ -365,18 +365,7 @@ Error generating stack: `+a.message+`
   r++;
   spacer(10);
 
-  sectionBand("ARBs and Population  (supplementary — not part of the official score)");
-  fieldRow("ARBs in this barangay (on the ARC)", blank(d.ownArb));
-  fieldRow("Population, this barangay", d.ownPop != null ? d.ownPop : "no data");
-  fieldRow("ARB households (ARC record)", d.arbHousehold != null ? d.arbHousehold : "—");
-  fieldRow("Adjacent barangays", d.adjacentList || "");
-  fieldRow("ARBs in adjacent barangays", blank(d.adjArb));
-  fieldRow("Population in adjacent barangays", d.adjPop != null ? d.adjPop : "no data");
-  fieldRow("Total ARBs (this barangay + adjacent)", blank(d.totalArb));
-  fieldRow("Total population (this barangay + adjacent)", d.hasAnyPop ? d.totalPop : "no data");
-  spacer(10);
-
-  cell("A" + r, "Validated By:", { bold: true, color: BLUE });
+  cell("B" + r, "Validated By:", { bold: true, color: BLUE });
   r++;
   cell("B" + r, d.validatedBy || "", { align: "center", border: { bottom: THIN } });
   merge(r, 2, r, 3);
@@ -388,12 +377,12 @@ Error generating stack: `+a.message+`
   r++;
   spacer(8);
 
-  cell("A" + r, "Noted By:", { bold: true, color: BLUE });
+  cell("B" + r, "Noted By:", { bold: true, color: BLUE });
   r++;
   cell("B" + r, d.notedBy || "", { align: "center", border: { bottom: THIN } });
   merge(r, 2, r, 3);
   r++;
-  cell("B" + r, "OIC-CARPO", { italic: true, size: 9, align: "center", color: OLIVE });
+  cell("B" + r, "CARPO - PBD", { italic: true, size: 9, align: "center", color: OLIVE });
   merge(r, 2, r, 3);
   cell("D" + r, "(PARCCOM Representative)", { italic: true, size: 9, align: "center", color: OLIVE });
   merge(r, 4, r, 5);
@@ -901,7 +890,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
         u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px", marginBottom: 16 }, value: validatedBy, onChange: (e) => setValidatedBy(e.target.value), placeholder: "Name — DAR Coordinator" }),
         u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Noted By:"),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 } },
-          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — OIC-CARPO" }),
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — CARPO - PBD" }),
           u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByParpo, onChange: (e) => setNotedByParpo(e.target.value), placeholder: "Name — PARPO I" }),
           u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByRegional, onChange: (e) => setNotedByRegional(e.target.value), placeholder: "Name — PARPO II" })
         )
