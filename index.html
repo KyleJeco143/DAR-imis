@@ -293,9 +293,6 @@ Error generating stack: `+a.message+`
   sectionBand("B.  Land Tenure Status  (20 pts.)");
   colHeads("Hectares", TEAL);
   scoredRow("1. Total CARP Area  3/", d.distributedAreaHa, d.carpScore);
-  blankLine("a. Distributed and/or Leasehold Area");
-  blankLine("     LAD");
-  blankLine("     Leasehold");
   scoredRow("2. Non-CARP Area  5/", d.nonCarpAreaHa != null ? d.nonCarpAreaHa : "", null);
   spacer(6);
 
@@ -565,6 +562,10 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
 
   let munis = u.useMemo(() => (stats ? [...new Set(stats.map((s) => s.municipality))].sort() : []), [stats]);
   let brgysInMuni = u.useMemo(() => (stats ? stats.filter((s) => s.municipality === muni).map((s) => s.barangay).sort() : []), [stats, muni]);
+  let muniTotalAgriLandHa = u.useMemo(
+    () => (stats && muni ? stats.filter((s) => s.municipality === muni).reduce((sum, s) => sum + (s.totalAgriLandHa || 0), 0) : 0),
+    [stats, muni]
+  );
   let own = u.useMemo(() => (stats && muni && brgy ? VF_findStat(stats, muni, brgy) : null), [stats, muni, brgy]);
   let adjacency = u.useMemo(() => (muni && brgy ? VF_findAdjacent(muni, brgy) : { supported: false, neighbors: [] }), [muni, brgy]);
   let boundaryRecords = u.useMemo(
@@ -589,8 +590,13 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let totalPop = (ownPop || 0) + adjPopFromMap + VF_num(manualAdjPop, 0);
   let hasAnyPop = ownPop != null || adjPopKnown.length > 0 || manualAdjPop;
 
-  let carpScore = own && own.carpAreaScore != null ? own.carpAreaScore : own && own.distributedAreaHa > 0 ? 5 : 0;
-  let nonCarpAreaHa = own && own.totalAgriLandHa != null ? Math.max(0, own.totalAgriLandHa - own.distributedAreaHa) : null;
+  // CARP Area is the ARB-distributed area of this barangay plus its adjacent barangays
+  // (same own+adjacent basis used for ARBs/population above). Non-CARP Area is the
+  // municipality's total recorded agricultural land minus that CARP area.
+  let carpAreaHa = (own ? own.distributedAreaHa || 0 : 0) + adjacentRecords.reduce((sum, r) => sum + (r.distributedAreaHa || 0), 0);
+  let pctDistributed = muniTotalAgriLandHa > 0 ? Math.min(100, Math.round((carpAreaHa / muniTotalAgriLandHa) * 1000) / 10) : null;
+  let carpScore = carpAreaHa > 0 ? (pctDistributed != null ? (pctDistributed >= 80 ? 20 : pctDistributed >= 50 ? 15 : 10) : 5) : 0;
+  let nonCarpAreaHa = muniTotalAgriLandHa > 0 ? Math.max(0, Math.round((muniTotalAgriLandHa - carpAreaHa) * 1000) / 1000) : null;
 
   let recipTotal = VF_num(actualArb, 0) + VF_num(potentialArb, 0) + VF_num(nonArb, 0);
   let recipScore = recipTotal > 0
@@ -670,9 +676,9 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             arcName: own && own.arcName,
             arcClassification: own && own.arcClassification,
             projectName, projectType, physicalTarget, projectCost, implementingAgency,
-            distributedAreaHa: own ? own.distributedAreaHa : 0,
+            distributedAreaHa: carpAreaHa,
             nonCarpAreaHa,
-            pctDistributed: own ? own.pctDistributed : null,
+            pctDistributed,
             carpScore,
             ownArb, ownPop,
             arbHousehold: own && own.arbHousehold,
@@ -770,11 +776,11 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           u.default.createElement("span", { style: VF_ptsBox }, carpScore + " / 20")
         ),
         u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 10 } },
-          u.default.createElement(VF_Field, { label: "CARP (Distributed) Area" }, u.default.createElement("div", { style: VF_readout }, own.distributedAreaHa.toLocaleString() + " ha")),
-          u.default.createElement(VF_Field, { label: "Non-CARP Area" }, u.default.createElement("div", { style: VF_readout }, nonCarpAreaHa != null ? nonCarpAreaHa.toLocaleString() + " ha" : "no baseline on file")),
-          u.default.createElement(VF_Field, { label: "% Distributed (of recorded Total Agri Land)" }, u.default.createElement("div", { style: VF_readout }, own.pctDistributed != null ? own.pctDistributed + "%" : "—"))
+          u.default.createElement(VF_Field, { label: "CARP (Distributed) Area — this barangay + adjacent" }, u.default.createElement("div", { style: VF_readout }, carpAreaHa.toLocaleString() + " ha")),
+          u.default.createElement(VF_Field, { label: "Non-CARP Area — municipality total minus CARP area" }, u.default.createElement("div", { style: VF_readout }, nonCarpAreaHa != null ? nonCarpAreaHa.toLocaleString() + " ha" : "no baseline on file")),
+          u.default.createElement(VF_Field, { label: "% Distributed (of municipality's recorded Total Agri Land)" }, u.default.createElement("div", { style: VF_readout }, pctDistributed != null ? pctDistributed + "%" : "—"))
         ),
-        u.default.createElement("div", { style: { fontSize: 11.5, color: "#7C8A78" } }, "80–100% distributed = 20 pts, 50–79% = 15 pts, 49% and below (or CARP area with no baseline) = 10 pts, no CARP area recorded = 5 pts. \"Total Agri Land\" is a 1993–2015 ARC baseline and may be outdated — verify on site if the % looks off."),
+        u.default.createElement("div", { style: { fontSize: 11.5, color: "#7C8A78" } }, "80–100% distributed = 20 pts, 50–79% = 15 pts, 49% and below (or CARP area with no municipality-wide baseline) = 10 pts, no CARP area recorded = 5 pts. \"Total Agri Land\" is summed across the whole municipality from a 1993–2015 ARC baseline and may be outdated — verify on site if the % looks off."),
 
         u.default.createElement("div", { style: { marginTop: 14, paddingTop: 14, borderTop: "1px solid #DCE6D6" } },
           u.default.createElement("div", { style: { fontWeight: 700, fontSize: 13, marginBottom: 8 } }, "ARBs — own barangay, adjacent barangays, and population"),
