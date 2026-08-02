@@ -295,22 +295,22 @@ Error generating stack: `+a.message+`
     spacer(14),
 
     "<tr>" + td("Validated By:", { bold: true, color: NAVY, colspan: 4 }) + "</tr>",
-    "<tr>" + td("ENGR. KYLE JECO E. BENITO", { align: "center", colspan: 2 }) +
+    "<tr>" + td(d.validatedBy || "", { align: "center", colspan: 2 }) +
       td("", { colspan: 2, noBorder: true, }) + "</tr>",
     "<tr>" + td("DAR Coordinator", { italic: true, align: "center", size: "9pt", colspan: 2 }) +
       td("(LGU Representative)", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
     spacer(10),
 
     "<tr>" + td("Noted By:", { bold: true, color: NAVY, colspan: 4 }) + "</tr>",
-    "<tr>" + td("LORENZA G. SEVILLA", { align: "center", colspan: 2 }) +
+    "<tr>" + td(d.notedBy || "", { align: "center", colspan: 2 }) +
       td("", { colspan: 2, noBorder: true }) + "</tr>",
     "<tr>" + td("OIC-CARPO", { italic: true, align: "center", size: "9pt", colspan: 2 }) +
       td("PARCCOM Representative", { italic: true, align: "center", size: "9pt", colspan: 2, noBorder: true }) + "</tr>",
     spacer(8),
-    "<tr>" + td("CHARLOTTE F. LASMARIAS", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
+    "<tr>" + td(d.notedByParpo || "", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
     "<tr>" + td("PARPO II", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
     spacer(8),
-    "<tr>" + td("MARIA ANA R. FRANCISCO, CESO V", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
+    "<tr>" + td(d.notedByRegional || "", { align: "center", colspan: 2 }) + td("", { colspan: 2, noBorder: true }) + "</tr>",
     "<tr>" + td("Regional Director", { italic: true, align: "center", size: "9pt", colspan: 4 }) + "</tr>",
   ].join("\n");
 
@@ -423,6 +423,8 @@ function VF_fromDb(r) {
     justification: r.justification,
     validatedBy: r.validated_by,
     notedBy: r.noted_by,
+    notedByParpo: r.noted_by_parpo,
+    notedByRegional: r.noted_by_regional,
     totalScore: r.total_score,
     updatedAt: r.updated_at,
   };
@@ -449,6 +451,8 @@ function VF_toDb(r) {
     justification: r.justification || null,
     validated_by: r.validatedBy || null,
     noted_by: r.notedBy || null,
+    noted_by_parpo: r.notedByParpo || null,
+    noted_by_regional: r.notedByRegional || null,
     total_score: r.totalScore,
     updated_at: new Date().toISOString(),
   };
@@ -476,6 +480,8 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [justification, setJustification] = u.useState("");
   let [validatedBy, setValidatedBy] = u.useState("");
   let [notedBy, setNotedBy] = u.useState("");
+  let [notedByParpo, setNotedByParpo] = u.useState("");
+  let [notedByRegional, setNotedByRegional] = u.useState("");
 
   u.useEffect(() => {
     fetch("data/arb-barangay-stats.json", { cache: "no-cache" })
@@ -537,7 +543,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setImp({ production: 0, postHarvest: 0, connectivity: 0 });
     setSafe({ noRow: false, noEnviro: false });
     setHasRoadMap(false);
-    setJustification(""); setValidatedBy(""); setNotedBy("");
+    setJustification(""); setValidatedBy(""); setNotedBy(""); setNotedByParpo(""); setNotedByRegional("");
   };
   let loadRecord = (r) => {
     setRecordId(r.id);
@@ -548,6 +554,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setActualArb(r.actualArb || 0); setPotentialArb(r.potentialArb || 0); setNonArb(r.nonArb || 0);
     setOrg(r.org); setImp(r.imp); setSafe(r.safe); setHasRoadMap(!!r.hasRoadMap);
     setJustification(r.justification || ""); setValidatedBy(r.validatedBy || ""); setNotedBy(r.notedBy || "");
+    setNotedByParpo(r.notedByParpo || ""); setNotedByRegional(r.notedByRegional || "");
   };
   let saveForm = () => {
     if (!muni || !brgy) return;
@@ -557,7 +564,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       projectName, projectType, physicalTarget, projectCost, implementingAgency,
       actualArb, potentialArb, nonArb, manualAdjArb, manualAdjPop,
       org, imp, safe, hasRoadMap,
-      justification, validatedBy, notedBy,
+      justification, validatedBy, notedBy, notedByParpo, notedByRegional,
       totalScore: Math.round(totalScore * 10) / 10,
     };
     saveRecord(record);
@@ -608,7 +615,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
             totalArb, totalPop, hasAnyPop,
             actualArb, potentialArb, nonArb, recipTotal, recipScore,
             org, orgScore, imp, impScore, safe, safeScore, hasRoadMap,
-            justification, validatedBy, notedBy,
+            justification, validatedBy, notedBy, notedByParpo, notedByRegional,
             totalScore,
           }),
           style: { ...be, display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 12.5 }
@@ -801,15 +808,13 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
       ),
 
       u.default.createElement("div", { style: { ...VF_card, marginBottom: 0 } },
-        u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 } },
-          u.default.createElement("div", null,
-            u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Validated By:"),
-            u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: validatedBy, onChange: (e) => setValidatedBy(e.target.value), placeholder: "Name — DAR Coordinator" })
-          ),
-          u.default.createElement("div", null,
-            u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Noted By:"),
-            u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — CARPO" })
-          )
+        u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Validated By:"),
+        u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px", marginBottom: 16 }, value: validatedBy, onChange: (e) => setValidatedBy(e.target.value), placeholder: "Name — DAR Coordinator" }),
+        u.default.createElement("div", { style: { fontSize: 11.5, color: "#4A5A46", marginBottom: 6 } }, "Noted By:"),
+        u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 } },
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedBy, onChange: (e) => setNotedBy(e.target.value), placeholder: "Name — OIC-CARPO" }),
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByParpo, onChange: (e) => setNotedByParpo(e.target.value), placeholder: "Name — PARPO II" }),
+          u.default.createElement("input", { style: { ...VF_input, borderStyle: "none", borderBottom: "1px solid #0E4D2B", borderRadius: 0, padding: "4px 2px" }, value: notedByRegional, onChange: (e) => setNotedByRegional(e.target.value), placeholder: "Name — Regional Director" })
         )
       )
     )
