@@ -33,9 +33,26 @@ can sanity-check a rebuild.
 
 Municipality names are spelled inconsistently across the three sources (e.g.
 `CITY OF ALAMINOS` / `ALAMINOS CITY` / `Alaminos`, `Sta. Maria` / `Malasique`);
-the script normalizes these to join the datasets. Check the coverage summary
-after any rebuild — a big drop usually means a source added a new spelling
-variant that needs adding to `MUNI_FIXES`.
+the script normalizes these to join the datasets, and picks one consistent
+display spelling per municipality (always including "City" if any source row
+used it) so the same place never splits into two dropdown entries. Check the
+coverage summary after any rebuild — a big drop usually means a source added
+a new spelling variant that needs adding to `MUNI_FIXES`.
+
+Barangay names have the same problem one level down — typos, transposed
+letters, hyphens vs spaces, "Sta."/"Sto." abbreviated in one source and
+spelled out in another, stray periods, and genuine same-place respellings
+(e.g. Umingan's "Don Abalos" vs "Don Justo Abalos"). The script strips
+diacritics/periods and expands "Sta."/"Sto." automatically, then routes
+through a curated `KNOWN_BARANGAY_ALIASES` table for the rest — found by
+cross-checking every barangay that failed to match the PSA population list
+against that municipality's real barangay list. Directional/numbered splits
+that are genuinely different places (e.g. "Carmay East" vs "Carmay West",
+"San Aurelio 1st/2nd/3rd") are deliberately left alone even when they look
+similar. Barangay rows literally named "NULL" (a handful in the ARB list,
+in San Jacinto/Bayambang/Sual) are dropped rather than shown as a fake
+barangay. If a rebuild's population match rate drops, check for a new
+unmatched spelling that belongs in `KNOWN_BARANGAY_ALIASES`.
 
 ## Saving records (Supabase setup)
 
@@ -115,8 +132,14 @@ for the saved-forms list, not a live value.
   approximate municipality outline exists, which isn't precise enough to
   honestly claim two specific barangays share a border — the app says so and
   falls back to manual entry rather than guessing.
-- **Population match rate is ~85%** against the ARB/ARC barangay set, mostly
-  due to spelling variants the normalizer doesn't catch yet.
+- **Population match rate is ~95%** against the ARB/ARC barangay set after
+  the alias cleanup above. The remainder is mostly barangays that appear to
+  be filed under the wrong municipality in the source data (e.g. a handful
+  of Aguilar/Mangatarem barangays showing up under Bani, and a Santa Maria
+  barangay under Tayug) — the script doesn't attempt to correct those, since
+  reassigning a beneficiary's municipality without stronger confirmation
+  risks being wrong in a more consequential way than just leaving the
+  population figure blank.
 - Sections C (Farmers Organization), D (Importance/Necessity), and E
   (Safeguards) of the validation form are inherently judgment calls from an
   actual site visit — nothing in these spreadsheets can answer them, so
