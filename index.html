@@ -296,9 +296,6 @@ Error generating stack: `+a.message+`
   blankLine("a. Distributed and/or Leasehold Area");
   blankLine("     LAD");
   blankLine("     Leasehold");
-  blankLine("b. Being processed  4/");
-  blankLine("c. To be covered within 12 months");
-  blankLine("d. To be covered beyond 12 months");
   scoredRow("2. Non-CARP Area  5/", d.nonCarpAreaHa != null ? d.nonCarpAreaHa : "", null);
   spacer(6);
 
@@ -336,13 +333,9 @@ Error generating stack: `+a.message+`
   spacer(6);
 
   sectionBand("D.  Importance / Necessity of the Project  (30 pts.)", null, d.impScore == null ? "" : d.impScore);
-  cell("B" + r, "Will serve production areas", {});
-  cell("D" + r, "Production Area covered (has.)", { italic: true, size: 9 });
-  cell("E" + r, d.imp.production, { bold: true, align: "center", border: { top: MEDIUM, bottom: MEDIUM, left: MEDIUM, right: MEDIUM } });
-  ws.getRow(r).height = 26;
-  r++;
-  scoredRow("Will serve post harvest and processing facilities", "", d.imp.postHarvest);
-  scoredRow("Will connect to existing Barangay or Municipal or Main", "", d.imp.connectivity);
+  checkRow("Will serve production areas", d.imp.production);
+  checkRow("Will serve post harvest and processing facilities", d.imp.postHarvest);
+  checkRow("Will connect to existing Barangay or Municipal or Main", d.imp.connectivity);
   spacer(6);
 
   sectionBand("E.  Safeguards  (5 pts.)", null, d.safeScore == null ? "" : d.safeScore);
@@ -494,7 +487,7 @@ function VF_fromDb(r) {
     manualAdjArb: r.manual_adj_arb,
     manualAdjPop: r.manual_adj_pop,
     org: r.org || { arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, arispIII: false, similarAgribusiness: false },
-    imp: r.imp || { production: 0, postHarvest: 0, connectivity: 0 },
+    imp: r.imp || { production: false, postHarvest: false, connectivity: false },
     safe: r.safe || { noRow: false, noEnviro: false },
     hasRoadMap: r.has_road_map,
     justification: r.justification,
@@ -551,7 +544,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
   let [potentialArb, setPotentialArb] = u.useState(0);
   let [nonArb, setNonArb] = u.useState(0);
   let [org, setOrg] = u.useState({ arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, arispIII: false, similarAgribusiness: false });
-  let [imp, setImp] = u.useState({ production: 0, postHarvest: 0, connectivity: 0 });
+  let [imp, setImp] = u.useState({ production: false, postHarvest: false, connectivity: false });
   let [safe, setSafe] = u.useState({ noRow: false, noEnviro: false });
   let [hasRoadMap, setHasRoadMap] = u.useState(false);
   let [justification, setJustification] = u.useState("");
@@ -605,7 +598,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     : 0;
 
   let orgScore = (org.arccess ? 4 : 0) + (org.apcp ? 4 : 0) + (org.otherPartnership ? 4 : 0) + (org.otherLivelihood ? 4 : 0) + (org.arispIII ? 4 : 0) + (org.similarAgribusiness ? 5 : 0);
-  let impScore = Math.min(10, VF_num(imp.production, 0)) + Math.min(10, VF_num(imp.postHarvest, 0)) + Math.min(10, VF_num(imp.connectivity, 0));
+  let impScore = (imp.production ? 10 : 0) + (imp.postHarvest ? 10 : 0) + (imp.connectivity ? 10 : 0);
   let safeScore = (safe.noRow ? 2.5 : 0) + (safe.noEnviro ? 2.5 : 0);
 
   let totalScore = carpScore + recipScore + orgScore + impScore + safeScore;
@@ -617,7 +610,7 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
     setProjectName(""); setProjectType(""); setPhysicalTarget(""); setProjectCost(""); setImplementingAgency("");
     setActualArb(0); setPotentialArb(0); setNonArb(0);
     setOrg({ arccess: false, apcp: false, otherPartnership: false, otherLivelihood: false, arispIII: false, similarAgribusiness: false });
-    setImp({ production: 0, postHarvest: 0, connectivity: 0 });
+    setImp({ production: false, postHarvest: false, connectivity: false });
     setSafe({ noRow: false, noEnviro: false });
     setHasRoadMap(false);
     setJustification(""); setValidatedBy(""); setNotedBy(""); setNotedByParpo(""); setNotedByRegional("");
@@ -854,11 +847,9 @@ function VF_View({ records, recordsLoaded, saveRecord, removeRecord }) {
           u.default.createElement("span", null, "D. Importance / Necessity of the Project"),
           u.default.createElement("span", { style: VF_ptsBox }, impScore + " / 30")
         ),
-        u.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 } },
-          u.default.createElement(VF_Field, { label: "Will serve production areas (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.production), onChange: (e) => setImp({ ...imp, production: e.target.value === "" ? 0 : Number(e.target.value) }) })),
-          u.default.createElement(VF_Field, { label: "Will serve post-harvest / processing (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.postHarvest), onChange: (e) => setImp({ ...imp, postHarvest: e.target.value === "" ? 0 : Number(e.target.value) }) })),
-          u.default.createElement(VF_Field, { label: "Connects to existing brgy/municipal/main road (0–10)" }, u.default.createElement("input", { style: VF_input, type: "number", min: 0, max: 10, value: VF_zeroBlank(imp.connectivity), onChange: (e) => setImp({ ...imp, connectivity: e.target.value === "" ? 0 : Number(e.target.value) }) }))
-        )
+        checkbox(imp.production, (v) => setImp({ ...imp, production: v }), "Will serve production areas", "10 pts"),
+        checkbox(imp.postHarvest, (v) => setImp({ ...imp, postHarvest: v }), "Will serve post harvest and processing facilities", "10 pts"),
+        checkbox(imp.connectivity, (v) => setImp({ ...imp, connectivity: v }), "Will connect to existing Barangay or Municipal or Main", "10 pts")
       ),
 
       u.default.createElement("div", { style: VF_card },
