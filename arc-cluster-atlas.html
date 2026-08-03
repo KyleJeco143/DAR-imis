@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARC Cluster Atlas — DAR Pangasinan IMIS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E4D2B;
+    --ink-deep:#0A3A20;
+    --paper:#F5F0D8;
+    --paper-2:#FBF9EE;
+    --paper-3:#FDFCF4;
+    --line:#DCE6D6;
+    --gold:#D4A017;
+    --muted:#7C8A78;
+    --card-shadow: 0 1px 0 rgba(14,77,43,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:#1F2A1A;}
+  #root{display:flex;flex-direction:column;height:100vh;min-height:640px;}
+
+  /* ---------- Header ---------- */
+  .hdr{
+    display:flex;align-items:center;gap:14px;
+    padding:14px 22px;
+    background:var(--ink);
+    color:var(--paper-2);
+    border-bottom:3px solid var(--gold);
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
+  }
+  .hdr::after{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(115deg, rgba(212,160,23,0.05) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  .seal{flex-shrink:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.35));}
+  .hdr-text{position:relative;z-index:1;}
+  .hdr-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;opacity:.75;text-transform:uppercase;}
+  .hdr-title{font-family:'Roboto Slab',serif;font-weight:700;font-size:19px;line-height:1.15;margin-top:2px;}
+  .hdr-sub{font-size:11.5px;opacity:.8;margin-top:3px;}
+  .hdr-right{margin-left:auto;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10.5px;opacity:.8;position:relative;z-index:1;}
+  .hdr-right b{display:block;font-size:15px;color:var(--gold);font-family:'Roboto Slab',serif;font-weight:700;}
+
+  /* ---------- Body layout ---------- */
+  .body{display:flex;flex:1;min-height:0;}
+  .sidebar{
+    width:328px;flex-shrink:0;
+    background:var(--paper-3);
+    border-right:1.5px solid var(--ink);
+    display:flex;flex-direction:column;
+    min-height:0;
+  }
+  .search-wrap{padding:14px 14px 10px;border-bottom:1px solid var(--line);flex-shrink:0;}
+  .search-box{position:relative;}
+  .search-box input{
+    width:100%;padding:9px 10px 9px 32px;border:1px solid #BFD0BC;background:var(--paper-2);
+    border-radius:3px;font-size:12.5px;font-family:'IBM Plex Sans',sans-serif;color:#1F2A1A;
+  }
+  .search-box input:focus{outline:2px solid var(--gold);outline-offset:0;}
+  .search-box i{position:absolute;left:10px;top:11px;color:var(--muted);font-size:12px;}
+  .reset-btn{
+    margin-top:8px;width:100%;padding:7px 8px;background:none;border:1px solid var(--ink);color:var(--ink);
+    font-size:11px;font-weight:600;letter-spacing:.03em;border-radius:3px;cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;transition:background .15s,color .15s;
+  }
+  .reset-btn:hover{background:var(--ink);color:var(--paper-2);}
+
+  .cluster-list{flex:1;overflow-y:auto;padding:10px 12px 20px;}
+  .cluster-card{
+    border:1.5px solid var(--line);
+    background:var(--paper-2);
+    border-radius:4px;
+    margin-bottom:10px;
+    cursor:pointer;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(8px);
+    animation:cardIn .45s cubic-bezier(.2,.7,.3,1) forwards;
+    transition:border-color .18s, box-shadow .18s, transform .18s;
+  }
+  .cluster-card:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(14,77,43,0.12);}
+  .cluster-card.active{border-color:var(--c,var(--ink));box-shadow:0 4px 14px rgba(14,77,43,0.18);}
+  @keyframes cardIn{to{opacity:1;transform:translateY(0);}}
+
+  .cc-head{display:flex;align-items:center;gap:10px;padding:11px 12px;}
+  .cc-swatch{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 2px rgba(255,255,255,0.6) inset;}
+  .cc-title{flex:1;min-width:0;}
+  .cc-abbr{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);}
+  .cc-name{font-family:'Roboto Slab',serif;font-weight:600;font-size:13px;line-height:1.25;margin-top:1px;color:var(--ink-deep);}
+  .cc-chev{font-size:11px;color:var(--muted);transition:transform .25s;flex-shrink:0;}
+  .cluster-card.active .cc-chev{transform:rotate(90deg);color:var(--c,var(--ink));}
+  .cc-meta{display:flex;gap:10px;padding:0 12px 11px 33px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+  .cc-meta span{display:flex;align-items:center;gap:4px;}
+
+  .cc-body{
+    max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.2,.7,.3,1);
+    background:var(--paper-3);border-top:1px dashed var(--line);
+  }
+  .cluster-card.active .cc-body{max-height:600px;}
+  .cc-section{padding:10px 12px;}
+  .cc-label{font-size:9.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:5px;}
+  .chip{
+    font-size:11px;padding:3px 8px;border-radius:11px;background:var(--paper);border:1px solid var(--line);
+    color:var(--ink-deep);cursor:pointer;transition:background .15s,transform .1s;
+  }
+  .chip:hover{transform:translateY(-1px);}
+  .arc-row{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:11.5px;padding:5px 0;border-bottom:1px solid var(--line);
+    cursor:pointer;
+  }
+  .arc-row:last-child{border-bottom:none;}
+  .arc-row:hover .arc-name{color:var(--c,var(--ink));}
+  .arc-name{font-weight:600;color:#1F2A1A;transition:color .15s;}
+  .arc-muni{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);}
+
+  .empty-note{padding:26px 16px;text-align:center;color:var(--muted);font-size:12px;}
+
+  /* ---------- Map area ---------- */
+  .map-area{flex:1;position:relative;min-width:0;}
+  #map{width:100%;height:100%;background:#EFEADA;}
+  .map-title-overlay{
+    position:absolute;top:14px;left:14px;z-index:600;
+    background:rgba(253,252,244,0.92);border:1.5px solid var(--ink);border-radius:3px;
+    padding:8px 14px;pointer-events:none;
+  }
+  .map-title-overlay .big{font-family:'Roboto Slab',serif;font-weight:700;font-size:15px;color:var(--ink-deep);}
+  .map-title-overlay .small{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.04em;margin-top:1px;}
+
+  .legend{
+    position:absolute;bottom:14px;left:14px;z-index:600;
+    background:rgba(253,252,244,0.95);border:1.5px solid var(--ink);border-radius:3px;
+    padding:10px 14px;max-width:280px;
+  }
+  .legend-title{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-bottom:7px;text-transform:uppercase;}
+  .legend-row{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:5px;cursor:pointer;}
+  .legend-row:last-child{margin-bottom:0;}
+  .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+  .banner{
+    position:absolute;top:14px;right:14px;z-index:600;
+    background:rgba(253,252,244,0.95);border:1.5px solid var(--gold);border-radius:3px;
+    padding:9px 14px;max-width:300px;
+    opacity:0;transform:translateY(-6px);pointer-events:none;
+    transition:opacity .3s,transform .3s;
+  }
+  .banner.show{opacity:1;transform:translateY(0);}
+  .banner .b-abbr{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.06em;}
+  .banner .b-name{font-family:'Roboto Slab',serif;font-weight:700;font-size:13px;color:var(--ink-deep);line-height:1.2;margin-top:2px;}
+
+  .muni-label{background:transparent!important;border:none!important;box-shadow:none!important;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;color:#5A6656;text-shadow:0 0 3px var(--paper),0 0 3px var(--paper);}
+  .muni-label.on{color:var(--ink-deep);font-weight:700;font-size:10.5px;}
+  .leaflet-popup-content-wrapper{border-radius:4px;border:1.5px solid var(--ink);}
+  .leaflet-popup-tip{background:var(--paper-2);}
+  .pop-cluster{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;}
+  .pop-arc{font-family:'Roboto Slab',serif;font-weight:700;font-size:13.5px;color:var(--ink-deep);margin:2px 0 4px;}
+  .pop-muni{font-size:11.5px;color:#3A463A;}
+
+  @keyframes pulseRing{
+    0%{stroke-opacity:.9;r:9;}
+    70%{stroke-opacity:0;r:20;}
+    100%{stroke-opacity:0;r:20;}
+  }
+  .footer-strip{
+    flex-shrink:0;padding:6px 22px;background:var(--ink);color:rgba(245,240,216,0.65);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;display:flex;justify-content:space-between;
+  }
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:#C9C4A8;border-radius:4px;}
+</style>
+</head>
+<body>
+<div id="root">
+
+  <div class="hdr">
+    <svg class="seal" width="36" height="36" viewBox="0 0 34 34" aria-hidden="true">
+      <circle cx="17" cy="17" r="16" fill="#0A3A20" stroke="#D4A017" stroke-width="2"/>
+      <path d="M17 8 L17 25 M17 12 L13 9 M17 12 L21 9 M17 16.5 L13 13.5 M17 16.5 L21 13.5 M17 21 L13 18 M17 21 L21 18"
+        stroke="#F5F0D8" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div class="hdr-text">
+      <div class="hdr-eyebrow">Infrastructure Monitoring &amp; Information System</div>
+      <div class="hdr-title">ARC Cluster Atlas</div>
+      <div class="hdr-sub">DAR Provincial Office — Pangasinan</div>
+    </div>
+    <div class="hdr-right"><b id="cCount">–</b>clusters mapped</div>
+  </div>
+
+  <div class="body">
+    <div class="sidebar">
+      <div class="search-wrap">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="searchInput" placeholder="Search cluster, ARC, or municipality…"/>
+        </div>
+        <button class="reset-btn" id="resetBtn"><i class="fa-solid fa-arrows-rotate" style="margin-right:5px;"></i>Show entire province</button>
+      </div>
+      <div class="cluster-list" id="clusterList"></div>
+    </div>
+
+    <div class="map-area">
+      <div id="map"></div>
+      <div class="map-title-overlay">
+        <div class="big">Pangasinan</div>
+        <div class="small">ARC Clusters · Municipalities · ARCs</div>
+      </div>
+      <div class="banner" id="banner">
+        <div class="b-abbr" id="bAbbr"></div>
+        <div class="b-name" id="bName"></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+  <div class="footer-strip">
+    <span>DAR IMIS · ARC Cluster Module</span>
+    <span id="footStamp"></span>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ============ EMBEDDED DATA ============ */
+const MUNI_POLYS = {"Agno": [[[16.13433, 119.87205], [16.14062, 119.84731], [16.17804, 119.81984], [16.2042, 119.76387], [16.12433, 119.778], [16.1128, 119.7636], [16.05475, 119.75676], [16.02139, 119.77356], [15.99293, 119.76269], [16.01512, 119.81833], [16.07518, 119.83201], [16.11424, 119.87774], [16.13433, 119.87205]]], "Aguilar": [[[15.85869, 120.29886], [15.90992, 120.24745], [15.89304, 120.2025], [15.86716, 120.18351], [15.82626, 120.12638], [15.81591, 120.1506], [15.77171, 120.15845], [15.74657, 120.1722], [15.76573, 120.19172], [15.8085, 120.25485], [15.84012, 120.27357], [15.85869, 120.29886]]], "Alaminos": [[[16.16242, 120.08119], [16.19001, 120.02907], [16.17019, 120.01651], [16.22844, 119.97705], [16.24456, 119.92398], [16.23015, 119.94642], [16.19316, 119.93877], [16.19208, 119.92458], [16.15411, 119.90255], [16.13404, 119.90232], [16.11599, 119.9452], [16.0485, 119.99611], [16.08754, 120.01274], [16.13997, 120.02209], [16.16242, 120.08119]]], "Alcala": [[[15.86786, 120.55505], [15.85493, 120.5232], [15.87392, 120.51559], [15.85314, 120.47072], [15.83125, 120.4778], [15.81966, 120.48402], [15.80292, 120.55897], [15.81299, 120.57174], [15.84129, 120.5801], [15.86786, 120.55505]]], "Anda": [[[16.3501, 119.98969], [16.33275, 119.95141], [16.2955, 119.93344], [16.22387, 119.99856], [16.25083, 120.01939], [16.28114, 119.99926], [16.31103, 120.01983], [16.3231, 119.99817], [16.3501, 119.98969]]], "Asingan": [[[16.02271, 120.70766], [16.02587, 120.68062], [16.04769, 120.62881], [16.00939, 120.61153], [15.97325, 120.63332], [15.94604, 120.60602], [15.93189, 120.64835], [15.96817, 120.6632], [15.99653, 120.70567], [16.02271, 120.70766]]], "Balungao": [[[15.94144, 120.71587], [15.93203, 120.66094], [15.87845, 120.66136], [15.83097, 120.68341], [15.85101, 120.73089], [15.9024, 120.71358], [15.93518, 120.72415], [15.94144, 120.71587]]], "Bani": [[[16.24774, 119.91858], [16.23349, 119.88203], [16.27679, 119.81332], [16.28976, 119.778], [16.23396, 119.77686], [16.2042, 119.76387], [16.17804, 119.81984], [16.14062, 119.84731], [16.13433, 119.87205], [16.13404, 119.90232], [16.15411, 119.90255], [16.19208, 119.92458], [16.19316, 119.93877], [16.23015, 119.94642], [16.24456, 119.92398], [16.24774, 119.91858]]], "Basista": [[[15.89265, 120.39777], [15.88261, 120.36719], [15.86153, 120.36623], [15.84837, 120.38748], [15.84608, 120.43485], [15.89265, 120.39777]]], "Bautista": [[[15.81299, 120.57174], [15.80292, 120.55897], [15.81966, 120.48402], [15.83125, 120.4778], [15.81664, 120.45902], [15.78692, 120.45588], [15.77221, 120.55704], [15.81299, 120.57174]]], "Bayambang": [[[15.83125, 120.4778], [15.85314, 120.47072], [15.84608, 120.43485], [15.84837, 120.38748], [15.78448, 120.36508], [15.75568, 120.39426], [15.75378, 120.42768], [15.72224, 120.46759], [15.77221, 120.55704], [15.78692, 120.45588], [15.81664, 120.45902], [15.83125, 120.4778]]], "Binalonan": [[[16.10576, 120.61447], [16.09064, 120.58008], [16.08513, 120.56336], [16.05802, 120.55989], [16.01422, 120.57639], [16.00939, 120.61153], [16.04769, 120.62881], [16.09804, 120.62395], [16.10576, 120.61447]]], "Binmaley": [[[16.00855, 120.31791], [16.06117, 120.3104], [16.04082, 120.25052], [15.97216, 120.26423], [15.9557, 120.2914], [15.97141, 120.32287], [16.00855, 120.31791]]], "Bolinao": [[[16.39343, 119.91217], [16.36947, 119.96124], [16.39873, 119.96127], [16.42497, 119.93368], [16.42278, 119.91398], [16.39343, 119.91217]], [[16.24774, 119.91858], [16.30098, 119.91422], [16.36171, 119.93021], [16.39214, 119.90143], [16.39097, 119.87997], [16.36821, 119.85646], [16.36002, 119.81668], [16.33268, 119.78878], [16.28976, 119.778], [16.27679, 119.81332], [16.23349, 119.88203], [16.24774, 119.91858]]], "Bugallon": [[[15.9344, 120.26827], [15.95833, 120.25317], [16.00375, 120.18586], [15.9712, 120.17006], [15.964, 120.14052], [15.92684, 120.09348], [15.9144, 120.10938], [15.82899, 120.12211], [15.82626, 120.12638], [15.86716, 120.18351], [15.89304, 120.2025], [15.90992, 120.24745], [15.9344, 120.26827]]], "Burgos": [[[16.01085, 119.90158], [16.02693, 119.91464], [16.06713, 119.90722], [16.08193, 119.8857], [16.11424, 119.87774], [16.07518, 119.83201], [16.01512, 119.81833], [15.99293, 119.76269], [15.9656, 119.74972], [15.94345, 119.75937], [15.96745, 119.79108], [15.97343, 119.82116], [16.01717, 119.86553], [16.01085, 119.90158]]], "Calasiao": [[[16.03581, 120.37902], [16.00855, 120.31791], [15.97141, 120.32287], [15.95227, 120.39088], [15.95009, 120.3985], [15.98457, 120.38347], [16.0247, 120.38601], [16.03581, 120.37902]]], "Dasol": [[[16.01085, 119.90158], [16.01717, 119.86553], [15.97343, 119.82116], [15.96745, 119.79108], [15.94345, 119.75937], [15.92264, 119.80455], [15.95579, 119.81211], [15.96263, 119.85467], [15.87949, 119.894], [15.89066, 119.91191], [15.88132, 119.94026], [15.91848, 120.01015], [15.94877, 119.98307], [15.94748, 119.95163], [16.00052, 119.92702], [16.01085, 119.90158]]], "Infanta": [[[15.92684, 120.09348], [15.90406, 120.06984], [15.92605, 120.0379], [15.91848, 120.01015], [15.88132, 119.94026], [15.89066, 119.91191], [15.87949, 119.894], [15.83546, 119.91279], [15.80712, 119.90178], [15.80492, 119.9735], [15.81966, 119.9989], [15.87221, 120.01962], [15.87415, 120.03642], [15.8437, 120.06063], [15.82328, 120.10585], [15.82899, 120.12211], [15.9144, 120.10938], [15.92684, 120.09348]]], "Labrador": [[[16.03807, 120.1423], [16.06298, 120.1089], [16.02405, 120.07595], [16.01255, 120.0443], [15.97856, 120.08033], [15.92684, 120.09348], [15.964, 120.14052], [15.9712, 120.17006], [16.00375, 120.18586], [16.00854, 120.16131], [16.03807, 120.1423]]], "Lingayen": [[[16.04082, 120.25052], [16.03684, 120.21753], [16.04851, 120.18824], [16.03807, 120.1423], [16.00854, 120.16131], [16.00375, 120.18586], [15.95833, 120.25317], [15.9344, 120.26827], [15.9557, 120.2914], [15.97216, 120.26423], [16.04082, 120.25052]]], "Mabini": [[[16.13404, 119.90232], [16.13433, 119.87205], [16.11424, 119.87774], [16.08193, 119.8857], [16.06713, 119.90722], [16.02693, 119.91464], [16.01085, 119.90158], [16.00052, 119.92702], [15.94748, 119.95163], [15.94877, 119.98307], [15.91848, 120.01015], [15.92605, 120.0379], [15.90406, 120.06984], [15.92684, 120.09348], [15.97856, 120.08033], [16.01255, 120.0443], [16.03877, 120.02263], [16.0485, 119.99611], [16.11599, 119.9452], [16.13404, 119.90232]]], "Malasique": [[[15.96604, 120.48856], [15.96909, 120.45506], [15.95009, 120.3985], [15.95227, 120.39088], [15.89265, 120.39777], [15.84608, 120.43485], [15.85314, 120.47072], [15.87392, 120.51559], [15.90775, 120.51751], [15.93681, 120.50014], [15.96604, 120.48856]]], "Manaoag": [[[16.07552, 120.53218], [16.07708, 120.4926], [16.04476, 120.45567], [16.01518, 120.48135], [15.98973, 120.48417], [15.98824, 120.49189], [15.99107, 120.54418], [16.00026, 120.5512], [16.03243, 120.50719], [16.07552, 120.53218]]], "Mangaldan": [[[16.09749, 120.423], [16.09601, 120.38074], [16.06737, 120.35861], [16.03581, 120.37902], [16.0247, 120.38601], [16.02802, 120.41912], [16.0431, 120.44468], [16.05156, 120.42767], [16.09749, 120.423]]], "Mangatarem": [[[15.83362, 120.31007], [15.85869, 120.29886], [15.84012, 120.27357], [15.8085, 120.25485], [15.76573, 120.19172], [15.74657, 120.1722], [15.6872, 120.21245], [15.61777, 120.25286], [15.63927, 120.26539], [15.64461, 120.31116], [15.68075, 120.32786], [15.71176, 120.35839], [15.73547, 120.36228], [15.75568, 120.39426], [15.78448, 120.36508], [15.78902, 120.34537], [15.83362, 120.31007]]], "Mapandan": [[[15.98973, 120.48417], [16.01518, 120.48135], [16.04476, 120.45567], [16.0431, 120.44468], [16.02802, 120.41912], [15.98973, 120.48417]]], "Natividad": [[[16.02826, 120.90565], [16.10342, 120.87224], [16.07343, 120.80389], [16.04735, 120.76923], [16.00728, 120.7811], [16.00882, 120.81998], [16.02826, 120.90565]]], "Pozzurobio": [[[16.09064, 120.58008], [16.15346, 120.56084], [16.13881, 120.4822], [16.07708, 120.4926], [16.07552, 120.53218], [16.08513, 120.56336], [16.09064, 120.58008]]], "Rosales": [[[15.93203, 120.66094], [15.92911, 120.64027], [15.89545, 120.61338], [15.88669, 120.59468], [15.86243, 120.59009], [15.86089, 120.60363], [15.81556, 120.61506], [15.83097, 120.68341], [15.87845, 120.66136], [15.93203, 120.66094]]], "San Carlos City": [[[15.95227, 120.39088], [15.97141, 120.32287], [15.9557, 120.2914], [15.9344, 120.26827], [15.90992, 120.24745], [15.85869, 120.29886], [15.83362, 120.31007], [15.83923, 120.33904], [15.86153, 120.36623], [15.88261, 120.36719], [15.89265, 120.39777], [15.95227, 120.39088]]], "San Fabian": [[[16.20532, 120.4626], [16.20461, 120.41728], [16.16238, 120.42313], [16.1134, 120.37651], [16.09601, 120.38074], [16.09749, 120.423], [16.09933, 120.45481], [16.14137, 120.47551], [16.20532, 120.4626]]], "San Jacinto": [[[16.13881, 120.4822], [16.14137, 120.47551], [16.09933, 120.45481], [16.09749, 120.423], [16.05156, 120.42767], [16.0431, 120.44468], [16.04476, 120.45567], [16.07708, 120.4926], [16.13881, 120.4822]]], "San Manuel": [[[16.04464, 120.71975], [16.06886, 120.72033], [16.13611, 120.69143], [16.19286, 120.71716], [16.18393, 120.68197], [16.18062, 120.62842], [16.15231, 120.64402], [16.11814, 120.63755], [16.10576, 120.61447], [16.09804, 120.62395], [16.04769, 120.62881], [16.02587, 120.68062], [16.02271, 120.70766], [16.04464, 120.71975]]], "San Nicolas": [[[16.10342, 120.87224], [16.16861, 120.84151], [16.19805, 120.76891], [16.19286, 120.71716], [16.13611, 120.69143], [16.06886, 120.72033], [16.04464, 120.71975], [16.04735, 120.76923], [16.07343, 120.80389], [16.10342, 120.87224]]], "San Quintin": [[[15.9954, 120.91158], [16.02826, 120.90565], [16.00882, 120.81998], [16.00728, 120.7811], [15.97655, 120.75704], [15.94144, 120.71587], [15.93518, 120.72415], [15.95604, 120.7729], [15.9563, 120.79986], [15.97136, 120.85263], [15.9954, 120.91158]]], "Sta. Barbara": [[[16.02802, 120.41912], [16.0247, 120.38601], [15.98457, 120.38347], [15.95009, 120.3985], [15.96909, 120.45506], [15.96604, 120.48856], [15.98824, 120.49189], [15.98973, 120.48417], [16.02802, 120.41912]]], "Sta. Maria": [[[15.97655, 120.75704], [15.99653, 120.70567], [15.96817, 120.6632], [15.93189, 120.64835], [15.92911, 120.64027], [15.93203, 120.66094], [15.94144, 120.71587], [15.97655, 120.75704]]], "Sto. Tomas": [[[15.88669, 120.59468], [15.86786, 120.55505], [15.84129, 120.5801], [15.86243, 120.59009], [15.88669, 120.59468]]], "Sison": [[[16.18062, 120.62842], [16.21842, 120.55802], [16.23344, 120.5202], [16.20671, 120.50668], [16.20532, 120.4626], [16.14137, 120.47551], [16.13881, 120.4822], [16.15346, 120.56084], [16.09064, 120.58008], [16.10576, 120.61447], [16.11814, 120.63755], [16.15231, 120.64402], [16.18062, 120.62842]]], "Sual": [[[16.06298, 120.1089], [16.10841, 120.08853], [16.13053, 120.10186], [16.16242, 120.08119], [16.13997, 120.02209], [16.08754, 120.01274], [16.0485, 119.99611], [16.03877, 120.02263], [16.01255, 120.0443], [16.02405, 120.07595], [16.06298, 120.1089]]], "Tayug": [[[16.00728, 120.7811], [16.04735, 120.76923], [16.04464, 120.71975], [16.02271, 120.70766], [15.99653, 120.70567], [15.97655, 120.75704], [16.00728, 120.7811]]], "Umingan": [[[15.85101, 120.73089], [15.82718, 120.7902], [15.79322, 120.81906], [15.83121, 120.83922], [15.83653, 120.85594], [15.86807, 120.87261], [15.89608, 120.87386], [15.91257, 120.90152], [15.96632, 120.92053], [15.9954, 120.91158], [15.97136, 120.85263], [15.9563, 120.79986], [15.95604, 120.7729], [15.93518, 120.72415], [15.9024, 120.71358], [15.85101, 120.73089]]], "Urbiztondo": [[[15.86153, 120.36623], [15.83923, 120.33904], [15.83362, 120.31007], [15.78902, 120.34537], [15.78448, 120.36508], [15.84837, 120.38748], [15.86153, 120.36623]]], "Urdaneta": [[[16.00939, 120.61153], [16.01422, 120.57639], [16.00026, 120.5512], [15.99107, 120.54418], [15.98824, 120.49189], [15.96604, 120.48856], [15.93681, 120.50014], [15.93387, 120.58545], [15.94604, 120.60602], [15.97325, 120.63332], [16.00939, 120.61153]]], "Villasis": [[[15.93189, 120.64835], [15.94604, 120.60602], [15.93387, 120.58545], [15.93681, 120.50014], [15.90775, 120.51751], [15.87392, 120.51559], [15.85493, 120.5232], [15.86786, 120.55505], [15.88669, 120.59468], [15.89545, 120.61338], [15.92911, 120.64027], [15.93189, 120.64835]]], "Laoac": [[[16.08513, 120.56336], [16.07552, 120.53218], [16.03243, 120.50719], [16.00026, 120.5512], [16.01422, 120.57639], [16.05802, 120.55989], [16.08513, 120.56336]]]};
+const CLUSTERS   = [{"name": "Eastern Pangasinan Agrarian Reform Community Cluster (EPARCC)", "municipalities": ["Asingan", "Balungao", "Rosales", "San Nicolas", "San Quintin", "Santa Maria", "Tayug", "Villasis"], "arcs": [{"arc": "Saranay", "municipality": "Asingan"}, {"arc": "Maresma", "municipality": "Balungao"}, {"arc": "Guiling", "municipality": "Rosales"}, {"arc": "San Nicolas", "municipality": "San Nicolas"}, {"arc": "Maligaya", "municipality": "San Quintin"}, {"arc": "Esperanza", "municipality": "Santa Maria"}, {"arc": "SELL", "municipality": "Tayug"}, {"arc": "Capulaan", "municipality": "Villasis"}, {"arc": "Tombalala", "municipality": "Villasis"}]}, {"name": "Lower Agno River Basin Agrarian Reform Community Cluster (LARBARCC)", "municipalities": ["Alcala", "Basista", "Bautista", "Bayambang", "Malasiqui", "San Carlos City", "Santa Barbara", "Santo Tomas", "Urbiztondo"], "arcs": [{"arc": "Eastern Alcala", "municipality": "Alcala"}, {"arc": "Basista", "municipality": "Basista"}, {"arc": "Pripavilla", "municipality": "Bautista"}, {"arc": "Vacante", "municipality": "Bautista"}, {"arc": "Sancagulis", "municipality": "Bayambang"}, {"arc": "Sanlibo", "municipality": "Bayambang"}, {"arc": "Galvan Cabrera", "municipality": "Malasiqui"}, {"arc": "Lasip", "municipality": "Malasiqui"}, {"arc": "BSBA", "municipality": "San Carlos City"}, {"arc": "Guelew", "municipality": "San Carlos City"}, {"arc": "Palaris", "municipality": "San Carlos City"}, {"arc": "Banerle", "municipality": "Santa Barbara"}, {"arc": "Minien West", "municipality": "Santa Barbara"}, {"arc": "La Santos", "municipality": "Santo Tomas"}, {"arc": "Casa Pigarean", "municipality": "Urbiztondo"}]}, {"name": "KALAHI", "municipalities": ["Umingan"], "arcs": [{"arc": "Almacar", "municipality": "Umingan"}, {"arc": "La Paz", "municipality": "Umingan"}]}, {"name": "Western Pangasinan Agrarian Reform Community Cluster I (WePARCC I)", "municipalities": ["Dasol", "Infanta", "Mabini"], "arcs": [{"arc": "Malimpin", "municipality": "Dasol"}, {"arc": "Bambaybaca", "municipality": "Infanta"}, {"arc": "Barlo", "municipality": "Mabini"}]}, {"name": "Western Pangasinan Agrarian Reform Community Cluster II (WePARCC II)", "municipalities": ["Alaminos City", "Bani", "Sual"], "arcs": [{"arc": "Bayanihan", "municipality": "Alaminos City"}, {"arc": "Pitong Gatang", "municipality": "Alaminos City"}, {"arc": "Dacap Sur", "municipality": "Bani"}, {"arc": "Dosecapa", "municipality": "Sual"}]}];
+const NAME_MAP   = {"Asingan": "Asingan", "Balungao": "Balungao", "Rosales": "Rosales", "San Nicolas": "San Nicolas", "San Quintin": "San Quintin", "Santa Maria": "Sta. Maria", "Tayug": "Tayug", "Villasis": "Villasis", "Alcala": "Alcala", "Basista": "Basista", "Bautista": "Bautista", "Bayambang": "Bayambang", "Malasiqui": "Malasique", "San Carlos City": "San Carlos City", "Santa Barbara": "Sta. Barbara", "Santo Tomas": "Sto. Tomas", "Urbiztondo": "Urbiztondo", "Umingan": "Umingan", "Dasol": "Dasol", "Infanta": "Infanta", "Mabini": "Mabini", "Alaminos City": "Alaminos", "Bani": "Bani", "Sual": "Sual"};
+
+const PALETTE = [
+  { key:'EPARCC',   color:'#1B5E20' },
+  { key:'LARBARCC', color:'#0D47A1' },
+  { key:'KALAHI',   color:'#B3541E' },
+  { key:'WEPARCC1', color:'#6A3E8C' },
+  { key:'WEPARCC2', color:'#C98A12' },
+];
+function abbrFor(name){
+  const m = name.match(/\(([^)]+)\)/);
+  if(m) return m[1];
+  if(name.toUpperCase() === name) return name;
+  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,8);
+}
+CLUSTERS.forEach((c,i)=>{
+  c.abbr = abbrFor(c.name);
+  c.color = PALETTE[i % PALETTE.length].color;
+});
+
+document.getElementById('cCount').textContent = CLUSTERS.length;
+document.getElementById('footStamp').textContent = 'Rendered ' + new Date().toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'});
+
+/* ============ MAP INIT ============ */
+const map = L.map('map', { attributionControl:false, zoomSnap:.25 }).setView([15.95,120.35], 9.4);
+const baseLayer = L.layerGroup().addTo(map);
+const clusterLayer = L.layerGroup().addTo(map);
+const arcLayer = L.layerGroup().addTo(map);
+const pulseLayer = L.layerGroup().addTo(map);
+
+/* Which municipalities belong to which cluster (by Lm-style key) */
+const muniClusterMap = {}; // lmKey -> [{cluster, color}]
+CLUSTERS.forEach(c=>{
+  c.municipalities.forEach(m=>{
+    const key = NAME_MAP[m] || m;
+    if(!muniClusterMap[key]) muniClusterMap[key] = [];
+    muniClusterMap[key].push(c);
+  });
+});
+
+/* Base province: every municipality, faint outline, cluster ones tinted */
+const muniLayerByKey = {};
+Object.entries(MUNI_POLYS).forEach(([key, rings])=>{
+  if(!rings || !rings.length) return;
+  const involved = muniClusterMap[key];
+  const layers = [];
+  rings.forEach(ring=>{
+    const latlngs = ring.map(p=>[p[0],p[1]]);
+    const poly = L.polygon(latlngs, {
+      color: involved ? involved[0].color : '#0E4D2B',
+      weight: involved ? 1.6 : .9,
+      opacity: involved ? .75 : .35,
+      fillColor: involved ? involved[0].color : '#EFEADA',
+      fillOpacity: involved ? .22 : .5,
+    }).addTo(baseLayer);
+    layers.push(poly);
+  });
+  muniLayerByKey[key] = layers;
+  // label
+  const biggest = rings.reduce((a,b)=> a.length>=b.length? a:b);
+  const c = biggest.reduce((acc,p)=>[acc[0]+p[0],acc[1]+p[1]], [0,0]).map(v=>v/biggest.length);
+  L.marker(c, {
+    icon: L.divIcon({className:'muni-label'+(involved?' on':''), html: key, iconSize:[0,0]}),
+    interactive:false
+  }).addTo(baseLayer);
+});
+
+/* ============ ARC POINT PLACEMENT ============ */
+function ringCentroid(rings){
+  const biggest = rings.reduce((a,b)=> a.length>=b.length? a:b);
+  const sum = biggest.reduce((acc,p)=>[acc[0]+p[0],acc[1]+p[1]], [0,0]);
+  return [sum[0]/biggest.length, sum[1]/biggest.length];
+}
+
+CLUSTERS.forEach(c=>{
+  const byMuni = {};
+  c.arcs.forEach(a=>{ (byMuni[a.municipality] = byMuni[a.municipality]||[]).push(a); });
+  Object.entries(byMuni).forEach(([muni, arcs])=>{
+    const key = NAME_MAP[muni] || muni;
+    const rings = MUNI_POLYS[key];
+    if(!rings) return;
+    const center = ringCentroid(rings);
+    const n = arcs.length;
+    arcs.forEach((a,i)=>{
+      const angle = (2*Math.PI*i/Math.max(n,1)) + (n>1?0:0);
+      const radius = n>1 ? 0.014 : 0;
+      const lat = center[0] + radius*Math.sin(angle);
+      const lon = center[1] + radius*Math.cos(angle);
+      a._latlng = [lat, lon];
+      a._cluster = c;
+    });
+  });
+});
+
+function drawArcMarkers(){
+  arcLayer.clearLayers();
+  CLUSTERS.forEach(c=>{
+    c.arcs.forEach(a=>{
+      if(!a._latlng) return;
+      const m = L.circleMarker(a._latlng, {
+        radius: 6.5, weight: 1.6, color:'#1F2A1A', fillColor: c.color, fillOpacity: .95,
+        className: 'arc-marker'
+      });
+      m.bindPopup(
+        '<div class="pop-cluster">'+c.abbr+'</div>'+
+        '<div class="pop-arc">Brgy. '+a.arc+'</div>'+
+        '<div class="pop-muni">'+a.municipality+', Pangasinan</div>'
+      );
+      m._clusterName = c.name;
+      m.addTo(arcLayer);
+    });
+  });
+}
+drawArcMarkers();
+
+/* ============ LEGEND ============ */
+const legendEl = document.getElementById('legend');
+function renderLegend(){
+  legendEl.innerHTML = '<div class="legend-title">ARC Clusters</div>' +
+    CLUSTERS.map(c=>(
+      '<div class="legend-row" data-name="'+encodeURIComponent(c.name)+'">'+
+      '<span class="legend-dot" style="background:'+c.color+'"></span>'+
+      '<span>'+c.abbr+'</span></div>'
+    )).join('');
+  legendEl.querySelectorAll('.legend-row').forEach(row=>{
+    row.addEventListener('click', ()=>{
+      const name = decodeURIComponent(row.getAttribute('data-name'));
+      selectCluster(name, true);
+    });
+  });
+}
+renderLegend();
+
+/* ============ SIDEBAR CARDS ============ */
+const listEl = document.getElementById('clusterList');
+let activeCluster = null;
+
+function renderCards(filterText){
+  listEl.innerHTML = '';
+  const ft = (filterText||'').toLowerCase();
+  let shown = 0;
+  CLUSTERS.forEach((c, idx)=>{
+    const matchesCluster = c.name.toLowerCase().includes(ft) || c.abbr.toLowerCase().includes(ft);
+    const matchingArcs = c.arcs.filter(a=> a.arc.toLowerCase().includes(ft) || a.municipality.toLowerCase().includes(ft));
+    if(ft && !matchesCluster && matchingArcs.length===0) return;
+    shown++;
+    const card = document.createElement('div');
+    card.className = 'cluster-card' + (activeCluster===c.name ? ' active':'');
+    card.style.setProperty('--c', c.color);
+    card.style.animationDelay = (idx*0.05)+'s';
+    card.innerHTML =
+      '<div class="cc-head">'+
+        '<span class="cc-swatch" style="background:'+c.color+'"></span>'+
+        '<div class="cc-title"><div class="cc-abbr">'+c.abbr+'</div><div class="cc-name">'+c.name.replace(/\s*\([^)]*\)\s*$/,'')+'</div></div>'+
+        '<i class="fa-solid fa-chevron-right cc-chev"></i>'+
+      '</div>'+
+      '<div class="cc-meta">'+
+        '<span><i class="fa-solid fa-map-location-dot"></i>'+c.municipalities.length+' municipalities</span>'+
+        '<span><i class="fa-solid fa-people-roof"></i>'+c.arcs.length+' ARCs</span>'+
+      '</div>'+
+      '<div class="cc-body">'+
+        '<div class="cc-section">'+
+          '<div class="cc-label">Municipalities involved</div>'+
+          '<div class="chip-row">'+c.municipalities.map(m=>'<span class="chip">'+m+'</span>').join('')+'</div>'+
+        '</div>'+
+        '<div class="cc-section" style="border-top:1px solid var(--line);">'+
+          '<div class="cc-label">Agrarian Reform Communities</div>'+
+          c.arcs.map(a=>'<div class="arc-row" data-arc="'+encodeURIComponent(a.arc)+'" data-muni="'+encodeURIComponent(a.municipality)+'">'+
+            '<span class="arc-name">Brgy. '+a.arc+'</span><span class="arc-muni">'+a.municipality+'</span></div>').join('')+
+        '</div>'+
+      '</div>';
+    card.querySelector('.cc-head').addEventListener('click', ()=> selectCluster(c.name));
+    card.querySelector('.cc-meta').addEventListener('click', ()=> selectCluster(c.name));
+    card.querySelectorAll('.arc-row').forEach(row=>{
+      row.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const arcName = decodeURIComponent(row.getAttribute('data-arc'));
+        const muniName = decodeURIComponent(row.getAttribute('data-muni'));
+        selectCluster(c.name, false, arcName, muniName);
+      });
+    });
+    listEl.appendChild(card);
+  });
+  if(shown===0){
+    listEl.innerHTML = '<div class="empty-note"><i class="fa-solid fa-magnifying-glass" style="font-size:20px;display:block;margin-bottom:8px;opacity:.5;"></i>No clusters or ARCs match your search.</div>';
+  }
+}
+renderCards();
+
+/* ============ SELECTION / HIGHLIGHT LOGIC ============ */
+const bannerEl = document.getElementById('banner');
+function showBanner(c){
+  document.getElementById('bAbbr').textContent = c.abbr;
+  document.getElementById('bName').textContent = c.name;
+  bannerEl.classList.add('show');
+}
+function hideBanner(){ bannerEl.classList.remove('show'); }
+
+function pulseAt(latlng, color){
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  // Leaflet handles this via a circleMarker with CSS animation instead
+  const ring = L.circleMarker(latlng, {radius:9, color:color, weight:2, fill:false, opacity:.9});
+  ring.addTo(pulseLayer);
+  const el = ring.getElement ? ring.getElement() : null;
+  let path = ring._path;
+  if(path){ path.style.animation = 'pulseRing 1.1s ease-out'; path.style.transformOrigin = 'center'; path.style.transformBox = 'fill-box'; }
+  setTimeout(()=>{ pulseLayer.removeLayer(ring); }, 1150);
+}
+
+function resetHighlight(){
+  activeCluster = null;
+  Object.entries(muniLayerByKey).forEach(([key, layers])=>{
+    const involved = muniClusterMap[key];
+    layers.forEach(poly=>{
+      poly.setStyle({
+        opacity: involved? .75 : .35,
+        fillOpacity: involved? .22 : .5,
+        weight: involved? 1.6 : .9
+      });
+    });
+  });
+  arcLayer.eachLayer(m=>{
+    m.setStyle({ radius:6.5, fillOpacity:.95, weight:1.6 });
+  });
+  hideBanner();
+  map.flyTo([15.95,120.35], 9.4, {duration:.9});
+}
+
+function selectCluster(name, fromLegend, focusArc, focusMuni){
+  const c = CLUSTERS.find(x=>x.name===name);
+  if(!c) return;
+  activeCluster = name;
+  renderCards(document.getElementById('searchInput').value);
+
+  const bounds = [];
+  Object.entries(muniLayerByKey).forEach(([key, layers])=>{
+    const isMember = c.municipalities.some(m => (NAME_MAP[m]||m) === key);
+    layers.forEach(poly=>{
+      poly.setStyle({
+        opacity: isMember? 1 : .12,
+        fillOpacity: isMember? .38 : .07,
+        weight: isMember? 2.4 : .6,
+        color: isMember? c.color : '#0E4D2B'
+      });
+      if(isMember) bounds.push(poly.getBounds());
+    });
+  });
+
+  arcLayer.eachLayer(m=>{
+    const isMember = m._clusterName === name;
+    m.setStyle({ radius: isMember? 8.5:5, fillOpacity: isMember? 1:.15, weight: isMember? 2:.8 });
+  });
+
+  showBanner(c);
+
+  if(focusArc){
+    const arcObj = c.arcs.find(a=>a.arc===focusArc && a.municipality===focusMuni);
+    if(arcObj && arcObj._latlng){
+      map.flyTo(arcObj._latlng, 13.5, {duration:.9});
+      setTimeout(()=> pulseAt(arcObj._latlng, c.color), 500);
+      return;
+    }
+  }
+  if(bounds.length){
+    let all = bounds[0];
+    bounds.forEach(b=> all = all.extend(b));
+    map.flyToBounds(all, {padding:[60,60], duration:.9, maxZoom:11.5});
+  }
+}
+
+/* ============ SEARCH & RESET ============ */
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  renderCards(e.target.value);
+});
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  document.getElementById('searchInput').value='';
+  renderCards();
+  resetHighlight();
+});
+
+setTimeout(()=> map.invalidateSize(), 150);
+</script>
+</body>
+</html>
