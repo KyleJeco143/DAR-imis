@@ -965,5 +965,41 @@ react-dom/cjs/react-dom-client.production.js:
    *)
 */
 </script>
+<script>
+(function(){
+  function addArcClusterTab(){
+    var sidebar = document.querySelector('.imis-sidebar');
+    if (!sidebar) return false;
+    if (document.getElementById('arcClusterTabBtn')) return true;
+    var buttons = sidebar.querySelectorAll('button');
+    var anchor = null;
+    for (var i = 0; i < buttons.length; i++) {
+      if (buttons[i].textContent.indexOf('Validation Form') !== -1) anchor = buttons[i];
+    }
+    if (!anchor) return false;
+    var btn = document.createElement('a');
+    btn.id = 'arcClusterTabBtn';
+    btn.href = 'arc-cluster-atlas.html';
+    btn.target = '_blank';
+    btn.rel = 'noopener';
+    btn.style.cssText = 'display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;' +
+      'background:transparent;color:#0E4D2B;border:none;text-align:left;cursor:pointer;' +
+      'font-size:13.5px;font-weight:600;border-radius:3px;margin-bottom:3px;' +
+      'text-decoration:none;font-family:inherit;box-sizing:border-box;';
+    btn.innerHTML =
+      '<i class="fa-solid fa-diagram-project" style="font-size:15px;width:15px;"></i>' +
+      '<span style="flex:1;">ARC Cluster</span>' +
+      '<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;opacity:.55;"></i>';
+    btn.onmouseenter = function(){ btn.style.background = '#DEEFC7'; };
+    btn.onmouseleave = function(){ btn.style.background = 'transparent'; };
+    anchor.insertAdjacentElement('afterend', btn);
+    return true;
+  }
+  if (!addArcClusterTab()) {
+    var obs = new MutationObserver(function(){ if (addArcClusterTab()) obs.disconnect(); });
+    obs.observe(document.body, { childList: true, subtree: true });
+  }
+})();
+</script>
 </body>
 </html>
