@@ -1,0 +1,27 @@
+name: Supabase Keep-Alive
+
+# Pings the Supabase REST API every 3 days so the free-tier project never
+# hits the 7-day inactivity threshold that causes it to auto-pause.
+# The key used here is the PUBLISHABLE (anon) key — the same one already
+# embedded in index.html and visible to any site visitor, so putting it in
+# this workflow file adds no new exposure.
+
+on:
+  schedule:
+    - cron: '0 3 */3 * *'   # every 3 days at 03:00 UTC (11:00 AM Manila time)
+  workflow_dispatch:        # lets you also trigger it manually from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://btktxpwogocltkshepjy.supabase.co/rest/v1/documents?select=id&limit=1" \
+            -H "apikey: sb_publishable_IH8Bgy-gQKPHtfBq9VND-A_W3O8t-hO" \
+            -H "Authorization: Bearer sb_publishable_IH8Bgy-gQKPHtfBq9VND-A_W3O8t-hO")
+          echo "Supabase responded with HTTP $STATUS"
+          if [ "$STATUS" -ge 400 ]; then
+            echo "::warning::Supabase keep-alive ping got HTTP $STATUS — check if the project needs manual unpausing."
+          fi
