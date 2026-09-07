@@ -2,7 +2,7 @@
 const $=id=>document.getElementById(id),esc=v=>String(v??'Not recorded').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 try{
 if(!window.L)throw new Error('Map library unavailable. Check your internet connection and reload.');
-const response=await fetch('data/gis/arbo-masterlist.json');if(!response.ok)throw new Error('ARBO masterlist could not be loaded.');
+let response=await fetch('arbo-masterlist.json',{cache:'no-store'});if(!response.ok)response=await fetch('data/gis/arbo-masterlist.json',{cache:'no-store'});if(!response.ok)throw new Error('ARBO masterlist file is missing. Upload arbo-masterlist.json beside index.html.');
 const data=await response.json(),rows=data.organizations;
 const map=L.map('map',{zoomSnap:.25}).setView([16.02,120.35],9);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
