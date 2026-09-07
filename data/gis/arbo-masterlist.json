@@ -1,0 +1,3060 @@
+{
+  "source": "pangasinan.xlsx",
+  "sheet": "Pangasinan",
+  "asOf": "July 2026",
+  "locationSource": "Existing barangay-boundaries.json; boundary provenance not independently verified",
+  "organizations": [
+    {
+      "id": "arbo-5",
+      "sourceRow": 5,
+      "name": "Agbiag ti Mannalon ti La Paz Association Inc.",
+      "arboId": "01055-44017",
+      "municipality": "Umingan",
+      "barangay": "La Paz",
+      "arc": "La Paz",
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 40,
+      "arbMembership": 40,
+      "coord": [
+        15.91971,
+        120.742085
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-6",
+      "sourceRow": 6,
+      "name": "Alcala Onion Growers MPC",
+      "arboId": "01055-04005",
+      "municipality": "Alcala",
+      "barangay": "Anulid",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.83399,
+        120.48698
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-7",
+      "sourceRow": 7,
+      "name": "Alcala Tobacco Rice Corn Agriculture Cooperative",
+      "arboId": null,
+      "municipality": "Santa Maria",
+      "barangay": "Bantog",
+      "arc": "Eastern Alcala",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 101,
+      "arbMembership": 101,
+      "coord": [
+        15.965475,
+        120.696095
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-8",
+      "sourceRow": 8,
+      "name": "Aliguas Bocboc Farmers Association Inc.",
+      "arboId": "01055-32003",
+      "municipality": "San Carlos City",
+      "barangay": "Bocboc",
+      "arc": "BSBA",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 112,
+      "arbMembership": 112,
+      "coord": [
+        15.89448,
+        120.26217
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-9",
+      "sourceRow": 9,
+      "name": "Aliguas Dumaralos na Buenlag, Inc.",
+      "arboId": "01055-17002",
+      "municipality": "Calasiao",
+      "barangay": "Buenlag",
+      "arc": "Senor Divino Tesoro",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 133,
+      "arbMembership": 133,
+      "coord": [
+        15.981105,
+        120.37754
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-10",
+      "sourceRow": 10,
+      "name": "Aliguas Pacuan Farmers Association Inc.",
+      "arboId": "01055-24005",
+      "municipality": "Malasiqui",
+      "barangay": "Pacuan",
+      "arc": "Galvan Cabrera",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "FA",
+      "membership": 51,
+      "arbMembership": 51,
+      "coord": [
+        15.85715,
+        120.46661
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-11",
+      "sourceRow": 11,
+      "name": "Alos Conconig Farmers Irrigators' Association Inc.",
+      "arboId": "01055-03004",
+      "municipality": "Alaminos City",
+      "barangay": "Limansangan",
+      "arc": "Bayanihan",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "IA",
+      "membership": 131,
+      "arbMembership": 23,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-12",
+      "sourceRow": 12,
+      "name": "Amagbagan Papallasen Farmers Association Inc.",
+      "arboId": "01055-30001",
+      "municipality": "Pozorrubio",
+      "barangay": "Amagbagan",
+      "arc": "Amagbagan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 69,
+      "arbMembership": 69,
+      "coord": [
+        16.086675,
+        120.53933
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-13",
+      "sourceRow": 13,
+      "name": "Amamperez ARBs and Farmers Association Inc.",
+      "arboId": "01055-47005",
+      "municipality": "Villasis",
+      "barangay": "Amamperez",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 63,
+      "arbMembership": 57,
+      "coord": [
+        15.870015,
+        120.53487
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-14",
+      "sourceRow": 14,
+      "name": "Anda Dolaoan Farmers Irrigators Association Inc.",
+      "arboId": "01055-05002",
+      "municipality": "Anda",
+      "barangay": "Dolaoan",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "IA",
+      "membership": 71,
+      "arbMembership": 70,
+      "coord": [
+        16.32836,
+        119.96798
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-15",
+      "sourceRow": 15,
+      "name": "Aramal-Tocok FFF Multi Purpose Cooperative",
+      "arboId": "01055-33001",
+      "municipality": "San Fabian",
+      "barangay": "Aramal",
+      "arc": "Aramal",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 332,
+      "arbMembership": 284,
+      "coord": [
+        16.12445,
+        120.43737
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-16",
+      "sourceRow": 16,
+      "name": "Artacho Farmers Association",
+      "arboId": "01055-10001",
+      "municipality": "Bautista",
+      "barangay": "Artacho",
+      "arc": "Pripavilla",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 164,
+      "arbMembership": 117,
+      "coord": [
+        15.807835,
+        120.565355
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-17",
+      "sourceRow": 17,
+      "name": "Asenso Pinmilapil Farmers Association Inc.",
+      "arboId": "01055-41002",
+      "municipality": "Sison",
+      "barangay": "Pinmilapil",
+      "arc": "Kampayan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 162,
+      "arbMembership": 162,
+      "coord": [
+        16.19849,
+        120.470745
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-18",
+      "sourceRow": 18,
+      "name": "Asosasyon ng Magsasaka ng San Miguel Burgos Inc.",
+      "arboId": "01055-16001",
+      "municipality": "Burgos",
+      "barangay": "San Miguel",
+      "arc": "Cacacente Masanta",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 167,
+      "arbMembership": 164,
+      "coord": [
+        16.032245,
+        119.894185
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-19",
+      "sourceRow": 19,
+      "name": "Atlas Mabuna Agrarian Reform Cooperative",
+      "arboId": "01055-24001",
+      "municipality": "Malasiqui",
+      "barangay": "Lasip",
+      "arc": "Lasip",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 497,
+      "arbMembership": 367,
+      "coord": [
+        15.904865,
+        120.45041
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-20",
+      "sourceRow": 20,
+      "name": "Baksayan Irrigators and Farmers Association, Inc.",
+      "arboId": "01055-44009",
+      "municipality": "Umingan",
+      "barangay": "Diket",
+      "arc": "Almacar",
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "IA",
+      "membership": 149,
+      "arbMembership": 146,
+      "coord": [
+        15.946965,
+        120.89377
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-21",
+      "sourceRow": 21,
+      "name": "Balangay Farmers Multi Purpose Cooperative, Inc.",
+      "arboId": "01055-45001",
+      "municipality": "Urbiztondo",
+      "barangay": "Balangay",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 157,
+      "arbMembership": 77,
+      "coord": [
+        15.85458,
+        120.36192
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-22",
+      "sourceRow": 22,
+      "name": "Baligayan Irrigators Association, Inc.",
+      "arboId": "01055-37004",
+      "municipality": "San Quintin",
+      "barangay": "Baligayan",
+      "arc": "Maligaya",
+      "cluster": "EPARCC",
+      "status": "Non-Operational",
+      "type": "IA",
+      "membership": 36,
+      "arbMembership": 36,
+      "coord": [
+        15.952785,
+        120.73599
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-23",
+      "sourceRow": 23,
+      "name": "Balila Irrigators Association, Inc.",
+      "arboId": "01055-37005",
+      "municipality": "San Quintin",
+      "barangay": "Labuan",
+      "arc": "Maligaya",
+      "cluster": "EPARCC",
+      "status": "Non-Operational",
+      "type": "FA",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.941245,
+        120.732445
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-24",
+      "sourceRow": 24,
+      "name": "Balungao Zambali Agrarian Reform Cooperative",
+      "arboId": "01055-07003",
+      "municipality": "Balungao",
+      "barangay": "Poblacion",
+      "arc": "Maresma",
+      "cluster": "EPARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.88116,
+        120.67123
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-25",
+      "sourceRow": 25,
+      "name": "Banerle Agrarian Reform Cooperative",
+      "arboId": "01055-38001",
+      "municipality": "Santa Barbara",
+      "barangay": "Erfe",
+      "arc": "Banerle",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 353,
+      "arbMembership": 309,
+      "coord": [
+        16.004515,
+        120.452385
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-26",
+      "sourceRow": 26,
+      "name": "Bani Agrarian Reform Beneficiares and Farmers Association Inc.",
+      "arboId": "01055-08004",
+      "municipality": "Bani",
+      "barangay": "San Miguel",
+      "arc": null,
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 88,
+      "arbMembership": 80,
+      "coord": [
+        16.21928,
+        119.92887
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-27",
+      "sourceRow": 27,
+      "name": "Bantay Insik Multi Purpose Cooperative",
+      "arboId": "01055-41001",
+      "municipality": "Sison",
+      "barangay": "Bantay Insik",
+      "arc": "Kampayan",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 81,
+      "arbMembership": 26,
+      "coord": [
+        16.187805,
+        120.47245
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-28",
+      "sourceRow": 28,
+      "name": "Bantog Samahang Nayon Multi-Purpose Cooperative",
+      "arboId": "01055-06001",
+      "municipality": "Asingan",
+      "barangay": "Bantog",
+      "arc": "Saranay",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 300,
+      "arbMembership": 121,
+      "coord": [
+        15.99951,
+        120.691145
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-29",
+      "sourceRow": 29,
+      "name": "Bantug Agriculture Cooperative",
+      "arboId": null,
+      "municipality": "Mapandan",
+      "barangay": "Torres",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 216,
+      "arbMembership": 216,
+      "coord": [
+        16.01287,
+        120.46688
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-30",
+      "sourceRow": 30,
+      "name": "Barangay Don Montano ARBs and Farmers Association Incorporated",
+      "arboId": "01055-44011",
+      "municipality": "Umingan",
+      "barangay": "Don Montano",
+      "arc": "Almacar",
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 43,
+      "arbMembership": 43,
+      "coord": [
+        15.93233,
+        120.88479
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-31",
+      "sourceRow": 31,
+      "name": "Barangay Goliman ARBs and Farmers Association Inc.",
+      "arboId": "01055-24007",
+      "municipality": "Malasiqui",
+      "barangay": "Goliman",
+      "arc": "Galvan Cabrera",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 79,
+      "arbMembership": 79,
+      "coord": [
+        15.856945,
+        120.456015
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-32",
+      "sourceRow": 32,
+      "name": "Barangay Rosario ARBs and Farmers Association Inc.",
+      "arboId": "01055-22002",
+      "municipality": "Lingayen",
+      "barangay": "Rosario",
+      "arc": "Balawarma",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 22,
+      "arbMembership": 22,
+      "coord": [
+        15.94145,
+        120.27346
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-33",
+      "sourceRow": 33,
+      "name": "Barlo Agrarian Reform Cooperative",
+      "arboId": "01055-23001",
+      "municipality": "Mabini",
+      "barangay": "Barlo",
+      "arc": "Barlo",
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 336,
+      "arbMembership": 242,
+      "coord": [
+        15.987155,
+        119.955435
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-34",
+      "sourceRow": 34,
+      "name": "Basing, Irrigators and Livestock Raisers Association Inc.",
+      "arboId": "01055-22001",
+      "municipality": "Lingayen",
+      "barangay": "Basing",
+      "arc": "Balawarma",
+      "cluster": null,
+      "status": "Operational",
+      "type": "IA",
+      "membership": 171,
+      "arbMembership": 142,
+      "coord": [
+        15.974825,
+        120.25866
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-35",
+      "sourceRow": 35,
+      "name": "Bayanihan Hundred Islands Agrarian Reform Cooperative",
+      "arboId": "01055-03002",
+      "municipality": "Alaminos City",
+      "barangay": "Poblacion",
+      "arc": "Bayanihan",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 1505,
+      "arbMembership": 391,
+      "coord": [
+        16.159,
+        119.98004
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-36",
+      "sourceRow": 36,
+      "name": "Beneficiaries of Agrarian Reform and Business Integrators Inc.",
+      "arboId": "01055-31001",
+      "municipality": "Rosales",
+      "barangay": "Acop",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 207,
+      "arbMembership": 205,
+      "coord": [
+        15.869925,
+        120.65955
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-37",
+      "sourceRow": 37,
+      "name": "Bin-I Agriculture Cooperative",
+      "arboId": null,
+      "municipality": "Alcala",
+      "barangay": "Pindangan East",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 40,
+      "arbMembership": 40,
+      "coord": [
+        15.854525,
+        120.56238
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-38",
+      "sourceRow": 38,
+      "name": "BOMADUS Multi Purpose Cooperative",
+      "arboId": "01055-21001",
+      "municipality": "Labrador",
+      "barangay": "Bolo",
+      "arc": "Bomados",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 306,
+      "arbMembership": 252,
+      "coord": [
+        15.964955,
+        120.128635
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-39",
+      "sourceRow": 39,
+      "name": "Bugallon Federation of Free Farmers Marketing Cooperative",
+      "arboId": "01055-15002",
+      "municipality": "Bugallon",
+      "barangay": "Poblacion",
+      "arc": "Pangcabucassan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 198,
+      "arbMembership": 198,
+      "coord": [
+        15.953935,
+        120.210365
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-40",
+      "sourceRow": 40,
+      "name": "Cabarruyan Agrarian Reform Cooperative",
+      "arboId": "01055-05001",
+      "municipality": "Anda",
+      "barangay": "Poblacion",
+      "arc": "Cabarruyan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 291,
+      "arbMembership": 277,
+      "coord": [
+        16.29825,
+        119.955045
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-41",
+      "sourceRow": 41,
+      "name": "Cacacente Masanta MPC",
+      "arboId": "01055-16002",
+      "municipality": "Burgos",
+      "barangay": "Poblacion",
+      "arc": "Cacacente Masanta",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        16.058265,
+        119.864495
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-42",
+      "sourceRow": 42,
+      "name": "Calapugan Agrarian Reform Cooperative (CARE.CO)",
+      "arboId": "01055-29002",
+      "municipality": "Natividad",
+      "barangay": "Calapugan",
+      "arc": "San Macario Sur",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 123,
+      "arbMembership": 89,
+      "coord": [
+        16.02757,
+        120.81032
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-43",
+      "sourceRow": 43,
+      "name": "Calmay-Lebueg Farmers Irrigators Association Inc.",
+      "arboId": "01055-48001",
+      "municipality": "Laoac",
+      "barangay": "Lebueg",
+      "arc": "D' Cacabicalan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "IA",
+      "membership": 31,
+      "arbMembership": 26,
+      "coord": [
+        16.0217,
+        120.5647
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-44",
+      "sourceRow": 44,
+      "name": "Camagsingalan Multi Purpose Cooperative",
+      "arboId": "01055-42001",
+      "municipality": "Sual",
+      "barangay": "Camagsingalan",
+      "arc": "Dosecapa",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 181,
+      "arbMembership": 108,
+      "coord": [
+        16.06619,
+        120.009105
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-45",
+      "sourceRow": 45,
+      "name": "Camanbugan Farmers Agriculture Cooperative",
+      "arboId": "01055-45003",
+      "municipality": "Urbiztondo",
+      "barangay": "Camanbugan",
+      "arc": "Casa Pigarean",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 38,
+      "arbMembership": 38,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-46",
+      "sourceRow": 46,
+      "name": "Camangaan Agrarian Reform Beneficiaries and Farmers Association Inc.",
+      "arboId": "01055-31004",
+      "municipality": "Rosales",
+      "barangay": "Camangaan",
+      "arc": "Guiling",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 37,
+      "arbMembership": 37,
+      "coord": [
+        15.84245,
+        120.63167
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-47",
+      "sourceRow": 47,
+      "name": "Capsing Irrigators Association, Inc.",
+      "arboId": "01055-44010",
+      "municipality": "Umingan",
+      "barangay": "Diket",
+      "arc": "Almacar",
+      "cluster": "KALAHI",
+      "status": "Non-Operational",
+      "type": "IA",
+      "membership": 76,
+      "arbMembership": 76,
+      "coord": [
+        15.946965,
+        120.89377
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-48",
+      "sourceRow": 48,
+      "name": "Capulaan Multi Purpose Cooperative",
+      "arboId": "01055-47001",
+      "municipality": "Villasis",
+      "barangay": "Capulaan",
+      "arc": "Capulaan",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 689,
+      "arbMembership": 574,
+      "coord": [
+        15.89627,
+        120.53783
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-49",
+      "sourceRow": 49,
+      "name": "Carayungan Sur ARBs & Farmers Assn., Inc.",
+      "arboId": "01055-44012",
+      "municipality": "Umingan",
+      "barangay": "Carayungan",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 60,
+      "arbMembership": 60,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-50",
+      "sourceRow": 50,
+      "name": "Carosalesan Irrigators Consumer Cooperative",
+      "arboId": "01055-44002",
+      "municipality": "Umingan",
+      "barangay": "Carosalesan",
+      "arc": "Almacar",
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 145,
+      "arbMembership": 110,
+      "coord": [
+        15.892375,
+        120.86697
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-51",
+      "sourceRow": 51,
+      "name": "Carusucan Agrarian Reform Cooperative (CARCO)",
+      "arboId": "01055-38002",
+      "municipality": "Santa Barbara",
+      "barangay": "Carusucan",
+      "arc": "Minien West",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 118,
+      "arbMembership": 99,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-52",
+      "sourceRow": 52,
+      "name": "Carusucan Norte ARBs and Farmers Association Inc.",
+      "arboId": "01055-06002",
+      "municipality": "Asingan",
+      "barangay": "Carusucan Norte",
+      "arc": "Saranay",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 62,
+      "arbMembership": 62,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-53",
+      "sourceRow": 53,
+      "name": "Casapigarean Farmers Irrigators Association, Inc.",
+      "arboId": "01055-45002",
+      "municipality": "Urbiztondo",
+      "barangay": "Camanbugan",
+      "arc": "Casa Pigarean",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "IA",
+      "membership": 161,
+      "arbMembership": 125,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-54",
+      "sourceRow": 54,
+      "name": "Catablan ARC Credit Cooperative",
+      "arboId": "01055-46001",
+      "municipality": "Urdaneta City",
+      "barangay": "Catablan",
+      "arc": "Catablan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 97,
+      "arbMembership": 71,
+      "coord": [
+        15.972455,
+        120.498385
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-55",
+      "sourceRow": 55,
+      "name": "Catuday Agrarian Reform Cooperative",
+      "arboId": "01055-14001",
+      "municipality": "Bolinao",
+      "barangay": "Catuday",
+      "arc": "Catuday",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 353,
+      "arbMembership": 97,
+      "coord": [
+        16.29352,
+        119.811995
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-56",
+      "sourceRow": 56,
+      "name": "Catuday Farmers Agricultural Development Association (FADA) Inc.",
+      "arboId": "01055-14003",
+      "municipality": "Bolinao",
+      "barangay": "Catuday",
+      "arc": "Catuday",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 202,
+      "arbMembership": 116,
+      "coord": [
+        16.29352,
+        119.811995
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-57",
+      "sourceRow": 57,
+      "name": "Catuday Farmers Irrigators' Association, Inc.",
+      "arboId": "01055-14002",
+      "municipality": "Bolinao",
+      "barangay": "Catuday",
+      "arc": "Catuday",
+      "cluster": null,
+      "status": "Operational",
+      "type": "IA",
+      "membership": 178,
+      "arbMembership": 169,
+      "coord": [
+        16.29352,
+        119.811995
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-58",
+      "sourceRow": 58,
+      "name": "Centro Allabon Farmers Association Inc.",
+      "arboId": "01055-01003",
+      "municipality": "Agno",
+      "barangay": "Allabon",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 61,
+      "arbMembership": 39,
+      "coord": [
+        16.017365,
+        119.793585
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-59",
+      "sourceRow": 59,
+      "name": "Centro Toma-Colayo Farmers Multi Purpose Cooperative",
+      "arboId": "01055-08001",
+      "municipality": "Bani",
+      "barangay": "Centro Toma",
+      "arc": "Dacap Sur",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 307,
+      "arbMembership": 108,
+      "coord": [
+        16.26374,
+        119.789995
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-60",
+      "sourceRow": 60,
+      "name": "Claris Agrarian Reform Cooperative",
+      "arboId": "01055-30002",
+      "municipality": "Pozorrubio",
+      "barangay": "Poblacion",
+      "arc": "Amagbagan",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-61",
+      "sourceRow": 61,
+      "name": "Colayo Organic Farmers Association, COFA Inc.",
+      "arboId": "01055-08003",
+      "municipality": "Bani",
+      "barangay": "Colayo",
+      "arc": "Dacap Sur",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 197,
+      "arbMembership": 111,
+      "coord": [
+        16.27457,
+        119.79598
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-62",
+      "sourceRow": 62,
+      "name": "D' Plowman Multi-Purpose Cooperative",
+      "arboId": "01055-44001",
+      "municipality": "Umingan",
+      "barangay": "Poblacion West",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 462,
+      "arbMembership": 391,
+      "coord": [
+        15.925995,
+        120.83862
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-63",
+      "sourceRow": 63,
+      "name": "D' Wide Fields Multi Purpose Cooperative",
+      "arboId": "01055-25002",
+      "municipality": "Manaoag",
+      "barangay": "Oraan West",
+      "arc": "Oraan West",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 187,
+      "arbMembership": 73,
+      "coord": [
+        16.01358,
+        120.495725
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-64",
+      "sourceRow": 64,
+      "name": "Dasol Agrarian Reform Beneficiaries and Farmers Association Inc.",
+      "arboId": "01055-19003",
+      "municipality": "Dasol",
+      "barangay": "San Vicente",
+      "arc": "Malimpin",
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 75,
+      "arbMembership": 73,
+      "coord": [
+        15.97963,
+        119.89983
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-65",
+      "sourceRow": 65,
+      "name": "De Pila Agriculture Cooperative",
+      "arboId": "01055-39001",
+      "municipality": "Santa Maria",
+      "barangay": "Pilar",
+      "arc": "Esperanza",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 313,
+      "arbMembership": 211,
+      "coord": [
+        15.94991,
+        120.667435
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-66",
+      "sourceRow": 66,
+      "name": "Diaz Bautista Farmers Agriculture Cooperative (Formerly Brgy. Diaz Bautista Farmers Association, Inc.)",
+      "arboId": "01055-10002",
+      "municipality": "Bautista",
+      "barangay": "Diaz",
+      "arc": "Vacante",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 174,
+      "arbMembership": 73,
+      "coord": [
+        15.793785,
+        120.506955
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-67",
+      "sourceRow": 67,
+      "name": "Diaz Highland Farmers Association, Inc.",
+      "arboId": "01055-44013",
+      "municipality": "Umingan",
+      "barangay": "Diaz",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 120,
+      "arbMembership": 118,
+      "coord": [
+        15.826085,
+        120.816575
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-68",
+      "sourceRow": 68,
+      "name": "Doliman Agrarian Reform Cooperative",
+      "arboId": "01055-20002",
+      "municipality": "Infanta",
+      "barangay": "Doliman",
+      "arc": "Bambaybaca",
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 441,
+      "arbMembership": 264,
+      "coord": [
+        15.82016,
+        119.985205
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-69",
+      "sourceRow": 69,
+      "name": "Dorongan Punta Women's & Farmers Multi Purpose Cooperative",
+      "arboId": "01055-27002",
+      "municipality": "Mangatarem",
+      "barangay": "Dorongan Punta",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 239,
+      "arbMembership": 237,
+      "coord": [
+        15.811955,
+        120.317435
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-70",
+      "sourceRow": 70,
+      "name": "Evangelista Agrarian Reform Cooperative",
+      "arboId": "01055-43001",
+      "municipality": "Tayug",
+      "barangay": "Evangelista",
+      "arc": "SELL",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 265,
+      "arbMembership": 189,
+      "coord": [
+        16.00216,
+        120.73829
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-71",
+      "sourceRow": 71,
+      "name": "Ganda Buhay Farmers Association, Inc.",
+      "arboId": "01055-24006",
+      "municipality": "Malasiqui",
+      "barangay": "Umando",
+      "arc": "Galvan Cabrera",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 81,
+      "arbMembership": 53,
+      "coord": [
+        15.86709,
+        120.462735
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-72",
+      "sourceRow": 72,
+      "name": "Golden Farm Agrarian Reform Cooperative (Raniag Mantacdang)",
+      "arboId": "01055-37002",
+      "municipality": "San Quintin",
+      "barangay": "Labuan",
+      "arc": "Maligaya",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 131,
+      "arbMembership": 105,
+      "coord": [
+        15.941245,
+        120.732445
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-73",
+      "sourceRow": 73,
+      "name": "Goliman Multi Purpose Cooperative",
+      "arboId": "01055-24002",
+      "municipality": "Malasiqui",
+      "barangay": "Goliman",
+      "arc": "Galvan Cabrera",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 490,
+      "arbMembership": 436,
+      "coord": [
+        15.856945,
+        120.456015
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-74",
+      "sourceRow": 74,
+      "name": "Greenland Multi Purpose Cooperative",
+      "arboId": "01055-44018",
+      "municipality": "Umingan",
+      "barangay": "Poblacion",
+      "arc": "La Paz",
+      "cluster": "KALAHI",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-75",
+      "sourceRow": 75,
+      "name": "Gualsic Agriculture Cooperative",
+      "arboId": "01055-04003",
+      "municipality": "Alcala",
+      "barangay": "Gualsic",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 140,
+      "arbMembership": 140,
+      "coord": [
+        15.853655,
+        120.49876
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-76",
+      "sourceRow": 76,
+      "name": "Guelew Multi purpose Cooperative",
+      "arboId": "01055-32001",
+      "municipality": "San Carlos City",
+      "barangay": "Guelew",
+      "arc": "Guelew",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 277,
+      "arbMembership": 194,
+      "coord": [
+        15.857345,
+        120.30214
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-77",
+      "sourceRow": 77,
+      "name": "Guiling Rosales Agrarian Reform Beneficiaries and Farmers Association Inc.",
+      "arboId": "01055-31002",
+      "municipality": "Rosales",
+      "barangay": "Guiling",
+      "arc": "Guiling",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 219,
+      "arbMembership": 219,
+      "coord": [
+        15.844895,
+        120.6164
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-78",
+      "sourceRow": 78,
+      "name": "Hillside Multi Purpose Cooperative",
+      "arboId": "01055-47002",
+      "municipality": "Villasis",
+      "barangay": "Unzad",
+      "arc": "Capulaan",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 179,
+      "arbMembership": 127,
+      "coord": [
+        15.911905,
+        120.53541
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-79",
+      "sourceRow": 79,
+      "name": "Home Along Coliling Farmers Association Inc.",
+      "arboId": "01055-32002",
+      "municipality": "San Carlos City",
+      "barangay": "Coliling",
+      "arc": "Palaris",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 202,
+      "arbMembership": 202,
+      "coord": [
+        15.92235,
+        120.376255
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-80",
+      "sourceRow": 80,
+      "name": "Imperial Marketing Cooperative",
+      "arboId": "01055-44019",
+      "municipality": "Umingan",
+      "barangay": "San Andres",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 50,
+      "arbMembership": 50,
+      "coord": [
+        15.89813,
+        120.740305
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-81",
+      "sourceRow": 81,
+      "name": "Infanta Agrarian Reform Beneficiaries and Farmers' Association Inc.",
+      "arboId": "01055-20003",
+      "municipality": "Infanta",
+      "barangay": "Bamban",
+      "arc": "Bambaybaca",
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 133,
+      "arbMembership": 130,
+      "coord": [
+        15.84573,
+        119.9724
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-82",
+      "sourceRow": 82,
+      "name": "Integrated Ricos Farmers Association Inc.",
+      "arboId": "01055-44015",
+      "municipality": "Umingan",
+      "barangay": "Ricos",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 114,
+      "arbMembership": 59,
+      "coord": [
+        15.87663,
+        120.835285
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-83",
+      "sourceRow": 83,
+      "name": "Islanda Agriculture Cooperative (IAC) (Formerly Carot Integrated Farmers Association)",
+      "arboId": "01055-05003",
+      "municipality": "Anda",
+      "barangay": "Carot",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 64,
+      "arbMembership": 64,
+      "coord": [
+        16.344535,
+        119.978015
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-84",
+      "sourceRow": 84,
+      "name": "Jungle Farmers Multi Purpose Cooperative, Inc.",
+      "arboId": "01055-02001",
+      "municipality": "Aguilar",
+      "barangay": "Laoag",
+      "arc": "Laoag",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 312,
+      "arbMembership": 213,
+      "coord": [
+        15.85409,
+        120.18454
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-85",
+      "sourceRow": 85,
+      "name": "Kalikasan ARBs and Farmers Association Inc.",
+      "arboId": "01055-27003",
+      "municipality": "Mangatarem",
+      "barangay": "Muelang",
+      "arc": "Pasang-At",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 92,
+      "arbMembership": 92,
+      "coord": [
+        15.758395,
+        120.22468
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-86",
+      "sourceRow": 86,
+      "name": "Kristine Heart MPC",
+      "arboId": "01055-44003",
+      "municipality": "Umingan",
+      "barangay": "Labuan",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 126,
+      "arbMembership": 69,
+      "coord": [
+        15.937525,
+        120.739925
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-87",
+      "sourceRow": 87,
+      "name": "Laguit Padilla Multi Purpose Cooperative, Inc.",
+      "arboId": "01055-15001",
+      "municipality": "Bugallon",
+      "barangay": "Laguit Padilla",
+      "arc": "Laguit Padilla",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 536,
+      "arbMembership": 439,
+      "coord": [
+        15.937855,
+        120.141585
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-88",
+      "sourceRow": 88,
+      "name": "Lambayan Multi Purpose Cooperative",
+      "arboId": "01055-28001",
+      "municipality": "Mapandan",
+      "barangay": "Poblacion",
+      "arc": "South Mapandan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 797,
+      "arbMembership": 384,
+      "coord": [
+        16.025205,
+        120.45388
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-89",
+      "sourceRow": 89,
+      "name": "Lebueg ARBs and Farmers Association",
+      "arboId": "01055-48002",
+      "municipality": "Laoac",
+      "barangay": "Lebueg",
+      "arc": "D' Cacabicalan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 21,
+      "arbMembership": 21,
+      "coord": [
+        16.0217,
+        120.5647
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-90",
+      "sourceRow": 90,
+      "name": "Lobong Credit Cooperative",
+      "arboId": "01055-34001",
+      "municipality": "San Jacinto",
+      "barangay": "Lobong",
+      "arc": "Lobong",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 141,
+      "arbMembership": 125,
+      "coord": [
+        16.081865,
+        120.473345
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-91",
+      "sourceRow": 91,
+      "name": "Luna Lipit Creek Farmers Association",
+      "arboId": "01055-44016",
+      "municipality": "Umingan",
+      "barangay": "Luna Este",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Non-Operational",
+      "type": "FA",
+      "membership": 31,
+      "arbMembership": 31,
+      "coord": [
+        15.864435,
+        120.804555
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-92",
+      "sourceRow": 92,
+      "name": "Mabini Agrarian Reform Beneficiaries and Farmers Association Inc.",
+      "arboId": "01055-23003",
+      "municipality": "Mabini",
+      "barangay": "Caranglaan",
+      "arc": null,
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 55,
+      "arbMembership": 49,
+      "coord": [
+        16.089295,
+        119.895755
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-93",
+      "sourceRow": 93,
+      "name": "Macabansa Multi Purpose Cooperative",
+      "arboId": "01055-01001",
+      "municipality": "Agno",
+      "barangay": "Bangan-Oda",
+      "arc": "MACABANSA",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 507,
+      "arbMembership": 282,
+      "coord": [
+        16.11178,
+        119.82977
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-94",
+      "sourceRow": 94,
+      "name": "Macalang Pantol Farmers Irrigators Association, Inc.",
+      "arboId": "01055-19002",
+      "municipality": "Dasol",
+      "barangay": "Macalang",
+      "arc": null,
+      "cluster": "WePARCC I",
+      "status": "Non-Operational",
+      "type": "IA",
+      "membership": 105,
+      "arbMembership": 103,
+      "coord": [
+        15.907345,
+        119.946565
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-95",
+      "sourceRow": 95,
+      "name": "Magandang Buhay Farmers Agrarian Reform Cooperative",
+      "arboId": "01055-37003",
+      "municipality": "San Quintin",
+      "barangay": "Labuan",
+      "arc": "Maligaya",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 248,
+      "arbMembership": 219,
+      "coord": [
+        15.941245,
+        120.732445
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-96",
+      "sourceRow": 96,
+      "name": "Malimpin Farmers Agriculture Cooperative",
+      "arboId": "01055-19001",
+      "municipality": "Dasol",
+      "barangay": "Malimpin",
+      "arc": "Malimpin",
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 207,
+      "arbMembership": 170,
+      "coord": [
+        15.98894,
+        119.913875
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-97",
+      "sourceRow": 97,
+      "name": "Mangatarem Multipurpose Cooperative",
+      "arboId": "01055-27001",
+      "municipality": "Mangatarem",
+      "barangay": "Poblacion",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 337,
+      "arbMembership": 144,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-98",
+      "sourceRow": 98,
+      "name": "Mapanatag MPC",
+      "arboId": "01055-27004",
+      "municipality": "Mangatarem",
+      "barangay": "Poblacion",
+      "arc": "Olong Panatag",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-99",
+      "sourceRow": 99,
+      "name": "Mapita High Value Crop Farmers & Irrigators Association Inc. (Formerly Sitio Mapita High-Valued Crop Growers Association, Inc.)",
+      "arboId": "01055-02002",
+      "municipality": "Aguilar",
+      "barangay": "Laoag",
+      "arc": "Laoag",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 174,
+      "arbMembership": 161,
+      "coord": [
+        15.85409,
+        120.18454
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-100",
+      "sourceRow": 100,
+      "name": "Mapolopolo Agrarian Reform Cooperative",
+      "arboId": "01055-09001",
+      "municipality": "Basista",
+      "barangay": "Mapolopolo",
+      "arc": "Basista",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 212,
+      "arbMembership": 183,
+      "coord": [
+        15.87673,
+        120.37441
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-101",
+      "sourceRow": 101,
+      "name": "Maresma Multi-Purpose Cooperative",
+      "arboId": "01055-07001",
+      "municipality": "Balungao",
+      "barangay": "San Andres",
+      "arc": "Maresma",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 404,
+      "arbMembership": 352,
+      "coord": [
+        15.85,
+        120.68597
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-102",
+      "sourceRow": 102,
+      "name": "Masigasig Alitaya Farmers Irrigators Association Inc.",
+      "arboId": "01055-26001",
+      "municipality": "Mangaldan",
+      "barangay": "Alitaya",
+      "arc": "Southern Mangaldan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "IA",
+      "membership": 351,
+      "arbMembership": 323,
+      "coord": [
+        16.033755,
+        120.398225
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-103",
+      "sourceRow": 103,
+      "name": "Matatag na Samahan ng Guelew ARBs, Farmers and Irrigators Inc.",
+      "arboId": "01055-32004",
+      "municipality": "San Carlos City",
+      "barangay": "Guelew",
+      "arc": "Guelew",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 103,
+      "arbMembership": 103,
+      "coord": [
+        15.857345,
+        120.30214
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-104",
+      "sourceRow": 104,
+      "name": "Nagkakaisang Magsasaka ng Santa Maria Assn., Inc.",
+      "arboId": "01055-39002",
+      "municipality": "Santa Maria",
+      "barangay": "San Pablo",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 141,
+      "arbMembership": 141,
+      "coord": [
+        15.94299,
+        120.70604
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-105",
+      "sourceRow": 105,
+      "name": "Nampalcan ARBs and Farmers Association, Inc.",
+      "arboId": "01055-44014",
+      "municipality": "Umingan",
+      "barangay": "Nampalcan",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 35,
+      "arbMembership": 35,
+      "coord": [
+        15.90593,
+        120.82845
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-106",
+      "sourceRow": 106,
+      "name": "Nayon Credit Cooperative",
+      "arboId": "01055-44006",
+      "municipality": "Umingan",
+      "barangay": "Bantug",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 124,
+      "arbMembership": 96,
+      "coord": [
+        15.91966,
+        120.852965
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-107",
+      "sourceRow": 107,
+      "name": "New Balikatan Barraca Farmers Irrigators Association Inc.",
+      "arboId": "01055-47004",
+      "municipality": "Villasis",
+      "barangay": "Barraca",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "IA",
+      "membership": 197,
+      "arbMembership": 95,
+      "coord": [
+        15.90645,
+        120.571685
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-108",
+      "sourceRow": 108,
+      "name": "New Hope ARBs and Farmers Association Inc.",
+      "arboId": "01055-38003",
+      "municipality": "Santa Barbara",
+      "barangay": "Leet",
+      "arc": "Banerle",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 44,
+      "arbMembership": 44,
+      "coord": [
+        15.99198,
+        120.46257
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-109",
+      "sourceRow": 109,
+      "name": "Northern Bayambang Multipurpose Cooperative",
+      "arboId": "01055-11002",
+      "municipality": "Bayambang",
+      "barangay": "Buenlag 1st",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 281,
+      "arbMembership": 151,
+      "coord": [
+        15.835965,
+        120.46247
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-110",
+      "sourceRow": 110,
+      "name": "Obong-Patacbo Agrarian Reform Cooperative",
+      "arboId": "01055-09002",
+      "municipality": "Basista",
+      "barangay": "Patacbo",
+      "arc": "Basista",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 228,
+      "arbMembership": 178,
+      "coord": [
+        15.855825,
+        120.42379
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-111",
+      "sourceRow": 111,
+      "name": "One Line Agrarian Reform Beneficiaries and Farmers Association Inc.",
+      "arboId": "01055-11005",
+      "municipality": "Bayambang",
+      "barangay": "Sancagulis",
+      "arc": "Sancagulis",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 56,
+      "arbMembership": 56,
+      "coord": [
+        15.795155,
+        120.43686
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-112",
+      "sourceRow": 112,
+      "name": "Organic Farmers of Olea Inc. (Formerly Malasiqui Onion Growers Association, Inc.)",
+      "arboId": "01055-24004",
+      "municipality": "Malasiqui",
+      "barangay": "Olea",
+      "arc": "Galvan Cabrera",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 227,
+      "arbMembership": 218,
+      "coord": [
+        15.86067,
+        120.484455
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-113",
+      "sourceRow": 113,
+      "name": "Organic Pares Pares Multi Purpose Cooperative",
+      "arboId": "01055-36001",
+      "municipality": "San Nicolas",
+      "barangay": "Camanggaan",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 236,
+      "arbMembership": 167,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-114",
+      "sourceRow": 114,
+      "name": "Paed Limaquita Farmers Irrigators Association, Inc.",
+      "arboId": "01055-03005",
+      "municipality": "Alaminos City",
+      "barangay": "Limansangan",
+      "arc": "Bayanihan",
+      "cluster": "WePARCC II",
+      "status": "Non-Operational",
+      "type": "IA",
+      "membership": 237,
+      "arbMembership": 49,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-115",
+      "sourceRow": 115,
+      "name": "Pagrang-Ayan Patar Agno Farmers Association Inc.",
+      "arboId": "01055-01002",
+      "municipality": "Agno",
+      "barangay": "Patar",
+      "arc": null,
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "FA",
+      "membership": 19,
+      "arbMembership": 10,
+      "coord": [
+        16.1555,
+        119.809725
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-116",
+      "sourceRow": 116,
+      "name": "Palma Agrarian Reform Cooperative",
+      "arboId": "01055-09003",
+      "municipality": "Basista",
+      "barangay": "Palma",
+      "arc": "Basista",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 150,
+      "arbMembership": 115,
+      "coord": [
+        15.867535,
+        120.405635
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-117",
+      "sourceRow": 117,
+      "name": "Pandan-Telbang Agrarian Reform Cooperative",
+      "arboId": "01055-03001",
+      "municipality": "Alaminos City",
+      "barangay": "Telbang",
+      "arc": "Pitong Gatang",
+      "cluster": "WePARCC II",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 89,
+      "arbMembership": 43,
+      "coord": [
+        16.16104,
+        120.051375
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-118",
+      "sourceRow": 118,
+      "name": "Pangascasan Farmers P4MP Inc.",
+      "arboId": "01055-15003",
+      "municipality": "Bugallon",
+      "barangay": "Pangascasan",
+      "arc": "Pangcabucassan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 244,
+      "arbMembership": 239,
+      "coord": [
+        15.930615,
+        120.254085
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-119",
+      "sourceRow": 119,
+      "name": "Pasileng Norte Binalonan Farmers Association, Inc.",
+      "arboId": "01055-12001",
+      "municipality": "Binalonan",
+      "barangay": "Pasileng",
+      "arc": "Rang-ay",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 73,
+      "arbMembership": 73,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-120",
+      "sourceRow": 120,
+      "name": "Patnubay Multi Purpose Cooperative",
+      "arboId": "01055-03003",
+      "municipality": "Alaminos City",
+      "barangay": "Magsaysay",
+      "arc": "Pitong Gatang",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 174,
+      "arbMembership": 112,
+      "coord": [
+        16.17459,
+        119.984745
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-121",
+      "sourceRow": 121,
+      "name": "Patubig MPC",
+      "arboId": "01055-40003",
+      "municipality": "Santo Tomas",
+      "barangay": "San Jose",
+      "arc": "La Santos",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.85832,
+        120.57539
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-122",
+      "sourceRow": 122,
+      "name": "Pindangan East ARBs and Farmers Association Inc.",
+      "arboId": "01055-04004",
+      "municipality": "Alcala",
+      "barangay": "Pindangan East",
+      "arc": "Eastern Alcala",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 32,
+      "arbMembership": 32,
+      "coord": [
+        15.854525,
+        120.56238
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-123",
+      "sourceRow": 123,
+      "name": "Pita Farmers Association, Inc.",
+      "arboId": "01055-20001",
+      "municipality": "Infanta",
+      "barangay": "Pita",
+      "arc": null,
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 155,
+      "arbMembership": 82,
+      "coord": [
+        15.895335,
+        120.010065
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-124",
+      "sourceRow": 124,
+      "name": "Pogomboa ARBs and Farmers Association Inc.",
+      "arboId": "01055-02003",
+      "municipality": "Aguilar",
+      "barangay": "Pogomboa",
+      "arc": "Laoag",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 59,
+      "arbMembership": 54,
+      "coord": [
+        15.882075,
+        120.24441
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-125",
+      "sourceRow": 125,
+      "name": "Polong Sur Multipurpose Cooperative",
+      "arboId": "01055-24003",
+      "municipality": "Malasiqui",
+      "barangay": "Polong Sur",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 116,
+      "arbMembership": 41,
+      "coord": [
+        15.893715,
+        120.42682
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-126",
+      "sourceRow": 126,
+      "name": "Poponto Global Farmers Agriculture Cooperative (Formerly Poponto Global Farmers Association, Inc.)",
+      "arboId": "01055-10003",
+      "municipality": "Bautista",
+      "barangay": "Poponto",
+      "arc": "Pripavilla",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 109,
+      "arbMembership": 75,
+      "coord": [
+        15.7803,
+        120.539985
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-127",
+      "sourceRow": 127,
+      "name": "Primicias Bautista Farmers Agriculture Cooperative (Formerly Primicias Farmers Association, Inc.)",
+      "arboId": "01055-10004",
+      "municipality": "Bautista",
+      "barangay": "Primicias",
+      "arc": "Pripavilla",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 204,
+      "arbMembership": 183,
+      "coord": [
+        15.787245,
+        120.54448
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-128",
+      "sourceRow": 128,
+      "name": "Progressive Cooperative of Oraan East MPC",
+      "arboId": "01055-25001",
+      "municipality": "Manaoag",
+      "barangay": "Oraan East",
+      "arc": "Oraan West",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 400,
+      "arbMembership": 242,
+      "coord": [
+        16.007175,
+        120.508685
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-129",
+      "sourceRow": 129,
+      "name": "Pugaro ARBs and Farmers Association Inc.",
+      "arboId": "01055-25003",
+      "municipality": "Manaoag",
+      "barangay": "Pugaro",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 72,
+      "arbMembership": 71,
+      "coord": [
+        16.06231,
+        120.49039
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-130",
+      "sourceRow": 130,
+      "name": "Rajal Farmers Agrarian Reform Cooperative",
+      "arboId": "01055-07002",
+      "municipality": "Balungao",
+      "barangay": "Rajal",
+      "arc": "Maresma",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 234,
+      "arbMembership": 226,
+      "coord": [
+        15.91217,
+        120.7061
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-131",
+      "sourceRow": 131,
+      "name": "Rang-ay Casantiagoan Farmers Agriculture Cooperative",
+      "arboId": "01055-48003",
+      "municipality": "Laoac",
+      "barangay": "Casantiagoan",
+      "arc": null,
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 23,
+      "arbMembership": 22,
+      "coord": [
+        16.017565,
+        120.567505
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-132",
+      "sourceRow": 132,
+      "name": "Rang-ay Upland Agrarian Reform Cooperative (Formerly Rang-Ay Upland Integrated Farmers Association, Inc.)",
+      "arboId": "01055-08002",
+      "municipality": "Bani",
+      "barangay": "Dacap Sur",
+      "arc": "Dacap Sur",
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 309,
+      "arbMembership": 251,
+      "coord": [
+        16.232425,
+        119.796635
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-133",
+      "sourceRow": 133,
+      "name": "Saint Paschal Baylon Multi Purpose Cooperative",
+      "arboId": "01055-37001",
+      "municipality": "San Quintin",
+      "barangay": "Poblacion",
+      "arc": null,
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 787,
+      "arbMembership": 396,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-134",
+      "sourceRow": 134,
+      "name": "Samahan ng mga Magsasaka ng Caoayan Irrigators Inc.",
+      "arboId": "01055-42002",
+      "municipality": "Sual",
+      "barangay": "Caoayan",
+      "arc": null,
+      "cluster": "WePARCC II",
+      "status": "Operational",
+      "type": "IA",
+      "membership": 52,
+      "arbMembership": 42,
+      "coord": [
+        16.073395,
+        120.059505
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-135",
+      "sourceRow": 135,
+      "name": "Samahan ng mga Magsasaka ng Rabago Rosales Inc.",
+      "arboId": "01055-31003",
+      "municipality": "Rosales",
+      "barangay": "Rabago",
+      "arc": "Guiling",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 103,
+      "arbMembership": 103,
+      "coord": [
+        15.85338,
+        120.630255
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-136",
+      "sourceRow": 136,
+      "name": "Samahan ng mga Magsasaka ng Sitio Manuelep Inc.",
+      "arboId": "01055-40002",
+      "municipality": "Santo Tomas",
+      "barangay": "San Antonio",
+      "arc": "La Santos",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 24,
+      "arbMembership": 24,
+      "coord": [
+        15.85684,
+        120.567575
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-137",
+      "sourceRow": 137,
+      "name": "Samang Norte Farmers Agrarian Reform Cooperative",
+      "arboId": "01055-14004",
+      "municipality": "Bolinao",
+      "barangay": "Samang Norte",
+      "arc": "Catuday",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        16.291475,
+        119.860965
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-138",
+      "sourceRow": 138,
+      "name": "Samang Norte Women's Association",
+      "arboId": "01055-14005",
+      "municipality": "Bolinao",
+      "barangay": "Samang Norte",
+      "arc": "Catuday",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "FA",
+      "membership": 91,
+      "arbMembership": 24,
+      "coord": [
+        16.291475,
+        119.860965
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-139",
+      "sourceRow": 139,
+      "name": "San Fabian PCWI Multi Purpose Cooperative",
+      "arboId": "01055-33002",
+      "municipality": "San Fabian",
+      "barangay": "Poblacion",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 614,
+      "arbMembership": 317,
+      "coord": [
+        16.120785,
+        120.405925
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-140",
+      "sourceRow": 140,
+      "name": "San Lorenzo Ruiz Multi Purpose Cooperative",
+      "arboId": "01055-40001",
+      "municipality": "Santo Tomas",
+      "barangay": "Sto. Domingo",
+      "arc": "La Santos",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 369,
+      "arbMembership": 238,
+      "coord": [
+        15.862215,
+        120.5781
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-141",
+      "sourceRow": 141,
+      "name": "San Pedro Apartado Multi Purpose Cooperative",
+      "arboId": "01055-04001",
+      "municipality": "Alcala",
+      "barangay": "San Pedro Apartado",
+      "arc": "Eastern Alcala",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 439,
+      "arbMembership": 388,
+      "coord": [
+        15.83252,
+        120.56374
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-142",
+      "sourceRow": 142,
+      "name": "San Pedro-Bacnit Agrarian Reform Beneficiaries & Farmers Association",
+      "arboId": "01055-23004",
+      "municipality": "Mabini",
+      "barangay": "Bacnit",
+      "arc": null,
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 84,
+      "arbMembership": 81,
+      "coord": [
+        16.037575,
+        119.93651
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-143",
+      "sourceRow": 143,
+      "name": "Sancagulis Multi-Purpose Cooperative",
+      "arboId": "01055-11001",
+      "municipality": "Bayambang",
+      "barangay": "Sancagulis",
+      "arc": "Sancagulis",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 118,
+      "arbMembership": 32,
+      "coord": [
+        15.795155,
+        120.43686
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-144",
+      "sourceRow": 144,
+      "name": "Sanlibo Farmers Association Inc.",
+      "arboId": "01055-11004",
+      "municipality": "Bayambang",
+      "barangay": "Sanlibo",
+      "arc": "Sanlibo",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 236,
+      "arbMembership": 213,
+      "coord": [
+        15.798805,
+        120.38431
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-145",
+      "sourceRow": 145,
+      "name": "Sanlibo Peoples Association, Inc.",
+      "arboId": "01055-11003",
+      "municipality": "Bayambang",
+      "barangay": "Sanlibo",
+      "arc": "Sanlibo",
+      "cluster": "LARBARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 215,
+      "arbMembership": 210,
+      "coord": [
+        15.798805,
+        120.38431
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-146",
+      "sourceRow": 146,
+      "name": "Sapalaza Irrigators Association, Inc.",
+      "arboId": "01055-43002",
+      "municipality": "Tayug",
+      "barangay": "Panganiban",
+      "arc": "SELL",
+      "cluster": "EPARCC",
+      "status": "Non-Operational",
+      "type": "IA",
+      "membership": 54,
+      "arbMembership": 54,
+      "coord": [
+        16.00652,
+        120.7715
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-147",
+      "sourceRow": 147,
+      "name": "Saranay Agrarian Reform Cooperative",
+      "arboId": "01055-29001",
+      "municipality": "Natividad",
+      "barangay": "San Macario Sur",
+      "arc": "San Macario Sur",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 214,
+      "arbMembership": 156,
+      "coord": [
+        16.025245,
+        120.857785
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-148",
+      "sourceRow": 148,
+      "name": "SELL ARC Women and ARBs Association Inc.",
+      "arboId": "01055-43003",
+      "municipality": "Tayug",
+      "barangay": "C. Lichauco",
+      "arc": "SELL",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 52,
+      "arbMembership": 52,
+      "coord": [
+        15.98136,
+        120.763215
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-149",
+      "sourceRow": 149,
+      "name": "Sitio Leet San Jose ARBs Association INC.",
+      "arboId": "01055-46002",
+      "municipality": "Urdaneta City",
+      "barangay": "San Jose",
+      "arc": "Catablan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 26,
+      "arbMembership": 26,
+      "coord": [
+        15.982675,
+        120.50574
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-150",
+      "sourceRow": 150,
+      "name": "Southern Binmaley Multi Purpose Cooperative",
+      "arboId": "01055-13001",
+      "municipality": "Binmaley",
+      "barangay": "Pallas",
+      "arc": "Southern Binmaley",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 887,
+      "arbMembership": 147,
+      "coord": [
+        15.974675,
+        120.303345
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-151",
+      "sourceRow": 151,
+      "name": "SRT Alcala Multi-Purpose Cooperative of Pangasinan",
+      "arboId": "01055-04002",
+      "municipality": "Alcala",
+      "barangay": "Laoac",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 248,
+      "arbMembership": 234,
+      "coord": [
+        15.831365,
+        120.50031
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-152",
+      "sourceRow": 152,
+      "name": "Sto. Domingo Agrarian Reform Beneficiaries and Farmers Association Inc.",
+      "arboId": "01055-35002",
+      "municipality": "San Manuel",
+      "barangay": "Santo Domingo",
+      "arc": "Santo Domingo",
+      "cluster": null,
+      "status": "Operational",
+      "type": "FA",
+      "membership": 25,
+      "arbMembership": 25,
+      "coord": [
+        16.06629,
+        120.641985
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-153",
+      "sourceRow": 153,
+      "name": "Sto. Domingo MPC",
+      "arboId": "01055-35001",
+      "municipality": "San Manuel",
+      "barangay": "Santo Domingo",
+      "arc": "Santo Domingo",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 389,
+      "arbMembership": 269,
+      "coord": [
+        16.06629,
+        120.641985
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-154",
+      "sourceRow": 154,
+      "name": "Talibaew Multi Purpose Cooperative",
+      "arboId": "01055-17001",
+      "municipality": "Calasiao",
+      "barangay": "Talibaew",
+      "arc": "Senor Divino Tesoro",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 79,
+      "arbMembership": 53,
+      "coord": [
+        16.00477,
+        120.36978
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-155",
+      "sourceRow": 155,
+      "name": "Taloy Guilig Women and Farmers Agrarian Reform Cooperative",
+      "arboId": "01055-33003",
+      "municipality": "San Fabian",
+      "barangay": "Taloy",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 158,
+      "arbMembership": 156,
+      "coord": null,
+      "locationBasis": "Address not matched"
+    },
+    {
+      "id": "arbo-156",
+      "sourceRow": 156,
+      "name": "Tanolong Farmers Association",
+      "arboId": "01055-11006",
+      "municipality": "Bayambang",
+      "barangay": "Tanolong",
+      "arc": null,
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "FA",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.80512,
+        120.41323
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-157",
+      "sourceRow": 157,
+      "name": "Timpuyog ti Mannalon nga Taga Santa Rosa Inc.",
+      "arboId": "01055-39003",
+      "municipality": "Santa Maria",
+      "barangay": "Sta. Rosa",
+      "arc": "Esperanza",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 131,
+      "arbMembership": 130,
+      "coord": [
+        15.974175,
+        120.68615
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-158",
+      "sourceRow": 158,
+      "name": "Tombod Farmers Multi Purpose Cooperative",
+      "arboId": "01055-47003",
+      "municipality": "Villasis",
+      "barangay": "Tombod",
+      "arc": "Tombalala",
+      "cluster": "EPARCC",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 212,
+      "arbMembership": 185,
+      "coord": [
+        15.92662,
+        120.561455
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-159",
+      "sourceRow": 159,
+      "name": "Torres Mabuna Marketing Cooperative",
+      "arboId": null,
+      "municipality": "Umingan",
+      "barangay": "Bantug",
+      "arc": null,
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 94,
+      "arbMembership": 94,
+      "coord": [
+        15.91966,
+        120.852965
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-160",
+      "sourceRow": 160,
+      "name": "Tupa Producers Cooperative",
+      "arboId": "01055-14006",
+      "municipality": "Bolinao",
+      "barangay": "Tupa",
+      "arc": "Catuday",
+      "cluster": null,
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        16.324305,
+        119.855065
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-161",
+      "sourceRow": 161,
+      "name": "Ubbog ti Biag Agriculture Cooperative",
+      "arboId": "01055-44008",
+      "municipality": "Umingan",
+      "barangay": "San Leon",
+      "arc": "La Paz",
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 231,
+      "arbMembership": 148,
+      "coord": [
+        15.90545,
+        120.72603
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-162",
+      "sourceRow": 162,
+      "name": "Umingan Farmers Agrarian Reform Cooperative",
+      "arboId": "01055-44004",
+      "municipality": "Umingan",
+      "barangay": "Luna Este",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 242,
+      "arbMembership": 212,
+      "coord": [
+        15.864435,
+        120.804555
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-163",
+      "sourceRow": 163,
+      "name": "Umingan Platinum Farmers MPC",
+      "arboId": "01055-44005",
+      "municipality": "Umingan",
+      "barangay": "Lauren",
+      "arc": null,
+      "cluster": "KALAHI",
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 109,
+      "arbMembership": 81,
+      "coord": [
+        15.944775,
+        120.839925
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-164",
+      "sourceRow": 164,
+      "name": "United Pripavilla MPC",
+      "arboId": "01055-10005",
+      "municipality": "Bautista",
+      "barangay": "Villanueva",
+      "arc": "Pripavilla",
+      "cluster": "LARBARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.79883,
+        120.54706
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-165",
+      "sourceRow": 165,
+      "name": "Villacorta Mabini Farmers Association Inc.",
+      "arboId": "01055-23002",
+      "municipality": "Mabini",
+      "barangay": "Villacorta",
+      "arc": null,
+      "cluster": "WePARCC I",
+      "status": "Operational",
+      "type": "FA",
+      "membership": 144,
+      "arbMembership": 141,
+      "coord": [
+        15.98883,
+        120.026025
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-166",
+      "sourceRow": 166,
+      "name": "West Pilar Consumers Cooperative",
+      "arboId": "01055-39004",
+      "municipality": "Santa Maria",
+      "barangay": "Pilar",
+      "arc": "Esperanza",
+      "cluster": "EPARCC",
+      "status": "Non-Operational",
+      "type": "Cooperative",
+      "membership": 0,
+      "arbMembership": 0,
+      "coord": [
+        15.94991,
+        120.667435
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    },
+    {
+      "id": "arbo-167",
+      "sourceRow": 167,
+      "name": "Women's Unity for Progress and Farmers Multi-Purpose Cooperative",
+      "arboId": "01055-28002",
+      "municipality": "Mapandan",
+      "barangay": "Primicias",
+      "arc": "South Mapandan",
+      "cluster": null,
+      "status": "Operational",
+      "type": "Cooperative",
+      "membership": 248,
+      "arbMembership": 225,
+      "coord": [
+        15.997095,
+        120.480025
+      ],
+      "locationBasis": "Approximate barangay bounding-box center"
+    }
+  ]
+}
