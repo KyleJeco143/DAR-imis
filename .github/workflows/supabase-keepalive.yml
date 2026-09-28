@@ -17,11 +17,4 @@ jobs:
     steps:
       - name: Ping Supabase REST API
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            "https://btktxpwogocltkshepjy.supabase.co/rest/v1/documents?select=id&limit=1" \
-            -H "apikey: sb_publishable_IH8Bgy-gQKPHtfBq9VND-A_W3O8t-hO" \
-            -H "Authorization: Bearer sb_publishable_IH8Bgy-gQKPHtfBq9VND-A_W3O8t-hO")
-          echo "Supabase responded with HTTP $STATUS"
-          if [ "$STATUS" -ge 400 ]; then
-            echo "::warning::Supabase keep-alive ping got HTTP $STATUS — check if the project needs manual unpausing."
-          fi
+                  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://btktxpwogocltkshepjy.supabase.co/rest/v1/arcs?select=*&limit=1" -H "apikey: sb_publishable_IHBBgy-gQKPHtf8q9VND-A_W3O8t-hO" -H "Authorization: Bearer sb_publishable_IHBBgy-gQKPHtf8q9VND-A_W3O8t-hO"); echo "Supabase responded with HTTP $STATUS"; [ "$STATUS" = "200" ] || { echo "::warning::Keep-alive ping got HTTP $STATUS - check if project needs unpausing."; exit 1; }
