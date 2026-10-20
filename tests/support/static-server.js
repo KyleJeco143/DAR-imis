@@ -13,11 +13,28 @@ const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'application/javascript',
   '.css': 'text/css',
+  '.json': 'application/json',
+  '.png': 'image/png',
 };
 
 const server = http.createServer((req, res) => {
-  const reqPath = req.url === '/' ? '/index.html' : req.url;
+  // Drop query strings (e.g. cache-busters like ?v=20260824) the way
+  // GitHub Pages does, and decode %20 etc. so file lookups match disk.
+  let urlPath;
+  try {
+    urlPath = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  } catch {
+    res.writeHead(400);
+    res.end('Bad request');
+    return;
+  }
+  const reqPath = urlPath === '/' ? '/index.html' : urlPath;
   const filePath = path.join(ROOT, path.normalize(reqPath).replace(/^(\.\.[/\\])+/, ''));
+  if (!filePath.startsWith(ROOT)) {
+    res.writeHead(403);
+    res.end('Forbidden');
+    return;
+  }
   fs.readFile(filePath, (err, data) => {
     if (err) {
       res.writeHead(404);

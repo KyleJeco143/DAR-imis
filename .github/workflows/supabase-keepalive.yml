@@ -1,20 +1,53 @@
 name: Supabase Keep-Alive
 
-# Pings the Supabase REST API every 3 days so the free-tier project never
-# hits the 7-day inactivity threshold that causes it to auto-pause.
-# The key used here is the PUBLISHABLE (anon) key — the same one already
-# embedded in index.html and visible to any site visitor, so putting it in
-# this workflow file adds no new exposure.
+# Keeps the free-tier Supabase project from being auto-paused.
+#
+# Supabase pauses free projects that lack "sufficient activity" over 7 days;
+# its docs say a few user requests to the database EACH DAY is enough.
+# The old version pinged once every 3 days, which Supabase flagged as too low
+# (pause warning received Oct 2026). This version runs twice a day and reads
+# from every main table the app uses.
+#
+# The key is the PUBLISHABLE (anon) key already embedded in index.html, so it
+# adds no exposure. To rotate it without editing this file, add a repository
+# secret named SUPABASE_ANON_KEY; it takes priority when present.
 
 on:
   schedule:
-    - cron: '0 3 */3 * *'   # every 3 days at 03:00 UTC (11:00 AM Manila time)
-  workflow_dispatch:        # lets you also trigger it manually from the Actions tab
+    - cron: '17 1 * * *'    # 09:17 Manila time
+    - cron: '17 13 * * *'   # 21:17 Manila time
+  workflow_dispatch:        # run manually from the Actions tab
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: false
 
 jobs:
   ping:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SUPABASE_URL: https://btktxpwogocltkshepjy.supabase.co
+      SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_IH8Bgy-gQKPHtfBq9VND-A_W3O8t-hO' }}
+      TABLES: projects arcs sme_records validation_forms
     steps:
-      - name: Ping Supabase REST API
+      - name: Query Supabase tables
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://btktxpwogocltkshepjy.supabase.co/rest/v1/arcs?select=*&limit=1" -H "apikey: sb_publishable_IH8Bgy-gQKPHtfBq9VND-A_W3O8t-hO"); echo "Supabase responded with HTTP $STATUS"; [ "$STATUS" = "200" ] || { echo "::warning::Keep-alive ping got HTTP $STATUS - check if project needs unpausing."; exit 1; }
+          ok=0; failed=0
+          for table in $TABLES; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" \
+              --retry 3 --retry-delay 10 --retry-all-errors --max-time 30 \
+              "$SUPABASE_URL/rest/v1/$table?select=*&limit=1" \
+              -H "apikey: $SUPABASE_KEY" \
+              -H "Authorization: Bearer $SUPABASE_KEY") || status=000
+            echo "$table -> HTTP $status"
+            if [ "$status" = "200" ]; then ok=$((ok+1)); else failed=$((failed+1)); fi
+          done
+          echo "Successful queries: $ok, failed: $failed"
+          if [ "$ok" -eq 0 ]; then
+            echo "::error::No Supabase query succeeded. The project may be paused - unpause it from the Supabase dashboard."
+            exit 1
+          fi
+          if [ "$failed" -gt 0 ]; then
+            echo "::warning::$failed table(s) did not respond with HTTP 200 - check table names or RLS policies."
+          fi
